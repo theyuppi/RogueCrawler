@@ -1,0 +1,6 @@
+Floor: 		ffc4aa6c  C4AA6C
+Wall: 		ff584a33  584A33
+Enemy: 		ffff0000  FF0000
+Treasure:	ffffff00  FFFF00
+Spikes: 	ff505050  505050
+Hole:		ff000000  000000

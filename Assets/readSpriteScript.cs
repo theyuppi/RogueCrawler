@@ -30,36 +30,40 @@ public class readSpriteScript : MonoBehaviour
 			{
 				Color pixelCol = new Color(spr.texture.GetPixel((int)i, (int)j).r, spr.texture.GetPixel((int)i, (int)j).g, spr.texture.GetPixel((int)i, (int)j).b, spr.texture.GetPixel((int)i, (int)j).a);
 				string tileType = ColorToHex(pixelCol);
-				GameObject tile = Instantiate(TilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
-				if (tileType.Equals("C4AA6C"))
-				{
-					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
-					//Debug.Log("Floor");
-				}
-				else if (tileType.Equals("584A33"))
-				{
-					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
-					//Debug.Log("Wall");
-				}
-				else if (tileType.Equals("FF0000"))
-				{
-					//Debug.Log("Enemy");
-				}
-				else if (tileType.Equals("FFFF00"))
-				{
-					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
-					//Debug.Log("Treasure");
-				}
-				else if (tileType.Equals("505050"))
-				{
-					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
-					//Debug.Log("Spikes");
-				}
-				else if (tileType.Equals("000000"))
-				{
-					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
-					//Debug.Log("Hole");
-				}
+                if (!tileType.Equals("FFFFFF"))
+                {
+                    GameObject tile = Instantiate(TilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
+
+                    if (tileType.Equals("C4AA6C"))
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
+                        //Debug.Log("Floor");
+                    }
+                    else if (tileType.Equals("584A33"))
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
+                        //Debug.Log("Wall");
+                    }
+                    else if (tileType.Equals("FF0000"))
+                    {
+                        //Debug.Log("Enemy");
+                    }
+                    else if (tileType.Equals("FFFF00"))
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
+                        //Debug.Log("Treasure");
+                    }
+                    else if (tileType.Equals("505050"))
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
+                        //Debug.Log("Spikes");
+                    }
+                    else if (tileType.Equals("000000"))
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
+                        //Debug.Log("Hole");
+                    }
+                }
 			}
 		}
 		Application.Quit();

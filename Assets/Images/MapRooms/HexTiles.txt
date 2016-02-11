@@ -4,3 +4,4 @@ Enemy: 		ffff0000  FF0000
 Treasure:	ffffff00  FFFF00
 Spikes: 	ff505050  505050
 Hole:		ff000000  000000
+Empty:		ffffffff  FFFFFF

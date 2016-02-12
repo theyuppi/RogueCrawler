@@ -1,0 +1,831 @@
+fileFormatVersion: 2
+guid: e2fedd33d2ed9e6419badf99c7948e1c
+timeCreated: 1455255610
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: warriorAnimations_0
+    21300002: warriorAnimations_1
+    21300004: warriorAnimations_2
+    21300006: warriorAnimations_3
+    21300008: warriorAnimations_4
+    21300010: warriorAnimations_5
+    21300012: warriorAnimations_6
+    21300014: warriorAnimations_7
+    21300016: warriorAnimations_8
+    21300018: warriorAnimations_9
+    21300020: warriorAnimations_10
+    21300022: warriorAnimations_11
+    21300024: warriorAnimations_12
+    21300026: warriorAnimations_13
+    21300028: warriorAnimations_14
+    21300030: warriorAnimations_15
+    21300032: warriorAnimations_16
+    21300034: warriorAnimations_17
+    21300036: warriorAnimations_18
+    21300038: warriorAnimations_19
+    21300040: warriorAnimations_20
+    21300042: warriorAnimations_21
+    21300044: warriorAnimations_22
+    21300046: warriorAnimations_23
+    21300048: warriorAnimations_24
+    21300050: warriorAnimations_25
+    21300052: warriorAnimations_26
+    21300054: warriorAnimations_27
+    21300056: warriorAnimations_28
+    21300058: warriorAnimations_29
+    21300060: warriorAnimations_30
+    21300062: warriorAnimations_31
+    21300064: warriorAnimations_32
+    21300066: warriorAnimations_33
+    21300068: warriorAnimations_34
+    21300070: warriorAnimations_35
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: warriorAnimations_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 14, y: 34}
+        - {x: -29, y: 34}
+        - {x: -34, y: 28}
+        - {x: -38, y: 5}
+        - {x: -38, y: -18}
+        - {x: -37, y: -30}
+        - {x: -30, y: -34}
+        - {x: 24, y: -34}
+        - {x: 26, y: -33}
+        - {x: 28, y: -21}
+        - {x: 28, y: 17}
+    - name: warriorAnimations_1
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 640
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -38, y: 32}
+        - {x: -38, y: -34}
+        - {x: 23, y: -34}
+        - {x: 26, y: -33}
+        - {x: 28, y: -26}
+        - {x: 28, y: 17}
+        - {x: 14, y: 32}
+    - name: warriorAnimations_2
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 640
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 19, y: 32}
+        - {x: -38, y: 32}
+        - {x: -38, y: -16}
+        - {x: -30, y: -34}
+        - {x: 28, y: -34}
+        - {x: 28, y: 13}
+        - {x: 24, y: 27}
+    - name: warriorAnimations_3
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 640
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -38, y: 32}
+        - {x: -38, y: -34}
+        - {x: 23, y: -34}
+        - {x: 26, y: -33}
+        - {x: 28, y: -26}
+        - {x: 28, y: 17}
+        - {x: 14, y: 32}
+    - name: warriorAnimations_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 14, y: 34}
+        - {x: -29, y: 34}
+        - {x: -34, y: 28}
+        - {x: -38, y: 5}
+        - {x: -38, y: -18}
+        - {x: -37, y: -30}
+        - {x: -30, y: -34}
+        - {x: 24, y: -34}
+        - {x: 26, y: -33}
+        - {x: 28, y: -21}
+        - {x: 28, y: 17}
+    - name: warriorAnimations_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6, y: 40}
+        - {x: -42, y: 40}
+        - {x: -42, y: -9}
+        - {x: -32, y: -33}
+        - {x: -25, y: -34}
+        - {x: 18, y: -34}
+        - {x: 26, y: -33}
+        - {x: 28, y: -27}
+        - {x: 28, y: 24}
+    - name: warriorAnimations_6
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -28, y: 48}
+        - {x: -35, y: 42}
+        - {x: -46, y: 32}
+        - {x: -46, y: -9}
+        - {x: -36, y: -34}
+        - {x: 30, y: -34}
+        - {x: 30, y: 40}
+        - {x: 1, y: 48}
+    - name: warriorAnimations_7
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 22, y: 32}
+        - {x: 10, y: 36}
+        - {x: -10, y: 36}
+        - {x: -18, y: 28}
+        - {x: -8, y: 44}
+        - {x: -8, y: 46}
+        - {x: -12, y: 50}
+        - {x: -25, y: 50}
+        - {x: -48, y: 37}
+        - {x: -48, y: -25}
+        - {x: -43, y: -34}
+        - {x: 21, y: -34}
+        - {x: 27, y: -33}
+        - {x: 30, y: -24}
+        - {x: 30, y: 13}
+    - name: warriorAnimations_8
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 15, y: 50}
+        - {x: -10, y: 38}
+        - {x: -18, y: 30}
+        - {x: -22, y: 20}
+        - {x: -17, y: 33}
+        - {x: -8, y: 40}
+        - {x: -1, y: 45}
+        - {x: -2, y: 52}
+        - {x: -40, y: 52}
+        - {x: -44, y: 51}
+        - {x: -44, y: -8}
+        - {x: -38, y: -34}
+        - {x: 20, y: -34}
+        - {x: 25, y: -32}
+        - {x: 30, y: -23}
+        - {x: 30, y: 20}
+    - name: warriorAnimations_9
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36, y: 52}
+        - {x: -40, y: 44}
+        - {x: -40, y: 5}
+        - {x: -28, y: -34}
+        - {x: 32, y: -34}
+        - {x: 32, y: 23}
+        - {x: 12, y: 52}
+    - name: warriorAnimations_10
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -34, y: 58}
+        - {x: -34, y: -34}
+        - {x: 32, y: -34}
+        - {x: 32, y: 46}
+        - {x: 14, y: 58}
+    - name: warriorAnimations_11
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 480
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -34, y: 60}
+        - {x: -34, y: -34}
+        - {x: 32, y: -34}
+        - {x: 32, y: 53}
+        - {x: 14, y: 60}
+    - name: warriorAnimations_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: 60}
+        - {x: -26, y: 60}
+        - {x: -34, y: 49}
+        - {x: -34, y: -9}
+        - {x: -28, y: -34}
+        - {x: 32, y: -34}
+        - {x: 32, y: 20}
+        - {x: 29, y: 47}
+    - name: warriorAnimations_13
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -37, y: 58}
+        - {x: -42, y: 47}
+        - {x: -42, y: -20}
+        - {x: -29, y: -34}
+        - {x: 30, y: -34}
+        - {x: 30, y: 32}
+        - {x: 14, y: 58}
+    - name: warriorAnimations_14
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10, y: 38}
+        - {x: -10, y: 38}
+        - {x: -18, y: 30}
+        - {x: -16, y: 49}
+        - {x: 2, y: 38}
+        - {x: 6, y: 38}
+        - {x: 10, y: 39}
+        - {x: 9, y: 61}
+        - {x: -9, y: 70}
+        - {x: -30, y: 70}
+        - {x: -44, y: 61}
+        - {x: -44, y: -12}
+        - {x: -39, y: -34}
+        - {x: 30, y: -34}
+        - {x: 30, y: 12}
+        - {x: 22, y: 34}
+    - name: warriorAnimations_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10, y: 36}
+        - {x: -10, y: 36}
+        - {x: -18, y: 28}
+        - {x: -11, y: 37}
+        - {x: -2, y: 39}
+        - {x: 1, y: 51}
+        - {x: -30, y: 70}
+        - {x: -50, y: 70}
+        - {x: -50, y: -6}
+        - {x: -40, y: -34}
+        - {x: 29, y: -34}
+        - {x: 30, y: -31}
+        - {x: 30, y: 13}
+        - {x: 22, y: 32}
+    - name: warriorAnimations_16
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -56, y: 66}
+        - {x: -74, y: 48}
+        - {x: -74, y: 28}
+        - {x: -63, y: -10}
+        - {x: -32, y: -34}
+        - {x: 22, y: -34}
+        - {x: 28, y: -22}
+        - {x: 28, y: 29}
+        - {x: -15, y: 66}
+    - name: warriorAnimations_17
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -75, y: 54}
+        - {x: -80, y: 41}
+        - {x: -80, y: 1}
+        - {x: -32, y: -34}
+        - {x: 28, y: -34}
+        - {x: 28, y: 54}
+    - name: warriorAnimations_18
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -75, y: 34}
+        - {x: -80, y: 27}
+        - {x: -80, y: -21}
+        - {x: -62, y: -34}
+        - {x: 22, y: -34}
+        - {x: 26, y: -32}
+        - {x: 28, y: -20}
+        - {x: 28, y: 15}
+        - {x: 13, y: 34}
+    - name: warriorAnimations_19
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 320
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 26, y: 34}
+        - {x: -38, y: 34}
+        - {x: -80, y: 19}
+        - {x: -80, y: -14}
+        - {x: -28, y: -34}
+        - {x: 22, y: -34}
+        - {x: 26, y: -32}
+        - {x: 28, y: -20}
+        - {x: 28, y: 27}
+    - name: warriorAnimations_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13, y: 34}
+        - {x: -36, y: 6}
+        - {x: -36, y: -30}
+        - {x: -30, y: -46}
+        - {x: -13, y: -46}
+        - {x: 27, y: -34}
+        - {x: 28, y: -29}
+        - {x: 28, y: 16}
+        - {x: 13, y: 34}
+    - name: warriorAnimations_21
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: 34}
+        - {x: -15, y: 34}
+        - {x: -34, y: 10}
+        - {x: -34, y: -20}
+        - {x: -27, y: -44}
+        - {x: -19, y: -48}
+        - {x: -7, y: -48}
+        - {x: 25, y: -32}
+        - {x: 28, y: -15}
+        - {x: 28, y: 16}
+    - name: warriorAnimations_22
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 24, y: 34}
+        - {x: -23, y: 34}
+        - {x: -30, y: 16}
+        - {x: -30, y: -41}
+        - {x: -21, y: -46}
+        - {x: 4, y: -46}
+        - {x: 26, y: -32}
+        - {x: 30, y: -27}
+        - {x: 30, y: 19}
+        - {x: 25, y: 33}
+    - name: warriorAnimations_23
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10, y: 34}
+        - {x: -15, y: 34}
+        - {x: -32, y: 8}
+        - {x: -32, y: -12}
+        - {x: -25, y: -38}
+        - {x: -13, y: -40}
+        - {x: 17, y: -40}
+        - {x: 30, y: -20}
+        - {x: 30, y: 16}
+        - {x: 24, y: 32}
+    - name: warriorAnimations_24
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 31, y: 10}
+        - {x: 12, y: 34}
+        - {x: -13, y: 34}
+        - {x: -30, y: 12}
+        - {x: -30, y: -33}
+        - {x: -24, y: -34}
+        - {x: 30, y: -34}
+        - {x: 32, y: -29}
+        - {x: 32, y: 8}
+    - name: warriorAnimations_25
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -15, y: 34}
+        - {x: -30, y: 14}
+        - {x: -30, y: -34}
+        - {x: 34, y: -34}
+        - {x: 34, y: 6}
+        - {x: 16, y: 34}
+    - name: warriorAnimations_26
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 22, y: 31}
+        - {x: 16, y: 34}
+        - {x: -26, y: 34}
+        - {x: -28, y: 30}
+        - {x: -28, y: -34}
+        - {x: 22, y: -34}
+        - {x: 24, y: -32}
+        - {x: 42, y: -9}
+        - {x: 42, y: 4}
+    - name: warriorAnimations_27
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 160
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13, y: 34}
+        - {x: -28, y: 25}
+        - {x: -28, y: -33}
+        - {x: -26, y: -34}
+        - {x: 23, y: -34}
+        - {x: 46, y: -15}
+        - {x: 46, y: 11}
+        - {x: 25, y: 34}
+    - name: warriorAnimations_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 23, y: 31}
+        - {x: 11, y: 34}
+        - {x: -15, y: 34}
+        - {x: -20, y: 27}
+        - {x: -28, y: 8}
+        - {x: -28, y: -34}
+        - {x: 34, y: -34}
+        - {x: 46, y: -13}
+        - {x: 46, y: -5}
+        - {x: 45, y: -2}
+    - name: warriorAnimations_29
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: 34}
+        - {x: -13, y: 34}
+        - {x: -28, y: 18}
+        - {x: -28, y: -31}
+        - {x: -26, y: -40}
+        - {x: 40, y: -40}
+        - {x: 40, y: -3}
+        - {x: 31, y: 11}
+    - name: warriorAnimations_30
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 32, y: -28}
+        - {x: 38, y: -11}
+        - {x: 38, y: -3}
+        - {x: 24, y: 32}
+        - {x: 10, y: 34}
+        - {x: -13, y: 34}
+        - {x: -28, y: 13}
+        - {x: -28, y: -32}
+        - {x: 3, y: -58}
+        - {x: 23, y: -58}
+        - {x: 37, y: -50}
+        - {x: 38, y: -36}
+        - {x: 38, y: -29}
+        - {x: 36, y: -28}
+    - name: warriorAnimations_31
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: -44}
+        - {x: 2, y: -32}
+        - {x: 2, y: -30}
+        - {x: 6, y: -34}
+        - {x: 18, y: -34}
+        - {x: 26, y: -32}
+        - {x: 30, y: -12}
+        - {x: 30, y: 18}
+        - {x: 22, y: 30}
+        - {x: 16, y: 34}
+        - {x: -26, y: 34}
+        - {x: -28, y: 26}
+        - {x: -28, y: -53}
+        - {x: -18, y: -64}
+        - {x: -10, y: -64}
+        - {x: 11, y: -60}
+        - {x: 29, y: -33}
+        - {x: 18, y: -34}
+        - {x: 13, y: -36}
+    - name: warriorAnimations_32
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -15, y: 34}
+        - {x: -44, y: -10}
+        - {x: -44, y: -48}
+        - {x: -38, y: -62}
+        - {x: 30, y: -62}
+        - {x: 30, y: 34}
+    - name: warriorAnimations_33
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 28, y: -20}
+        - {x: 28, y: 15}
+        - {x: 13, y: 34}
+        - {x: -29, y: 34}
+        - {x: -54, y: 4}
+        - {x: -54, y: -49}
+        - {x: -33, y: -65}
+        - {x: -27, y: -66}
+        - {x: -16, y: -66}
+        - {x: -15, y: -65}
+        - {x: -17, y: -53}
+        - {x: 26, y: -32}
+    - name: warriorAnimations_34
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 15, y: 34}
+        - {x: -38, y: 34}
+        - {x: -58, y: 10}
+        - {x: -58, y: -26}
+        - {x: -47, y: -42}
+        - {x: 5, y: -42}
+        - {x: 26, y: -32}
+        - {x: 28, y: -28}
+        - {x: 28, y: 25}
+    - name: warriorAnimations_35
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -31, y: 34}
+        - {x: -58, y: 6}
+        - {x: -58, y: -14}
+        - {x: -39, y: -34}
+        - {x: 28, y: -34}
+        - {x: 28, y: 15}
+        - {x: 13, y: 34}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

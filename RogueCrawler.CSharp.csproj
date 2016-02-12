@@ -66,6 +66,7 @@
     <Compile Include="Assets\camFollowPlayerScript.cs" />
     <Compile Include="Assets\playerMovementScript.cs" />
     <Compile Include="Assets\readSpriteScript.cs" />
+    <Compile Include="Assets\spikeScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Images\MapRooms\HexTiles.txt" />

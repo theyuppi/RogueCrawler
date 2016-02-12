@@ -6,7 +6,7 @@ public class readSpriteScript : MonoBehaviour
 	SpriteRenderer sr;
 	Sprite spr;
 
-	public GameObject TilePrefab;
+	public GameObject tilePrefab;
 
 	void Start()
 	{
@@ -32,7 +32,7 @@ public class readSpriteScript : MonoBehaviour
 				string tileType = ColorToHex(pixelCol);
                 if (!tileType.Equals("FFFFFF"))
                 {
-                    GameObject tile = Instantiate(TilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
+                    GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
 
                     if (tileType.Equals("C4AA6C"))
                     {

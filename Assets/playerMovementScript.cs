@@ -8,7 +8,7 @@ public class playerMovementScript : MonoBehaviour {
 	private SpriteRenderer sRender;
 	private Animator animaThor;
 
-	public const float stepDuration = 0.5f;
+	public const float stepDuration = 0.2f;
 	
 
 	void Start () {

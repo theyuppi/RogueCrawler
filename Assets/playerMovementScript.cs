@@ -10,12 +10,17 @@ public class playerMovementScript : MonoBehaviour
 	private SpriteRenderer sRender;
 	private Animator animaThor;
 
+<<<<<<< HEAD
 	public const float stepDuration = 0.5f;
 	public List<Node> currentPath = null;
 	public readSpriteScript map;
 	public int tileX = 29;
 	public int tileY = 9;
 	int moveSpeed = 2;
+=======
+	public const float stepDuration = 0.2f;
+	
+>>>>>>> origin/dev
 
 	//Time stuff
 	private float timeBetweenSteps = 1.0f;

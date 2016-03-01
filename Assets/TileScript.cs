@@ -19,13 +19,14 @@ public class TileScript : MonoBehaviour {
 	public TileTypes myTileType = TileTypes.Floor;
 	public GameObject chestPrefab;
 	public GameObject spikePrefab;
+    public GameObject holePrefab;
 
 	public float moveCost = 1.0f;
 	public bool walkable = true;
 	public Vector2 myID;
 	public GameObject levelHandler;
 
-	void Awake()
+    void Awake()
 	{
 		mySprite = Resources.LoadAll<Sprite>("tileSet");
 	}
@@ -49,11 +50,22 @@ public class TileScript : MonoBehaviour {
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
 		}
+<<<<<<< HEAD
 		else if (myTileType == TileTypes.Wall)
 		{
 			walkable = false;
 		}
 	}
+=======
+        else if (myTileType == TileTypes.Hole)
+        {
+            spr.sprite = mySprite[(int)TileTypes.Floor];
+            GameObject tileAddon = Instantiate(holePrefab, transform.position, transform.rotation) as GameObject;
+            tileAddon.transform.parent = transform;
+            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        }
+    }
+>>>>>>> origin/dev
 	
 	void OnMouseUp()
 	{

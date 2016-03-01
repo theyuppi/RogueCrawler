@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class playerMovementScript : MonoBehaviour {
+public class playerMovementScript : MonoBehaviour
+{
 
 	private Rigidbody2D rBody;
 	private Coroutine playerMovement;
@@ -9,9 +11,18 @@ public class playerMovementScript : MonoBehaviour {
 	private Animator animaThor;
 
 	public const float stepDuration = 0.5f;
-	
+	public List<Node> currentPath = null;
+	public readSpriteScript map;
+	public int tileX = 29;
+	public int tileY = 9;
+	int moveSpeed = 2;
 
-	void Start () {
+	//Time stuff
+	private float timeBetweenSteps = 1.0f;
+	private float currentTime = 0.0f;
+
+	void Start()
+	{
 		rBody = GetComponent<Rigidbody2D>();
 		sRender = GetComponent<SpriteRenderer>();
 		animaThor = GetComponent<Animator>();
@@ -19,6 +30,30 @@ public class playerMovementScript : MonoBehaviour {
 
 	private void FixedUpdate()
 	{
+		currentTime += Time.deltaTime;
+		Debug.Log("Time is: " + Time.deltaTime);
+		if (currentTime > timeBetweenSteps)
+		{
+			if (currentPath != null)
+			{
+				int currNode = 0;
+
+				while (currNode < currentPath.Count - 1)
+				{
+					Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
+						new Vector3(0, 0, -1f);
+					Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
+						new Vector3(0, 0, -1f);
+
+					Debug.DrawLine(start, end, Color.red);
+
+					currNode++;
+					MoveNextTile();
+				}
+			}
+			currentTime = 0;
+		}
+
 		if (animaThor.GetInteger("State") != 0)
 		{
 			animaThor.SetInteger("State", 0);
@@ -43,10 +78,10 @@ public class playerMovementScript : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.Alpha1))
 			animaThor.SetInteger("State", 0);
-			if (Input.GetKey(KeyCode.Alpha2))
-				animaThor.SetInteger("State", 1);
-				if (Input.GetKey(KeyCode.Alpha3))
-					animaThor.SetInteger("State", 2);
+		if (Input.GetKey(KeyCode.Alpha2))
+			animaThor.SetInteger("State", 1);
+		if (Input.GetKey(KeyCode.Alpha3))
+			animaThor.SetInteger("State", 2);
 	}
 
 	private IEnumerator Move(Vector2 direction)
@@ -65,5 +100,59 @@ public class playerMovementScript : MonoBehaviour {
 		transform.position = destinationPosition;
 
 		playerMovement = null;
+	}
+
+	//void FixedUpdate()
+	//{
+	//	if (currentPath != null)
+	//	{
+
+	//		int currNode = 0;
+
+	//		while (currNode < currentPath.Count - 1)
+	//		{
+
+	//			Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
+	//				new Vector3(0, 0, -1f);
+	//			Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
+	//				new Vector3(0, 0, -1f);
+
+	//			Debug.DrawLine(start, end, Color.red);
+
+	//			currNode++;
+	//			MoveNextTile();
+	//		}
+	//	}
+	//}
+
+	public void MoveNextTile()
+	{
+		float remainingMovement = moveSpeed;
+
+		while (remainingMovement > 0)
+		{
+			if (currentPath == null)
+				return;
+
+			// Get cost from current tile to next tile
+			remainingMovement -= map.CostToEnterTile(currentPath[0].x, currentPath[0].y, currentPath[1].x, currentPath[1].y);
+
+			// Move us to the next tile in the sequence
+			tileX = currentPath[1].x;
+			tileY = currentPath[1].y;
+
+			transform.position = map.TileCoordToWorldCoord(tileX, tileY);	// Update our unity world position
+
+			// Remove the old "current" tile
+			currentPath.RemoveAt(0);
+
+			if (currentPath.Count == 1)
+			{
+				// We only have one tile left in the path, and that tile MUST be our ultimate
+				// destination -- and we are standing on it!
+				// So let's just clear our pathfinding info.
+				currentPath = null;
+			}
+		}
 	}
 }

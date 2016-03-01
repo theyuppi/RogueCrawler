@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Node.cs" />
     <Compile Include="Assets\TileScript.cs" />
     <Compile Include="Assets\camFollowPlayerScript.cs" />
     <Compile Include="Assets\playerMovementScript.cs" />

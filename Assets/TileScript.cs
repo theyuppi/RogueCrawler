@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class TileScript : MonoBehaviour {
 
 	SpriteRenderer spr;
@@ -19,6 +20,10 @@ public class TileScript : MonoBehaviour {
 	public GameObject chestPrefab;
 	public GameObject spikePrefab;
 
+	public float moveCost = 1.0f;
+	public bool walkable = true;
+	public Vector2 myID;
+	public GameObject levelHandler;
 
 	void Awake()
 	{
@@ -44,9 +49,15 @@ public class TileScript : MonoBehaviour {
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
 		}
+		else if (myTileType == TileTypes.Wall)
+		{
+			walkable = false;
+		}
 	}
 	
-	//void Update () {
-	//	spr.sprite = mySprite[(int)myTileType];
-	//}
+	void OnMouseUp()
+	{
+		//Debug.Log("YOU CLICKED ME! " + myID);
+		levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+	}
 }

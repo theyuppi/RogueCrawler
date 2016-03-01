@@ -22,12 +22,12 @@ public class readSpriteScript : MonoBehaviour
 	{
 		selectedUnit.GetComponent<playerMovementScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
-		CreateRoom("maproom" + 1);
+		CreateRoom("maproom" + 1 + "new");
 		GeneratePathfindingGraph();
 	}
 
 	void Update()
-	{}
+	{ }
 
 	void CreateRoom(string levelName)
 	{
@@ -45,7 +45,7 @@ public class readSpriteScript : MonoBehaviour
 				if (!tileType.Equals("FFFFFF"))
 				{
 					//GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
-					GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX -j) * -0.8f), transform.rotation) as GameObject;
+					GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, j * 0.8f), transform.rotation) as GameObject;
 
 					if (tileType.Equals("C4AA6C"))
 					{
@@ -79,6 +79,7 @@ public class readSpriteScript : MonoBehaviour
 					myTileArray[(int)j, (int)i] = tile;
 					tile.GetComponent<TileScript>().myID = new Vector2(j, i);
 					tile.GetComponent<TileScript>().levelHandler = this.gameObject;
+					tile.GetComponent<TileScript>().player = selectedUnit;
 					//tile.GetComponent<TileScript>().transform.parent = transform;
 				}
 			}
@@ -99,7 +100,6 @@ public class readSpriteScript : MonoBehaviour
 		byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
 		return new Color32(r, g, b, 255);
 	}
-
 
 	void GeneratePathfindingGraph()
 	{
@@ -134,11 +134,9 @@ public class readSpriteScript : MonoBehaviour
 		}
 	}
 
-
-
 	public Vector3 TileCoordToWorldCoord(int x, int y)
 	{
-		return new Vector3(0.4f + y * 0.8f, -1.2f + (-23.2f + x * 0.8f), 0);
+		return new Vector3(y * 0.8f, (x * 0.8f), 0);
 	}
 
 	public bool UnitCanEnterTile(int x, int y)
@@ -147,10 +145,12 @@ public class readSpriteScript : MonoBehaviour
 		// terrain flags here to see if they are allowed to enter the tile.
 		//Debug.Log(myTileArray[x, y].GetComponent<TileScript>().walkable);
 		//Debug.Log("X = " + x + " Y = " + y);
+		if (myTileArray[x, y] == null)
+		{
+			return false;
+		}
 		return myTileArray[x, y].GetComponent<TileScript>().walkable;
 	}
-
-
 
 	public void GeneratePathTo(int x, int y)
 	{
@@ -218,8 +218,8 @@ public class readSpriteScript : MonoBehaviour
 
 			foreach (Node v in u.neighbours)
 			{
-				float alt = dist[u] + u.DistanceTo(v);
-				//float alt = dist[u] + CostToEnterTile(u.x, u.y, v.x, v.y);
+				//float alt = dist[u] + u.DistanceTo(v);
+				float alt = dist[u] + CostToEnterTile(u.x, u.y, v.x, v.y);
 				if (alt < dist[v])
 				{
 					dist[v] = alt;
@@ -253,7 +253,31 @@ public class readSpriteScript : MonoBehaviour
 
 		currentPath.Reverse();
 
+		//Draw new path
+		for (int i = 0; i < currentPath.Count; i++)
+		{
+			myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().StepTile = true;
+			if (i == currentPath.Count - 1)
+			{
+				myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().GoalTile = true;
+			}
+		}
+		for (int i = 0; i < currentPath.Count; i++)
+		{
+			Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
+		}
+		//Set new path
 		selectedUnit.GetComponent<playerMovementScript>().currentPath = currentPath;
+	}
+
+	public void ClearOldPath()
+	{
+		//Clear old path
+		for (int i = 0; i < selectedUnit.GetComponent<playerMovementScript>().currentPath.Count; i++)
+		{
+			myTileArray[selectedUnit.GetComponent<playerMovementScript>().currentPath[i].x, 
+				selectedUnit.GetComponent<playerMovementScript>().currentPath[i].y].GetComponent<TileScript>().ResetColor();
+		}
 	}
 
 	public float CostToEnterTile(int sourceX, int sourceY, int targetX, int targetY)
@@ -263,6 +287,7 @@ public class readSpriteScript : MonoBehaviour
 			return Mathf.Infinity;
 		}
 		float cost = myTileArray[targetX, targetY].GetComponent<TileScript>().moveCost;
+
 		return cost;
 	}
 }

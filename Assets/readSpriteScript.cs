@@ -254,7 +254,7 @@ public class readSpriteScript : MonoBehaviour
 		currentPath.Reverse();
 
 		//Draw new path
-		for (int i = 0; i < currentPath.Count; i++)
+		for (int i = 1; i < currentPath.Count; i++)
 		{
 			myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().StepTile = true;
 			if (i == currentPath.Count - 1)
@@ -264,7 +264,7 @@ public class readSpriteScript : MonoBehaviour
 		}
 		for (int i = 0; i < currentPath.Count; i++)
 		{
-			Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
+			//Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
 		}
 		//Set new path
 		selectedUnit.GetComponent<playerMovementScript>().currentPath = currentPath;

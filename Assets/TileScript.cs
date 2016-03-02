@@ -27,9 +27,11 @@ public class TileScript : MonoBehaviour
 	public Vector2 myID;
 	public GameObject levelHandler;
 	public GameObject player;
+    int doubleclicked = 1;
 
-	public bool GoalTile = false;
+    public bool GoalTile = false;
 	public bool StepTile = false;
+    
 
 	void Awake()
 	{
@@ -71,24 +73,33 @@ public class TileScript : MonoBehaviour
 
 	void OnMouseUp()
 	{
-		//Debug.Log("YOU CLICKED ME! " + myID);
-		if (player.GetComponent<playerMovementScript>().currentPath == null)
+        if (player.GetComponent<playerMovementScript>().isMoving == true)
+        {
+            doubleclicked = 0;
+            player.GetComponent<playerMovementScript>().isMoving = false;
+            levelHandler.GetComponent<readSpriteScript>().ClearOldPath();
+            player.GetComponent<playerMovementScript>().currentPath = null;
+        }
+
+        if (player.GetComponent<playerMovementScript>().currentPath == null)
 		{
-			levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+            if (doubleclicked > 0)
+			    levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
 		}
 
 		else if (myID.x == player.GetComponent<playerMovementScript>().GetGoalTileX()
 			&& myID.y == player.GetComponent<playerMovementScript>().GetGoalTileY())
 		{
-			//player.GetComponent<playerMovementScript>().MakeAMove();
-			StartCoroutine(player.GetComponent<playerMovementScript>().MakeAMove());
+            //player.GetComponent<playerMovementScript>().MakeAMove();
+            StartCoroutine(player.GetComponent<playerMovementScript>().MakeAMove());
 		}
 		else
 		{
 			levelHandler.GetComponent<readSpriteScript>().ClearOldPath();
 			levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
 		}
-	}
+        doubleclicked++;
+    }
 
 	void FixedUpdate()
 	{

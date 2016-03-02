@@ -4,7 +4,7 @@ using System.Collections;
 public class camFollowPlayerScript : MonoBehaviour {
 
      public Transform target;
-     public float smoothTime = 0.3f;
+     public float smoothTime = 0.0f;
  
      private Vector3 velocity = Vector3.zero;
  

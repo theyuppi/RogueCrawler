@@ -31,6 +31,7 @@ public class TileScript : MonoBehaviour
 
     public bool GoalTile = false;
 	public bool StepTile = false;
+    public bool hasEnemy = false;
     
 
 	void Awake()
@@ -73,6 +74,8 @@ public class TileScript : MonoBehaviour
 
 	void OnMouseUp()
 	{
+        // Clicked while moving to cancel movement
+        Debug.Log("Clicked on tile");
         if (player.GetComponent<playerMovementScript>().isMoving == true)
         {
             doubleclicked = 0;
@@ -81,20 +84,23 @@ public class TileScript : MonoBehaviour
             player.GetComponent<playerMovementScript>().currentPath = null;
         }
 
+        // Generate movement path (First click)
         if (player.GetComponent<playerMovementScript>().currentPath == null)
 		{
             if (doubleclicked > 0)
 			    levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
 		}
 
+        // Move through generated path (Second click on same tile)
 		else if (myID.x == player.GetComponent<playerMovementScript>().GetGoalTileX()
 			&& myID.y == player.GetComponent<playerMovementScript>().GetGoalTileY())
 		{
-            //player.GetComponent<playerMovementScript>().MakeAMove();
             StartCoroutine(player.GetComponent<playerMovementScript>().MakeAMove());
 		}
-		else
-		{
+
+        // Generate new movement path (Clicked on another tile)
+        else
+        {
 			levelHandler.GetComponent<readSpriteScript>().ClearOldPath();
 			levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
 		}
@@ -115,8 +121,9 @@ public class TileScript : MonoBehaviour
 
 	private void StepColor()
 	{
-		GetComponent<SpriteRenderer>().color = Color.red;
-	}
+        //GetComponent<SpriteRenderer>().color = Color.red;
+        GetComponent<SpriteRenderer>().color = Color.green;
+    }
 
 	private void GoalColor()
 	{

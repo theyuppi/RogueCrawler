@@ -19,6 +19,7 @@ public class playerMovementScript : MonoBehaviour
     public int tileYmoved = 0;
     int moveSpeed = 100;
     public bool isMoving = false;
+    public bool lastNotWalkable = false;
 
     //Time stuff
     private float timeBetweenSteps = 1.0f;
@@ -158,10 +159,6 @@ public class playerMovementScript : MonoBehaviour
 
     public IEnumerator MoveNextTile(int currNode)
     {
-        //float remainingMovement = moveSpeed;
-
-        //while (remainingMovement > 0)
-        //{
         if (currentPath == null)
             yield return new WaitForEndOfFrame();
 
@@ -169,59 +166,60 @@ public class playerMovementScript : MonoBehaviour
         //remainingMovement -= map.CostToEnterTile(tileX, tileY, currentPath[1].x, currentPath[1].y);
 
         // Move us to the next tile in the sequence
+
         tileX = currentPath[currNode].x;
         tileY = currentPath[currNode].y;
 
-        Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
-        Vector2 dir = destinationPosition - startPosition;
-        dir.Normalize();
-        switch ((int)dir.x)
+
+        if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
         {
-            case 1:
-                sRender.flipX = true;
-                break;
-
-            case -1:
-                sRender.flipX = false;
-                break;
-
-            default:
-                break;
+            tileX = currentPath[currNode - 1].x;
+            tileY = currentPath[currNode - 1].y;
         }
-        
-        float t = 0.0f;
 
-        while (t <= 1.1f)
+        else
         {
-            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-            t += Time.deltaTime / stepDuration;
-            yield return new WaitForEndOfFrame();
+
+            Vector2 startPosition = transform.position;
+            Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
+            Vector2 dir = destinationPosition - startPosition;
+            dir.Normalize();
+            switch ((int)dir.x)
+            {
+                case 1:
+                    sRender.flipX = true;
+                    break;
+
+                case -1:
+                    sRender.flipX = false;
+                    break;
+
+                default:
+                    break;
+            }
+
+            // Lerp to new position
+            float t = 0.0f;
+            while (t <= 1.1f)
+            {
+                transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+                t += Time.deltaTime / stepDuration;
+                yield return new WaitForEndOfFrame();
+            }
+
+            if (currentPath != null)
+            {
+                tileXmoved = currentPath[currNode].x;
+                tileYmoved = currentPath[currNode].y;
+            }
+
+            map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
         }
 
-        if (currentPath != null)
-        { 
-            tileXmoved = currentPath[currNode].x;
-            tileYmoved = currentPath[currNode].y;
-        }
-
-        //map.myTileArray[currentPath[0].x, currentPath[0].y].GetComponent<TileScript>().ResetColor();
-        map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
-        // Remove the old "current" tile
-        //currentPath.RemoveAt(0);
-
-        //if (currentPath.Count == 1)
-        //{
-        //	// We only have one tile left in the path, and that tile MUST be our ultimate
-        //	// destination -- and we are standing on it!
-        //	// So let's just clear our pathfinding info.
-        //	currentPath = null;
-        //}
         if (currentPath != null && currNode == currentPath.Count)
         {
             currentPath = null;
         }
-        //}
     }
 
     //public void MoveNextTile(int currNode)

@@ -63,14 +63,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CameraScript.cs" />
     <Compile Include="Assets\EnemyHandler.cs" />
+    <Compile Include="Assets\EnemyScript.cs" />
     <Compile Include="Assets\Node.cs" />
-    <Compile Include="Assets\SkeletonScript.cs" />
+    <Compile Include="Assets\PlayerHandler.cs" />
+    <Compile Include="Assets\PlayerScript.cs" />
+    <Compile Include="Assets\ReadSpriteScript.cs" />
+    <Compile Include="Assets\SpikeScript.cs" />
     <Compile Include="Assets\TileScript.cs" />
-    <Compile Include="Assets\camFollowPlayerScript.cs" />
-    <Compile Include="Assets\playerMovementScript.cs" />
-    <Compile Include="Assets\readSpriteScript.cs" />
-    <Compile Include="Assets\spikeScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Images\MapRooms\HexTiles.txt" />

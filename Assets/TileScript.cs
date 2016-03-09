@@ -21,6 +21,7 @@ public class TileScript : MonoBehaviour
 	public GameObject chestPrefab;
 	public GameObject spikePrefab;
 	public GameObject holePrefab;
+    public GameObject occupant;
 
 	public float moveCost = 1.0f;
 	public bool walkable = true;
@@ -74,37 +75,39 @@ public class TileScript : MonoBehaviour
 
 	void OnMouseUp()
 	{
-        // Clicked while moving to cancel movement
-        Debug.Log("Clicked on tile");
-        if (player.GetComponent<playerMovementScript>().isMoving == true)
+        if (player.GetComponent<PlayerScript>().isPerformingAttack == false)
         {
-            doubleclicked = 0;
-            player.GetComponent<playerMovementScript>().isMoving = false;
-            levelHandler.GetComponent<readSpriteScript>().ClearOldPath();
-            player.GetComponent<playerMovementScript>().currentPath = null;
+            // Clicked while moving to cancel movement
+            if (player.GetComponent<PlayerScript>().isMoving == true)
+            {
+                doubleclicked = 0;
+                player.GetComponent<PlayerScript>().isMoving = false;
+                levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
+                player.GetComponent<PlayerScript>().currentPath = null;
+            }
+
+            // Generate movement path (First click)
+            if (player.GetComponent<PlayerScript>().currentPath == null)
+            {
+                if (doubleclicked > 0)
+                    levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+            }
+
+            // Move through generated path (Second click on same tile)
+            else if (myID.x == player.GetComponent<PlayerScript>().GetGoalTileX()
+                && myID.y == player.GetComponent<PlayerScript>().GetGoalTileY())
+            {
+                StartCoroutine(player.GetComponent<PlayerScript>().MakeAMove());
+            }
+
+            // Generate new movement path (Clicked on another tile)
+            else
+            {
+                levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
+                levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+            }
+            doubleclicked++;
         }
-
-        // Generate movement path (First click)
-        if (player.GetComponent<playerMovementScript>().currentPath == null)
-		{
-            if (doubleclicked > 0)
-			    levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
-		}
-
-        // Move through generated path (Second click on same tile)
-		else if (myID.x == player.GetComponent<playerMovementScript>().GetGoalTileX()
-			&& myID.y == player.GetComponent<playerMovementScript>().GetGoalTileY())
-		{
-            StartCoroutine(player.GetComponent<playerMovementScript>().MakeAMove());
-		}
-
-        // Generate new movement path (Clicked on another tile)
-        else
-        {
-			levelHandler.GetComponent<readSpriteScript>().ClearOldPath();
-			levelHandler.GetComponent<readSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
-		}
-        doubleclicked++;
     }
 
 	void FixedUpdate()
@@ -117,7 +120,11 @@ public class TileScript : MonoBehaviour
 		{
 			GoalColor();
 		}
-	}
+        if (occupant != null && occupant.GetComponent<EnemyScript>().tile == null)
+        {
+            occupant.GetComponent<EnemyScript>().tile = this.gameObject;
+        }
+    }
 
 	private void StepColor()
 	{
@@ -136,4 +143,17 @@ public class TileScript : MonoBehaviour
 		StepTile = false;
 		GetComponent<SpriteRenderer>().color = Color.white;
 	}
+
+    public Vector3 GetPos()
+    {
+        return transform.position;
+    }
+
+    public void CharOnTileGetHit(int damageAmount)
+    {
+        if (occupant != null)
+        {
+            StartCoroutine(occupant.GetComponent<EnemyScript>().GetHit(damageAmount));
+        }
+    }
 }

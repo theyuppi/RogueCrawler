@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class spikeScript : MonoBehaviour {
+public class SpikeScript : MonoBehaviour {
 
 	Vector3 startPos;
 	Vector3 currPos;

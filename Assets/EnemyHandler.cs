@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyHandler : MonoBehaviour {
 
     // Use this for initialization
     public GameObject skeletonPrefab;
+    public List<GameObject> enemyList = null;
+    public int enemyID;
     public enum enemies
     {
         axeSkeleton,
@@ -17,23 +20,27 @@ public class EnemyHandler : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void FixedUpdate () {
+	    
 	}
 
-    public void SpawnEnemy(enemies enemyType, Vector2 position)
+    public GameObject SpawnEnemy(enemies enemyType, Vector2 position)
     {
         switch (enemyType)
         {
             case enemies.axeSkeleton:
                 GameObject enemy = Instantiate(skeletonPrefab, position, transform.rotation) as GameObject;
                 enemy.transform.parent = transform;
-                break;
-            case enemies.fireSkeleton:
-                break;
-            default:
-                break;
-        }
+                enemyList.Add(enemy);
+                enemy.GetComponent<EnemyScript>().eHandler = this;
+                return enemy;
 
+            case enemies.fireSkeleton:
+                return null;
+
+            default:
+                return null;
+                
+        }
     }
 }

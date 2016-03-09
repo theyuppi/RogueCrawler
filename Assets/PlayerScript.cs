@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class playerMovementScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour
 {
 
     private Rigidbody2D rBody;
@@ -11,15 +11,30 @@ public class playerMovementScript : MonoBehaviour
     private Animator animaThor;
 
     public const float stepDuration = 0.2f;
+    public const float stepAttackDuration = 0.15f;
     public List<Node> currentPath = null;
-    public readSpriteScript map;
+    public ReadSpriteScript map;
     public int tileX = 16;
     public int tileY = 0;
     public int tileXmoved = 16;
     public int tileYmoved = 0;
     int moveSpeed = 100;
     public bool isMoving = false;
+    public bool isPerformingAttack = false;
     public bool lastNotWalkable = false;
+    public int attackPower = 20;
+    public int currActPts = 0;
+    public int maxActPts = 10;
+
+    private enum direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
+    private direction myDirection = direction.Right;
 
     //Time stuff
     private float timeBetweenSteps = 1.0f;
@@ -30,6 +45,7 @@ public class playerMovementScript : MonoBehaviour
         rBody = GetComponent<Rigidbody2D>();
         sRender = GetComponent<SpriteRenderer>();
         animaThor = GetComponent<Animator>();
+        animaThor.SetInteger("State", 0);
     }
 
     private void Update()
@@ -57,10 +73,10 @@ public class playerMovementScript : MonoBehaviour
         //	//currentTime = 0;
         //}
 
-        if (animaThor.GetInteger("State") != 0)
-        {
-            animaThor.SetInteger("State", 0);
-        }
+        //if (animaThor.GetInteger("State") != 0)
+        //{
+        //    animaThor.SetInteger("State", 0);
+        //}
         if (playerMovement == null)
         {
             if (Input.GetKey(KeyCode.W))
@@ -134,8 +150,8 @@ public class playerMovementScript : MonoBehaviour
             }
             yield return new WaitForSeconds(stepDuration);
         }
-
-
+        map.ClearOldPath();
+        currentPath = null;
     }
 
 
@@ -170,33 +186,64 @@ public class playerMovementScript : MonoBehaviour
         tileX = currentPath[currNode].x;
         tileY = currentPath[currNode].y;
 
+        Vector2 startPosition = transform.position;
+
+        Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
+        Vector2 dir = destinationPosition - startPosition;
+        dir.Normalize();
+        switch ((int)dir.x)
+        {
+            case 1:
+                sRender.flipX = true;
+                break;
+
+            case -1:
+                sRender.flipX = false;
+                break;
+
+            default:
+                break;
+        }
 
         if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
         {
-            tileX = currentPath[currNode - 1].x;
-            tileY = currentPath[currNode - 1].y;
+            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().hasEnemy == true)
+            {
+                Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
+                if (roundDir == Vector2.up)
+                {
+                    myDirection = direction.Up;
+                }
+                else if (roundDir == Vector2.down)
+                {
+                    myDirection = direction.Down;
+                }
+                else if (roundDir == Vector2.left)
+                {
+                    myDirection = direction.Left;
+                }
+                else if (roundDir == Vector2.right)
+                {
+                    myDirection = direction.Right;
+                }
+                if (isPerformingAttack == false)
+                {
+                    PerformAttack(myDirection);
+                }
+            }
+
+            if (currentPath != null)
+            {
+                tileX = currentPath[currNode - 1].x;
+                tileY = currentPath[currNode - 1].y;
+            }
+            
         }
 
         else
         {
 
-            Vector2 startPosition = transform.position;
-            Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
-            Vector2 dir = destinationPosition - startPosition;
-            dir.Normalize();
-            switch ((int)dir.x)
-            {
-                case 1:
-                    sRender.flipX = true;
-                    break;
-
-                case -1:
-                    sRender.flipX = false;
-                    break;
-
-                default:
-                    break;
-            }
+            
 
             // Lerp to new position
             float t = 0.0f;
@@ -261,10 +308,74 @@ public class playerMovementScript : MonoBehaviour
 
     public int GetGoalTileX()
     {
-        return currentPath[currentPath.Count - 1].x;
+        if (currentPath != null)
+        {
+            return currentPath[currentPath.Count - 1].x;
+        }
+        return 0;
     }
     public int GetGoalTileY()
     {
         return currentPath[currentPath.Count - 1].y;
     }
+
+    private void PerformAttack(direction dir)
+    {
+        isPerformingAttack = true;
+        switch (dir)
+        {
+            case direction.Up:
+                StartCoroutine(PerformAttackMove(Vector2.up));
+                animaThor.SetInteger("State", 1);
+                break;
+            case direction.Down:
+                StartCoroutine(PerformAttackMove(Vector2.down));
+                animaThor.SetInteger("State", 2);
+                break;
+            case direction.Left:
+                StartCoroutine(PerformAttackMove(Vector2.left));
+                animaThor.SetInteger("State", 1);
+                break;
+            case direction.Right:
+                StartCoroutine(PerformAttackMove(Vector2.right));
+                animaThor.SetInteger("State", 1);
+
+                break;
+            default:
+                break;
+        }
+        map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower);
+        map.ClearOldPath();
+        StartCoroutine(SetAttackFalse());
+
+    }
+
+    private IEnumerator PerformAttackMove(Vector2 dir)
+    {
+        Vector2 startPosition = transform.position;
+        Vector2 destinationPosition = startPosition + (dir * 0.2f);
+        float t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+            t += Time.deltaTime / stepAttackDuration;
+            yield return new WaitForEndOfFrame();
+        }
+        yield return new WaitForSeconds(0.6f);
+        animaThor.SetInteger("State", 0);
+        t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
+            t += Time.deltaTime / stepAttackDuration;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator SetAttackFalse()
+    {
+        yield return new WaitForSeconds(1.0f);
+        isPerformingAttack = false;
+    }
+
 }

@@ -11,6 +11,7 @@ public class ReadSpriteScript : MonoBehaviour
     public GameObject tilePrefab;
     public GameObject targetPrefab;
     public EnemyHandler eHandler;
+    public PlayerHandler pHandler;
 
     private int gridSizeX = 50;
     private int gridSizeY = 50;
@@ -63,7 +64,7 @@ public class ReadSpriteScript : MonoBehaviour
                     else if (tileType.Equals("FF0000"))
                     {
                         //eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f));
-                        tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f));
+                        tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f), (int)i, (int)j);
                         tile.GetComponent<TileScript>().walkable = false;
                         tile.GetComponent<TileScript>().hasEnemy = true;
                         //Debug.Log("Enemy");
@@ -86,6 +87,7 @@ public class ReadSpriteScript : MonoBehaviour
                     myTileArray[(int)j, (int)i] = tile;
                     tile.GetComponent<TileScript>().myID = new Vector2(j, i);
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;
+                    eHandler.GetComponent<EnemyHandler>().levelhandler = this.gameObject;
                     tile.GetComponent<TileScript>().player = selectedUnit;
                     //tile.GetComponent<TileScript>().transform.parent = transform;
                 }
@@ -167,31 +169,35 @@ public class ReadSpriteScript : MonoBehaviour
         return myTileArray[x, y].GetComponent<TileScript>().walkable;
     }
 
-    public void GeneratePathTo(int x, int y)
+    public void GeneratePathTo(int x, int y, GameObject pathRequester, bool isPlayer)
     {
         // Clear out our unit's old path.
-        selectedUnit.GetComponent<PlayerScript>().currentPath = null;
-
-        //if (UnitCanEnterTile(x, y) == false && myTileArray[x, y].GetComponent<TileScript>().hasEnemy == false)
-        //{
-        //	// We probably clicked on a mountain or something, so just quit out.
-        //	return;
-        //}
+        //selectedUnit.GetComponent<PlayerScript>().currentPath = null;
+        if (isPlayer)
+        {
+            pathRequester.GetComponent<PlayerScript>().currentPath = null;
+        }
+        else
+        {
+            pathRequester.GetComponent<EnemyScript>().currentPath = null;
+        }
 
         Dictionary<Node, float> dist = new Dictionary<Node, float>();
         Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
 
         // Setup the "Q" -- the list of nodes we haven't checked yet.
         List<Node> unvisited = new List<Node>();
-        Node source = graph[
-                            selectedUnit.GetComponent<PlayerScript>().tileX,
-                            selectedUnit.GetComponent<PlayerScript>().tileY
-                            ];
+        Node source;
+        if (isPlayer)
+        {
+            source = graph[pathRequester.GetComponent<PlayerScript>().tileX, pathRequester.GetComponent<PlayerScript>().tileY];
+        }
+        else
+        {
+            source = graph[pathRequester.GetComponent<EnemyScript>().tileX, pathRequester.GetComponent<EnemyScript>().tileY];
+        }
 
-        Node target = graph[
-                            x,
-                            y
-                            ];
+        Node target = graph[x, y];
 
         dist[source] = 0;
         prev[source] = null;
@@ -233,7 +239,6 @@ public class ReadSpriteScript : MonoBehaviour
 
             foreach (Node v in u.neighbours)
             {
-                //float alt = dist[u] + u.DistanceTo(v);
                 float alt = dist[u] + CostToEnterTile(u.x, u.y, v.x, v.y);
                 if (alt < dist[v])
                 {
@@ -243,7 +248,7 @@ public class ReadSpriteScript : MonoBehaviour
             }
         }
 
-        // If we get there, the either we found the shortest route
+        // If we get there, then either we found the shortest route
         // to our target, or there is no route at ALL to our target.
 
         if (prev[target] == null)
@@ -267,11 +272,6 @@ public class ReadSpriteScript : MonoBehaviour
         // So we need to invert it!
         currentPath.Reverse();
 
-        //// Check if last tile is walkable, if not then remove from path
-        //if (myTileArray[currentPath[currentPath.Count - 1].x, currentPath[currentPath.Count - 1].y].GetComponent<TileScript>().walkable == false)
-        //{
-        //    currentPath.RemoveAt(currentPath.Count - 1);
-        //}
 
         //Draw new path
         for (int i = 1; i < currentPath.Count; i++)
@@ -294,12 +294,20 @@ public class ReadSpriteScript : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < currentPath.Count; i++)
-        {
-            //Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
-        }
+        //for (int i = 0; i < currentPath.Count; i++)
+        //{
+        //    Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
+        //}
         //Set new path
-        selectedUnit.GetComponent<PlayerScript>().currentPath = currentPath;
+
+        if (isPlayer)
+        {
+            pathRequester.GetComponent<PlayerScript>().currentPath = currentPath;
+        }
+        else
+        {
+            pathRequester.GetComponent<EnemyScript>().currentPath = currentPath;
+        }
     }
 
     public void ClearOldPath()

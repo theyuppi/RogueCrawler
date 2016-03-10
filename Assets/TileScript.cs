@@ -75,7 +75,7 @@ public class TileScript : MonoBehaviour
 
 	void OnMouseUp()
 	{
-        if (player.GetComponent<PlayerScript>().isPerformingAttack == false)
+        if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().myTurn == true)
         {
             // Clicked while moving to cancel movement
             if (player.GetComponent<PlayerScript>().isMoving == true)
@@ -90,7 +90,7 @@ public class TileScript : MonoBehaviour
             if (player.GetComponent<PlayerScript>().currentPath == null)
             {
                 if (doubleclicked > 0)
-                    levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+                    levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
             }
 
             // Move through generated path (Second click on same tile)
@@ -104,7 +104,7 @@ public class TileScript : MonoBehaviour
             else
             {
                 levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
-                levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y);
+                levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
             }
             doubleclicked++;
         }

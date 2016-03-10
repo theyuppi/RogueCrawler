@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class PlayerScript : MonoBehaviour
 {
 
@@ -9,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     private Coroutine playerMovement;
     private SpriteRenderer sRender;
     private Animator animaThor;
+    public TileScript tScript;
 
     public const float stepDuration = 0.2f;
     public const float stepAttackDuration = 0.15f;
@@ -25,6 +27,7 @@ public class PlayerScript : MonoBehaviour
     public int attackPower = 20;
     public int currActPts = 0;
     public int maxActPts = 10;
+    public bool myTurn = false;
 
     private enum direction
     {
@@ -50,33 +53,6 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        //currentTime += Time.deltaTime;
-        //if (currentTime >= timeBetweenSteps)
-        //{
-        //	if (currentPath != null)
-        //	{
-        //		int currNode = 0;
-
-        //		while (currNode < currentPath.Count - 1)
-        //		{
-        //			Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
-        //				new Vector3(0, 0, -1f);
-        //			Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
-        //				new Vector3(0, 0, -1f);
-
-        //			Debug.DrawLine(start, end, Color.red);
-
-        //			currNode++;
-        //			MoveNextTile();
-        //		}
-        //	//}
-        //	//currentTime = 0;
-        //}
-
-        //if (animaThor.GetInteger("State") != 0)
-        //{
-        //    animaThor.SetInteger("State", 0);
-        //}
         if (playerMovement == null)
         {
             if (Input.GetKey(KeyCode.W))
@@ -94,38 +70,25 @@ public class PlayerScript : MonoBehaviour
                 playerMovement = StartCoroutine(Move(Vector2.left));
             }
         }
-
-        if (Input.GetKey(KeyCode.Alpha1))
-            animaThor.SetInteger("State", 0);
-        if (Input.GetKey(KeyCode.Alpha2))
-            animaThor.SetInteger("State", 1);
-        if (Input.GetKey(KeyCode.Alpha3))
-            animaThor.SetInteger("State", 2);
-
-        //Debug.Log("My X is = " + tileX);
-        //Debug.Log("My Y is = " + tileY);
     }
 
-    //public void MakeAMove()
-    //{
-    //	if (currentPath != null)
-    //	{
-    //		int currNode = 0;
+    private IEnumerator Move(Vector2 direction)
+    {
+        Vector2 startPosition = transform.position;
+        Vector2 destinationPosition = new Vector2(transform.position.x, transform.position.y) + (direction * 0.8f);
+        float t = 0.0f;
 
-    //		while (currentPath != null && currNode < currentPath.Count - 1)
-    //		{
-    //			Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
-    //				new Vector3(0, 0, -1f);
-    //			Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
-    //				new Vector3(0, 0, -1f);
+        while (t < 1.0f)
+        {
+            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+            t += Time.deltaTime / stepDuration;
+            yield return new WaitForEndOfFrame();
+        }
 
-    //			Debug.DrawLine(start, end, Color.red);
+        transform.position = destinationPosition;
 
-    //			currNode++;
-    //			MoveNextTile(currNode);
-    //		}
-    //	}
-    //}
+        playerMovement = null;
+    }
 
     public IEnumerator MakeAMove()
     {
@@ -154,32 +117,10 @@ public class PlayerScript : MonoBehaviour
         currentPath = null;
     }
 
-
-    private IEnumerator Move(Vector2 direction)
-    {
-        Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = new Vector2(transform.position.x, transform.position.y) + (direction * 0.8f);
-        float t = 0.0f;
-
-        while (t < 1.0f)
-        {
-            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-            t += Time.deltaTime / stepDuration;
-            yield return new WaitForEndOfFrame();
-        }
-
-        transform.position = destinationPosition;
-
-        playerMovement = null;
-    }
-
     public IEnumerator MoveNextTile(int currNode)
     {
         if (currentPath == null)
             yield return new WaitForEndOfFrame();
-
-        // Get cost from current tile to next tile
-        //remainingMovement -= map.CostToEnterTile(tileX, tileY, currentPath[1].x, currentPath[1].y);
 
         // Move us to the next tile in the sequence
 
@@ -242,9 +183,6 @@ public class PlayerScript : MonoBehaviour
 
         else
         {
-
-            
-
             // Lerp to new position
             float t = 0.0f;
             while (t <= 1.1f)

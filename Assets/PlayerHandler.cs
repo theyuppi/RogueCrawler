@@ -1,15 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Playe : MonoBehaviour {
+public class PlayerHandler : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    public GameObject Player;
+    public List<GameObject> playerList = null;
+
+    void Start () {
+        playerList.Add(Player);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    
 	}
+
+    //public GameObject SpawnPlayer(Vector2 position)
+    //{
+    //    GameObject player = Instantiate(Player, position, transform.rotation) as GameObject;
+    //    enemy.transform.parent = transform;
+    //    enemyList.Add(enemy);
+    //    enemy.GetComponent<EnemyScript>().eHandler = this;
+    //    return enemy;
+    //}
+
 }

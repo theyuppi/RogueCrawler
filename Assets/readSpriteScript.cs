@@ -59,6 +59,7 @@ public class ReadSpriteScript : MonoBehaviour
                     else if (tileType.Equals("584A33"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
+                        tile.tag = "Wall";
                         //Debug.Log("Wall");
                     }
                     else if (tileType.Equals("FF0000"))
@@ -67,27 +68,31 @@ public class ReadSpriteScript : MonoBehaviour
                         tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f), (int)i, (int)j);
                         tile.GetComponent<TileScript>().walkable = false;
                         tile.GetComponent<TileScript>().hasEnemy = true;
+                        tile.tag = "Floor";
                         //Debug.Log("Enemy");
                     }
                     else if (tileType.Equals("FFFF00"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
+                        tile.tag = "Chest";
                         //Debug.Log("Treasure");
                     }
                     else if (tileType.Equals("505050"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
+                        tile.tag = "Spike";
                         //Debug.Log("Spikes");
                     }
                     else if (tileType.Equals("000000"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
+                        tile.tag = "Hole";
                         //Debug.Log("Hole");
                     }
                     myTileArray[(int)j, (int)i] = tile;
                     tile.GetComponent<TileScript>().myID = new Vector2(j, i);
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;
-                    eHandler.GetComponent<EnemyHandler>().levelhandler = this.gameObject;
+                    eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
                     tile.GetComponent<TileScript>().player = selectedUnit;
                     //tile.GetComponent<TileScript>().transform.parent = transform;
                 }

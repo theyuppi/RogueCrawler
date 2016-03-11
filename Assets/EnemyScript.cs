@@ -38,7 +38,7 @@ public class EnemyScript : MonoBehaviour {
         if (myTurn == true)
         {
             //do pathfinding ya dummy
-            eHandler.levelhandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
+            eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
                 cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX, 
                 cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
                 this.gameObject, false);
@@ -167,22 +167,32 @@ public class EnemyScript : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Floor")
+        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
         {
             other.GetComponent<TileScript>().walkable = false;
-            tile.GetComponent<TileScript>().hasEnemy = true;
+            other.GetComponent<TileScript>().hasEnemy = true;
+            other.GetComponent<TileScript>().occupant = this.gameObject;
             tile = other.gameObject;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Floor")
+        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
         {
             other.GetComponent<TileScript>().walkable = true;
-            tile.GetComponent<TileScript>().hasEnemy = false;
+            other.GetComponent<TileScript>().hasEnemy = false;
+            other.GetComponent<TileScript>().occupant = null;
         }
     }
+
+    //void OnTriggerStay2D(Collider2D other)
+    //{
+    //    if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
+    //    {
+    //        other.GetComponent<TileScript>().occupant = null;
+    //    }
+    //}
 
     public IEnumerator GetHit(int damageAmount)
     {

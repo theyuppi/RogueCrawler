@@ -11,6 +11,7 @@ public class PlayerScript : MonoBehaviour
     private SpriteRenderer sRender;
     private Animator animaThor;
     public TileScript tScript;
+    public GameObject tile;
 
     public const float stepDuration = 0.2f;
     public const float stepAttackDuration = 0.15f;
@@ -316,4 +317,24 @@ public class PlayerScript : MonoBehaviour
         isPerformingAttack = false;
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
+        {
+            other.GetComponent<TileScript>().walkable = false;
+            other.GetComponent<TileScript>().occupant = this.gameObject;
+            //tile.GetComponent<TileScript>().hasEnemy = true;
+            tile = other.gameObject;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
+        {
+            other.GetComponent<TileScript>().walkable = true;
+            other.GetComponent<TileScript>().occupant = null;
+            //tile.GetComponent<TileScript>().hasEnemy = false;
+        }
+    }
 }

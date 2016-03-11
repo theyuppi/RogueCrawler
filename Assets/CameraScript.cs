@@ -28,11 +28,13 @@ public class CameraScript : MonoBehaviour
             if (currentTarget != 0)
             {
                 characterList[currentTarget].GetComponent<EnemyScript>().myTurn = false;
+                //eHandler.levelHandler.GetComponent<TileScript>().OccupyTile();
             }
             else
             {
                 characterList[currentTarget].GetComponent<PlayerScript>().myTurn = false;
             }
+
 
             currentTarget++;
             if (currentTarget >= characterList.Count)
@@ -45,11 +47,14 @@ public class CameraScript : MonoBehaviour
             if (currentTarget != 0)
             {
                 characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
+                //eHandler.levelHandler.GetComponent<TileScript>().occupant = null;
             }
             else
             {
                 characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
             }
+
+            Debug.Log("whose turn: " + currentTarget);
         }
     }
 

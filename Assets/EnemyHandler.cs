@@ -7,7 +7,7 @@ public class EnemyHandler : MonoBehaviour {
     // Use this for initialization
     public GameObject skeletonPrefab;
     public GameObject cScript;
-    public GameObject levelhandler; 
+    public GameObject levelHandler; 
     public List<GameObject> enemyList = null;
     public int enemyID;
     public enum enemies

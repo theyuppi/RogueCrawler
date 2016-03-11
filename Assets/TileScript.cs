@@ -71,6 +71,7 @@ public class TileScript : MonoBehaviour
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
 		}
+        //OccupyTile();
 	}
 
 	void OnMouseUp()
@@ -120,10 +121,7 @@ public class TileScript : MonoBehaviour
 		{
 			GoalColor();
 		}
-        if (occupant != null && occupant.GetComponent<EnemyScript>().tile == null)
-        {
-            occupant.GetComponent<EnemyScript>().tile = this.gameObject;
-        }
+        //OccupyTile();
     }
 
 	private void StepColor()
@@ -154,6 +152,18 @@ public class TileScript : MonoBehaviour
         if (occupant != null)
         {
             StartCoroutine(occupant.GetComponent<EnemyScript>().GetHit(damageAmount));
+        }
+    }
+
+    public void OccupyTile()
+    {
+        if (occupant != null && occupant.GetComponents<EnemyScript>().Length != 0)
+        {
+            occupant.GetComponent<EnemyScript>().tile = this.gameObject;
+        }
+        if (occupant != null && occupant.GetComponents<PlayerScript>().Length != 0)
+        {
+            occupant.GetComponent<PlayerScript>().tile = this.gameObject;
         }
     }
 }

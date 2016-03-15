@@ -20,12 +20,14 @@ public class ReadSpriteScript : MonoBehaviour
 
     public GameObject[,] myTileArray;
     Node[,] graph;
+    float completeCost = 0;
+    public bool unReachable = false;
 
     void Start()
     {
         selectedUnit.GetComponent<PlayerScript>().map = this;
         myTileArray = new GameObject[gridSizeX, gridSizeY];
-        CreateRoom("maproom" + 1 + "new");
+        CreateRoom("maproom" + 1 + "newer");
         GeneratePathfindingGraph();
     }
 
@@ -178,6 +180,7 @@ public class ReadSpriteScript : MonoBehaviour
     {
         // Clear out our unit's old path.
         //selectedUnit.GetComponent<PlayerScript>().currentPath = null;
+        completeCost = 0;
         if (isPlayer)
         {
             pathRequester.GetComponent<PlayerScript>().currentPath = null;
@@ -241,15 +244,20 @@ public class ReadSpriteScript : MonoBehaviour
             }
 
             unvisited.Remove(u);
-
+            //Debug.Log("cost: " + completeCost);
             foreach (Node v in u.neighbours)
             {
                 float alt = dist[u] + CostToEnterTile(u.x, u.y, v.x, v.y);
+
                 if (alt < dist[v])
                 {
                     dist[v] = alt;
                     prev[v] = u;
                 }
+            }
+            if (completeCost > 8000)
+            {
+                unReachable = true;
             }
         }
 
@@ -277,33 +285,64 @@ public class ReadSpriteScript : MonoBehaviour
         // So we need to invert it!
         currentPath.Reverse();
 
+        // Stop at first obstruction
+        List<Node> returnPath = new List<Node>();
+        for (int i = 0; i < currentPath.Count; i++)
+        {
+            returnPath.Add(currentPath[i]);
+            if (i != 0 && myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().walkable == false)
+            {
+                break;
+            }
+        }
+
+        currentPath = returnPath;
 
         //Draw new path
-        for (int i = 1; i < currentPath.Count; i++)
+        if (isPlayer)
         {
-            myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().StepTile = true;
-            if (i == currentPath.Count - 1)
+            for (int i = 1; i < currentPath.Count; i++)
             {
-                if (myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().walkable == true)
+
+                int currActPts = pathRequester.GetComponent<PlayerScript>().currActPts;
+
+
+                if (i > currActPts)
                 {
-                    myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().GoalTile = true;
-                }
-                else
-                {
-                    myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().StepTile = false;
-                    if (myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().hasEnemy == true)
+                    if (myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().walkable == true)
                     {
-                        targetPrefab.transform.position = myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().GetPos();
-                        targetPrefab.GetComponent<SpriteRenderer>().enabled = true;
+                        myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().unReachable = true;
+                        if (i != 1)
+                        {
+                            myTileArray[currentPath[i - 1].x, currentPath[i - 1].y].GetComponent<TileScript>().goalTile = true;
+                        }
+                    }
+                }
+
+                myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().stepTile = true;
+                if (i == currentPath.Count - 1)
+                {
+                    if (myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().walkable == true)
+                    {
+                        myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().goalTile = true;
+                    }
+                    else
+                    {
+                        myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().stepTile = false;
+                        if (i != 1)
+                        {
+                            myTileArray[currentPath[i - 1].x, currentPath[i - 1].y].GetComponent<TileScript>().goalTile = true;
+                        }
+                        if (myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().hasEnemy == true)
+                        {
+                            targetPrefab.transform.position = myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().GetPos();
+                            targetPrefab.GetComponent<SpriteRenderer>().enabled = true;
+                        }
                     }
                 }
             }
         }
-        //for (int i = 0; i < currentPath.Count; i++)
-        //{
-        //    Debug.Log("Node " + i + ": X = " + currentPath[i].x + ", Y = " + currentPath[i].y);
-        //}
-        //Set new path
+        
 
         if (isPlayer)
         {
@@ -333,10 +372,24 @@ public class ReadSpriteScript : MonoBehaviour
     {
         if (UnitCanEnterTile(targetX, targetY) == false)
         {
+            completeCost += 30;
             return 30;
         }
         float cost = myTileArray[targetX, targetY].GetComponent<TileScript>().moveCost;
 
+        completeCost += cost;
+
         return cost;
     }
+
+    //public void ClearCertainPath(List<Node> currentPath)
+    //{
+    //    if (currentPath != null)
+    //    {
+    //        for (int i = 0; i < currentPath.Count; i++)
+    //        {
+    //            myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().ResetColor();
+    //        }
+    //    }
+    //}
 }

@@ -30,9 +30,11 @@ public class TileScript : MonoBehaviour
 	public GameObject player;
     int doubleclicked = 1;
 
-    public bool GoalTile = false;
-	public bool StepTile = false;
+    public bool goalTile = false;
+	public bool stepTile = false;
     public bool hasEnemy = false;
+    public bool hasPlayer = false;
+    public bool unReachable = false;
     
 
 	void Awake()
@@ -113,15 +115,21 @@ public class TileScript : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (StepTile)
-		{
-			StepColor();
-		}
-		if (GoalTile)
-		{
-			GoalColor();
-		}
-        //OccupyTile();
+        if (unReachable)
+        {
+            UnreachableColor();
+        }
+        else
+        {
+            if (stepTile)
+            {
+                StepColor();
+            }
+            if (goalTile)
+            {
+                GoalColor();
+            }
+        }
     }
 
 	private void StepColor()
@@ -132,13 +140,19 @@ public class TileScript : MonoBehaviour
 
 	private void GoalColor()
 	{
-		GetComponent<SpriteRenderer>().color = Color.green;
+        GetComponent<SpriteRenderer>().color = Color.cyan;
 	}
 
-	public void ResetColor()
+    private void UnreachableColor()
+    {
+        GetComponent<SpriteRenderer>().color = Color.red;
+    }
+
+    public void ResetColor()
 	{
-		GoalTile = false;
-		StepTile = false;
+		goalTile = false;
+		stepTile = false;
+        unReachable = false;
 		GetComponent<SpriteRenderer>().color = Color.white;
 	}
 
@@ -147,11 +161,21 @@ public class TileScript : MonoBehaviour
         return transform.position;
     }
 
-    public void CharOnTileGetHit(int damageAmount)
+    public void CharOnTileGetHit(int damageAmount, bool isPlayer)
     {
         if (occupant != null)
         {
-            StartCoroutine(occupant.GetComponent<EnemyScript>().GetHit(damageAmount));
+            if (isPlayer)
+            {
+                Debug.Log("myID: " + myID);
+                Debug.Log("occutpant: " + occupant.ToString());
+                StartCoroutine(occupant.GetComponent<PlayerScript>().GetHit(damageAmount));
+                
+            }
+            else
+            {
+                StartCoroutine(occupant.GetComponent<EnemyScript>().GetHit(damageAmount));
+            }
         }
     }
 

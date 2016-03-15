@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -21,14 +22,18 @@ public class PlayerScript : MonoBehaviour
     public int tileY = 0;
     public int tileXmoved = 16;
     public int tileYmoved = 0;
-    int moveSpeed = 100;
     public bool isMoving = false;
     public bool isPerformingAttack = false;
     public bool lastNotWalkable = false;
     public int attackPower = 20;
     public int currActPts = 0;
-    public int maxActPts = 10;
+    private int maxActPts = 100;
     public bool myTurn = false;
+    private int health = 100;
+    public Text healthText;
+    public int XP = 0;
+    public int charLVL = 1;
+
 
     private enum direction
     {
@@ -40,16 +45,15 @@ public class PlayerScript : MonoBehaviour
 
     private direction myDirection = direction.Right;
 
-    //Time stuff
-    private float timeBetweenSteps = 1.0f;
-    private float currentTime = 0.0f;
-
     void Start()
     {
         rBody = GetComponent<Rigidbody2D>();
         sRender = GetComponent<SpriteRenderer>();
         animaThor = GetComponent<Animator>();
         animaThor.SetInteger("State", 0);
+        healthText = GetComponentInChildren<Text>();
+        healthText.text = health.ToString();
+        ReceiveActPts();
     }
 
     private void Update()
@@ -98,22 +102,31 @@ public class PlayerScript : MonoBehaviour
         isMoving = true;
         while (isMoving == true && currentPath != null && currNode < currentPath.Count - 1)
         {
-            Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
-                new Vector3(0, 0, -1f);
-            Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
-                new Vector3(0, 0, -1f);
-
-            Debug.DrawLine(start, end, Color.red);
-
-            currNode++;
-
-            StartCoroutine(MoveNextTile(currNode));
-            if (currNode == currentPath.Count - 1)
+            if (currActPts > 0)
             {
-                isMoving = false;
+                Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
+                    new Vector3(0, 0, -1f);
+                Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
+                    new Vector3(0, 0, -1f);
+
+                Debug.DrawLine(start, end, Color.red);
+
+                currNode++;
+
+                StartCoroutine(MoveNextTile(currNode));
+
+                if (currNode == currentPath.Count - 1)
+                {
+                    isMoving = false;
+                }
+                yield return new WaitForSeconds(stepDuration);
             }
-            yield return new WaitForSeconds(stepDuration);
+            else
+            {
+                break;
+            } 
         }
+
         map.ClearOldPath();
         currentPath = null;
     }
@@ -170,7 +183,11 @@ public class PlayerScript : MonoBehaviour
                 }
                 if (isPerformingAttack == false)
                 {
-                    PerformAttack(myDirection);
+                    if (currActPts >= 2)
+                    {
+                        PerformAttack(myDirection);
+                        currActPts -= 2;
+                    }
                 }
             }
 
@@ -185,6 +202,7 @@ public class PlayerScript : MonoBehaviour
         else
         {
             // Lerp to new position
+            currActPts--;
             float t = 0.0f;
             while (t <= 1.1f)
             {
@@ -198,52 +216,16 @@ public class PlayerScript : MonoBehaviour
                 tileXmoved = currentPath[currNode].x;
                 tileYmoved = currentPath[currNode].y;
             }
-
+            
             map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
         }
+        
 
         if (currentPath != null && currNode == currentPath.Count)
         {
             currentPath = null;
         }
     }
-
-    //public void MoveNextTile(int currNode)
-    //{
-    //    //float remainingMovement = moveSpeed;
-
-    //    //while (remainingMovement > 0)
-    //    //{
-    //    if (currentPath == null)
-    //        return;
-
-    //    // Get cost from current tile to next tile
-    //    //remainingMovement -= map.CostToEnterTile(tileX, tileY, currentPath[1].x, currentPath[1].y);
-
-    //    // Move us to the next tile in the sequence
-    //    tileX = currentPath[currNode].x;
-    //    tileY = currentPath[currNode].y;
-
-    //    transform.position = map.TileCoordToWorldCoord(tileX, tileY);   // Update our unity world position
-
-    //    map.myTileArray[currentPath[0].x, currentPath[0].y].GetComponent<TileScript>().ResetColor();
-    //    map.myTileArray[tileX, tileY].GetComponent<TileScript>().ResetColor();
-    //    // Remove the old "current" tile
-    //    //currentPath.RemoveAt(0);
-
-    //    //if (currentPath.Count == 1)
-    //    //{
-    //    //	// We only have one tile left in the path, and that tile MUST be our ultimate
-    //    //	// destination -- and we are standing on it!
-    //    //	// So let's just clear our pathfinding info.
-    //    //	currentPath = null;
-    //    //}
-    //    if (currNode == currentPath.Count)
-    //    {
-    //        currentPath = null;
-    //    }
-    //    //}
-    //}
 
     public int GetGoalTileX()
     {
@@ -283,7 +265,7 @@ public class PlayerScript : MonoBehaviour
             default:
                 break;
         }
-        map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower);
+        map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
         map.ClearOldPath();
         StartCoroutine(SetAttackFalse());
 
@@ -323,7 +305,7 @@ public class PlayerScript : MonoBehaviour
         {
             other.GetComponent<TileScript>().walkable = false;
             other.GetComponent<TileScript>().occupant = this.gameObject;
-            //tile.GetComponent<TileScript>().hasEnemy = true;
+            other.GetComponent<TileScript>().hasPlayer = true;
             tile = other.gameObject;
         }
     }
@@ -334,7 +316,19 @@ public class PlayerScript : MonoBehaviour
         {
             other.GetComponent<TileScript>().walkable = true;
             other.GetComponent<TileScript>().occupant = null;
-            //tile.GetComponent<TileScript>().hasEnemy = false;
+            other.GetComponent<TileScript>().hasPlayer = false;
         }
+    }
+
+    public IEnumerator GetHit(int damageAmount)
+    {
+        yield return new WaitForSeconds(0.5f);
+        health -= damageAmount;
+        healthText.text = health.ToString();
+    }
+
+    public void ReceiveActPts()
+    {
+        currActPts = maxActPts;
     }
 }

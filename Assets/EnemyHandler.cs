@@ -56,4 +56,9 @@ public class EnemyHandler : MonoBehaviour {
         enemyList.RemoveAll(gameObject => gameObject == null);
         cScript.GetComponent<CameraScript>().MergeList();
     }
+
+    public void PassTurn()
+    {
+        levelHandler.GetComponent<CameraScript>().NextTurn(true);
+    }
 }

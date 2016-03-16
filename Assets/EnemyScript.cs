@@ -10,6 +10,7 @@ public class EnemyScript : MonoBehaviour {
     public GameObject tile;
     public EnemyHandler eHandler;
     public CameraScript cScript;
+    //public PlayerHandler pHandler;
     public bool isDead = false;
     public bool isMoving = false;
     public bool myTurn = false;
@@ -29,7 +30,9 @@ public class EnemyScript : MonoBehaviour {
     private int attackPower = 10;
     public int currActPts = 0;
     public int maxActPts = 10;
+    int xpReward = 5;
     Vector2 roundDir;
+    
 
     private enum direction
     {
@@ -46,6 +49,7 @@ public class EnemyScript : MonoBehaviour {
         healthText.text = health.ToString();
         sRender = GetComponent<SpriteRenderer>();
         animaThor = GetComponent<Animator>();
+        //pHandler = GetComponent<PlayerHandler>();
         animaThor.SetInteger("State", 0);
         ReceiveActPts();
         //cScript = GetComponent<CameraScript>();
@@ -273,7 +277,7 @@ public class EnemyScript : MonoBehaviour {
         tile.GetComponent<TileScript>().occupant = null;
         isDead = true;
         eHandler.RemoveFromList();
-        
+        eHandler.SendXPtoPlayer(xpReward);
         Destroy(this.gameObject);
         
     }

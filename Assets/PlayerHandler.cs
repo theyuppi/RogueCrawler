@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public class PlayerHandler : MonoBehaviour {
 
     // Use this for initialization
-    public GameObject Player;
+    public GameObject player;
     public List<GameObject> playerList = null;
 
     void Start () {
-        playerList.Add(Player);
+        playerList.Add(player);
     }
 	
 	// Update is called once per frame
@@ -25,5 +25,10 @@ public class PlayerHandler : MonoBehaviour {
     //    enemy.GetComponent<EnemyScript>().eHandler = this;
     //    return enemy;
     //}
+
+    public void DistributeXP(int gainedXP)
+    {
+        player.GetComponent<PlayerScript>().GainXP(gainedXP);
+    }
 
 }

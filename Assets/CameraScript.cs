@@ -12,14 +12,16 @@ public class CameraScript : MonoBehaviour
     public EnemyHandler eHandler;
     public PlayerHandler pHandler;
     public List<GameObject> characterList = null;
-    public Text apText;
+    public Text[] UItext;
+    int xp;
 
     void Start()
     {
         MergeList();
         characterList[0].GetComponent<PlayerScript>().myTurn = true;
-        apText = GetComponentInChildren<Text>();
-        apText.text = characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+        UItext = GetComponentsInChildren<Text>();
+        UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+        UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().XP.ToString();
     }
 
     void Update()
@@ -28,9 +30,12 @@ public class CameraScript : MonoBehaviour
         goalPos.z = transform.position.z;
         transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
         if (currentTarget > 0)
-            apText.text = characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
+            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
         else
-            apText.text = characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+
+        if (currentTarget == 0)
+            UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().XP.ToString();
 
         if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0)
         {
@@ -124,13 +129,13 @@ public class CameraScript : MonoBehaviour
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
             //eHandler.levelHandler.GetComponent<TileScript>().occupant = null;
             characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
-            apText.text = characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
+            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
         }
         else
         {
             characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
             characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
-            apText.text = characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
         }
     }
 }

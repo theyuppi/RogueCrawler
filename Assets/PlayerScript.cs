@@ -31,7 +31,8 @@ public class PlayerScript : MonoBehaviour
     public bool myTurn = false;
     private int health = 100;
     public Text healthText;
-    public int XP = 0;
+    public int XP = 5;
+    
     public int charLVL = 1;
 
 
@@ -53,6 +54,7 @@ public class PlayerScript : MonoBehaviour
         animaThor.SetInteger("State", 0);
         healthText = GetComponentInChildren<Text>();
         healthText.text = health.ToString();
+        
         ReceiveActPts();
     }
 
@@ -330,5 +332,10 @@ public class PlayerScript : MonoBehaviour
     public void ReceiveActPts()
     {
         currActPts = maxActPts;
+    }
+
+    public void GainXP(int gainedXP)
+    {
+        XP += gainedXP;
     }
 }

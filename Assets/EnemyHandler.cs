@@ -61,4 +61,9 @@ public class EnemyHandler : MonoBehaviour {
     {
         levelHandler.GetComponent<CameraScript>().NextTurn(true);
     }
+
+    public void SendXPtoPlayer(int gainedXP)
+    {
+        cScript.GetComponent<CameraScript>().pHandler.GetComponent<PlayerHandler>().DistributeXP(gainedXP);
+    }
 }

@@ -31,9 +31,12 @@ public class PlayerScript : MonoBehaviour
     public bool myTurn = false;
     private int health = 100;
     public Text healthText;
-    public int XP = 5;
+    public int xp = 0;
     
     public int charLVL = 1;
+	public List<int> xpLevels = new List<int>{
+		10, 20, 30, 40, 50
+	};
 
 
     private enum direction
@@ -60,23 +63,31 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        if (playerMovement == null)
-        {
-            if (Input.GetKey(KeyCode.W))
-                playerMovement = StartCoroutine(Move(Vector2.up));
-            else if (Input.GetKey(KeyCode.S))
-                playerMovement = StartCoroutine(Move(Vector2.down));
-            else if (Input.GetKey(KeyCode.D))
-            {
-                sRender.flipX = true;
-                playerMovement = StartCoroutine(Move(Vector2.right));
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                sRender.flipX = false;
-                playerMovement = StartCoroutine(Move(Vector2.left));
-            }
-        }
+		//// Manual movement (keyboard)
+		//if (playerMovement == null)
+		//{
+		//	if (Input.GetKey(KeyCode.W))
+		//		playerMovement = StartCoroutine(Move(Vector2.up));
+		//	else if (Input.GetKey(KeyCode.S))
+		//		playerMovement = StartCoroutine(Move(Vector2.down));
+		//	else if (Input.GetKey(KeyCode.D))
+		//	{
+		//		sRender.flipX = true;
+		//		playerMovement = StartCoroutine(Move(Vector2.right));
+		//	}
+		//	else if (Input.GetKey(KeyCode.A))
+		//	{
+		//		sRender.flipX = false;
+		//		playerMovement = StartCoroutine(Move(Vector2.left));
+		//	}
+		//}
+
+		//Level up
+		if (xp >= xpLevels[charLVL-1])
+		{
+			xp = 0;
+			charLVL++;
+		}
     }
 
     private IEnumerator Move(Vector2 direction)
@@ -336,6 +347,6 @@ public class PlayerScript : MonoBehaviour
 
     public void GainXP(int gainedXP)
     {
-        XP += gainedXP;
+        xp += gainedXP;
     }
 }

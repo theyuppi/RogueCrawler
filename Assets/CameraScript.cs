@@ -21,7 +21,8 @@ public class CameraScript : MonoBehaviour
         characterList[0].GetComponent<PlayerScript>().myTurn = true;
         UItext = GetComponentsInChildren<Text>();
         UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
-        UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().XP.ToString();
+        UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
+		UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
     }
 
     void Update()
@@ -34,8 +35,11 @@ public class CameraScript : MonoBehaviour
         else
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
 
-        if (currentTarget == 0)
-            UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().XP.ToString();
+		if (currentTarget == 0)
+		{
+			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + " / " + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
+			UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
+		}
 
         if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0)
         {

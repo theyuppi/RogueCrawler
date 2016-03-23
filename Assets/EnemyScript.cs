@@ -32,7 +32,9 @@ public class EnemyScript : MonoBehaviour {
     public int maxActPts = 10;
     int xpReward = 5;
     Vector2 roundDir;
-    
+
+    public float myOffsetX = 0;
+    public float myOffsetY = 0.2f;
 
     private enum direction
     {
@@ -53,6 +55,7 @@ public class EnemyScript : MonoBehaviour {
         animaThor.SetInteger("State", 0);
         ReceiveActPts();
         //cScript = GetComponent<CameraScript>();
+        transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
     }
 	
 	// Update is called once per frame
@@ -140,6 +143,7 @@ public class EnemyScript : MonoBehaviour {
         Vector2 startPosition = transform.position;
 
         Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
+        destinationPosition.y += myOffsetY;
         Vector2 dir = destinationPosition - startPosition;
         dir.Normalize();
         roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
@@ -321,7 +325,7 @@ public class EnemyScript : MonoBehaviour {
     private IEnumerator PerformAttackMove(Vector2 dir)
     {
         Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * 0.2f);
+        Vector2 destinationPosition = startPosition + (dir * 0.4f);
         float t = 0.0f;
         // Moves toward target
         while (t < 1.1f)

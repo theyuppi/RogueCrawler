@@ -39,8 +39,10 @@ public class TileScript : MonoBehaviour
 
 	void Awake()
 	{
-		mySprite = Resources.LoadAll<Sprite>("tileSet");
-	}
+        //mySprite = Resources.LoadAll<Sprite>("tileSet");
+        //mySprite = Resources.LoadAll<Sprite>("tilesSquashed");
+        mySprite = Resources.LoadAll<Sprite>("bigtiles");
+    }
 
 	void Start()
 	{

@@ -38,6 +38,9 @@ public class PlayerScript : MonoBehaviour
 		10, 20, 30, 40, 50
 	};
 
+    public float myOffsetX = 0;
+    public float myOffsetY = 0.2f;
+
 
     private enum direction
     {
@@ -157,6 +160,7 @@ public class PlayerScript : MonoBehaviour
         Vector2 startPosition = transform.position;
 
         Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
+        destinationPosition.y += myOffsetY;
         Vector2 dir = destinationPosition - startPosition;
         dir.Normalize();
         switch ((int)dir.x)
@@ -287,7 +291,7 @@ public class PlayerScript : MonoBehaviour
     private IEnumerator PerformAttackMove(Vector2 dir)
     {
         Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * 0.2f);
+        Vector2 destinationPosition = startPosition + (dir * 0.4f);
         float t = 0.0f;
         while (t < 1.1f)
         {

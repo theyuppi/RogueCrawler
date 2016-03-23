@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 821e0d3faa7e55842be56f821512b441
-timeCreated: 1457359068
+timeCreated: 1458665124
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -57,39 +57,39 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 80
-        height: 80
+        width: 100
+        height: 100
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -40, y: 40}
-        - {x: -40, y: -40}
-        - {x: 40, y: -40}
-        - {x: 40, y: 40}
-      - - {x: -35, y: 35}
-        - {x: 35, y: 35}
-        - {x: 35, y: -35}
-        - {x: -35, y: -35}
+      - - {x: -50, y: 50}
+        - {x: -50, y: -50}
+        - {x: 50, y: -50}
+        - {x: 50, y: 50}
+      - - {x: -45, y: 45}
+        - {x: 45, y: 45}
+        - {x: 45, y: -45}
+        - {x: -45, y: -45}
     - name: target_1
       rect:
         serializedVersion: 2
-        x: 80
+        x: 100
         y: 0
-        width: 80
-        height: 80
+        width: 100
+        height: 100
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -40, y: 40}
-        - {x: -40, y: -40}
-        - {x: 40, y: -40}
-        - {x: 40, y: 40}
-      - - {x: -35, y: 35}
-        - {x: 35, y: 35}
-        - {x: 35, y: -35}
-        - {x: -35, y: -35}
+      - - {x: -50, y: 50}
+        - {x: -50, y: -50}
+        - {x: 50, y: -50}
+        - {x: 50, y: 50}
+      - - {x: -45, y: 45}
+        - {x: 45, y: 45}
+        - {x: 45, y: -45}
+        - {x: -45, y: -45}
     outline: []
   spritePackingTag: 
   userData: 

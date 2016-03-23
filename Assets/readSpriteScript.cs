@@ -15,17 +15,21 @@ public class ReadSpriteScript : MonoBehaviour
 
 	private int gridSizeX = 50;
 	private int gridSizeY = 50;
-	private int tileSizeX = 80;
-	private int tileSizeY = 80;
+	private int tileSizeX = 100;
+	private int tileSizeY = 100;
+    private float mplX;
+    private float mplY;
 
-	public GameObject[,] myTileArray;
+    public GameObject[,] myTileArray;
 	Node[,] graph;
 	float completeCost = 0;
 	public bool unReachable = false;
 
 	void Start()
 	{
-		selectedUnit.GetComponent<PlayerScript>().map = this;
+        mplX = (float)tileSizeX / 100;
+        mplY = (float)tileSizeY / 100;
+        selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
 		CreateRoom("maproom" + 1 + "newer");
 		GeneratePathfindingGraph();
@@ -50,7 +54,7 @@ public class ReadSpriteScript : MonoBehaviour
 				if (!tileType.Equals("FFFFFF"))
 				{
 					//GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
-					GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, j * 0.8f), transform.rotation) as GameObject;
+					GameObject tile = Instantiate(tilePrefab, new Vector2(i * mplX, j * mplY), transform.rotation) as GameObject;
 
 					if (tileType.Equals("C4AA6C"))
 					{
@@ -67,7 +71,7 @@ public class ReadSpriteScript : MonoBehaviour
 					else if (tileType.Equals("FF0000"))
 					{
 						//eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f));
-						tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f), (int)i, (int)j);
+						tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * mplX, j * mplY), (int)i, (int)j);
 						tile.GetComponent<TileScript>().walkable = false;
 						tile.GetComponent<TileScript>().hasEnemy = true;
 						tile.tag = "Floor";
@@ -150,9 +154,9 @@ public class ReadSpriteScript : MonoBehaviour
 		}
 	}
 
-	public Vector3 TileCoordToWorldCoord(int x, int y)
+	public Vector3 TileCoordToWorldCoord(int y, int x)
 	{
-		return new Vector3(y * 0.8f, (x * 0.8f), 0);
+		return new Vector3(x * mplX, (y * mplY), 0);
 	}
 
 	public bool UnitCanEnterTile(int x, int y)

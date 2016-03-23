@@ -32,6 +32,7 @@ public class EnemyScript : MonoBehaviour {
     public int maxActPts = 10;
     int xpReward = 5;
     Vector2 roundDir;
+    public bool active = false;
 
     public float myOffsetX = 0;
     public float myOffsetY = 0.2f;
@@ -60,33 +61,36 @@ public class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-	    if (health <= 0)
+        if (active)
         {
-            Destroy();
-        }
+            if (health <= 0)
+            {
+                Destroy();
+            }
 
-        if (myTurn == true)
-        {
-            //do pathfinding ya dummy
-            // de va här de sprack osv
-            eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
-                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
-                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
-                    this.gameObject, false);
-            //if (currActPts >= 2 && isMoving == false)
-            //{
-                
+            if (myTurn == true)
+            {
+                //do pathfinding ya dummy
+                // de va här de sprack osv
+                eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
+                        cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
+                        cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
+                        this.gameObject, false);
+                //if (currActPts >= 2 && isMoving == false)
+                //{
+
                 StartCoroutine(MakeAMove());
 
-            //}
-            
-            myTurn = false;
+                //}
+
+                myTurn = false;
+            }
+            if (turnIsOver == true)
+            {
+                eHandler.GetComponent<EnemyHandler>().PassTurn();
+            }
+            turnIsOver = false;
         }
-        if (turnIsOver == true)
-        {
-            eHandler.GetComponent<EnemyHandler>().PassTurn();
-        }
-        turnIsOver = false;
     }
 
     public IEnumerator MakeAMove()

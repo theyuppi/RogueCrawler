@@ -97,14 +97,14 @@ public class CameraScript : MonoBehaviour
     public void NextTurn(bool forwardTurnOrder)
     {
         StartCoroutine(ChangeCameraSmoothness());
-        if (currentTarget > 0)
+        if (currentTarget > 0)  //It's an enemys turn
         {
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = false;
             //eHandler.levelHandler.GetComponent<TileScript>().OccupyTile();
             //eHandler.GetComponent<EnemyHandler>().levelHandler.GetComponent<ReadSpriteScript>().
             //    ClearCertainPath(characterList[currentTarget].GetComponent<EnemyScript>().currentPath);
         }
-        else
+        else  //It's players turn
         {
             characterList[currentTarget].GetComponent<PlayerScript>().myTurn = false;
         }
@@ -128,14 +128,15 @@ public class CameraScript : MonoBehaviour
             SetTarget(currentTarget);
         }
 
-        if (currentTarget > 0)
+        if (currentTarget > 0) //Pass turn to an enemy
         {
+			characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
             //eHandler.levelHandler.GetComponent<TileScript>().occupant = null;
             characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
         }
-        else
+        else  //Pass turn to a player
         {
             characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
             characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();

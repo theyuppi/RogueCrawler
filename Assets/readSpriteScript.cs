@@ -26,6 +26,9 @@ public class ReadSpriteScript : MonoBehaviour
 	float completeCost = 0;
 	public bool unReachable = false;
 
+	//test
+	private System.Threading.Thread myThread = null;
+
 	void Start()
 	{
         mplX = (float)tileSizeX / 100;
@@ -36,16 +39,18 @@ public class ReadSpriteScript : MonoBehaviour
         MakeRoom(0 , 40,  "bigmap1_12");
         MakeRoom(40, 80, "bigmap1_11");
         MakeRoom(40, 40, "bigmap1_10");
-        MakeRoom(40, 0, "bigmap1_09");
-        MakeRoom(80, 120, "bigmap1_08");
-        MakeRoom(80, 80, "bigmap1_07");
-        MakeRoom(80, 0, "bigmap1_06");
-        MakeRoom(120, 120, "bigmap1_05");
-        MakeRoom(120, 80, "bigmap1_04");
-        MakeRoom(120, 40, "bigmap1_03");
-        MakeRoom(120, 0, "bigmap1_02");
-        MakeRoom(160, 40, "bigmap1_01");
-        GeneratePathfindingGraph();
+		MakeRoom(40, 0, "bigmap1_09");
+		MakeRoom(80, 120, "bigmap1_08");
+		MakeRoom(80, 80, "bigmap1_07");
+		MakeRoom(80, 0, "bigmap1_06");
+		MakeRoom(120, 120, "bigmap1_05");
+		MakeRoom(120, 80, "bigmap1_04");
+		MakeRoom(120, 40, "bigmap1_03");
+		MakeRoom(120, 0, "bigmap1_02");
+		MakeRoom(160, 40, "bigmap1_01");
+		GeneratePathfindingGraph();
+		//myThread = new System.Threading.Thread(delegate() { GeneratePathfindingGraph(); });
+		//myThread.Start();
 	}
 
 	void Update()
@@ -165,6 +170,7 @@ public class ReadSpriteScript : MonoBehaviour
 					graph[x, y].neighbours.Add(graph[x, y + 1]);
 			}
 		}
+		//myThread.Join();
 	}
 
 	public Vector3 TileCoordToWorldCoord(int y, int x)
@@ -272,7 +278,7 @@ public class ReadSpriteScript : MonoBehaviour
 					prev[v] = u;
 				}
 			}
-			if (completeCost > 8000)
+			if (completeCost > 40)
 			{
 				unReachable = true;
 			}
@@ -371,6 +377,13 @@ public class ReadSpriteScript : MonoBehaviour
 		}
 	}
 
+	public void GeneratePathTo2(int x, int y, GameObject pathRequester, bool isPlayer)
+	{
+		//myThread = new System.Threading.Thread(delegate() { GeneratePathTo2(x, y, pathRequester, isPlayer); });
+		//myThread.Start();
+	}
+	
+
 	public void ClearOldPath()
 	{
 		if (selectedUnit.GetComponent<PlayerScript>().currentPath != null)
@@ -441,10 +454,10 @@ public class ReadSpriteScript : MonoBehaviour
                         //Debug.Log("Wall");
                     }
                     else if (tileType.Equals("FF0000"))
-                    {
-                        tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x);
-                        tile.GetComponent<TileScript>().walkable = false;
-                        tile.GetComponent<TileScript>().hasEnemy = true;
+					{
+						tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x);
+						tile.GetComponent<TileScript>().walkable = false;
+						tile.GetComponent<TileScript>().hasEnemy = true;
                         tile.tag = "Floor";
                         //Debug.Log("Enemy");
                     }

@@ -66,25 +66,6 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-		//// Manual movement (keyboard)
-		//if (playerMovement == null)
-		//{
-		//	if (Input.GetKey(KeyCode.W))
-		//		playerMovement = StartCoroutine(Move(Vector2.up));
-		//	else if (Input.GetKey(KeyCode.S))
-		//		playerMovement = StartCoroutine(Move(Vector2.down));
-		//	else if (Input.GetKey(KeyCode.D))
-		//	{
-		//		sRender.flipX = true;
-		//		playerMovement = StartCoroutine(Move(Vector2.right));
-		//	}
-		//	else if (Input.GetKey(KeyCode.A))
-		//	{
-		//		sRender.flipX = false;
-		//		playerMovement = StartCoroutine(Move(Vector2.left));
-		//	}
-		//}
-
 		//Level up
 		if (xp >= xpLevels[charLVL-1])
 		{

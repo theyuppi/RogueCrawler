@@ -57,12 +57,13 @@ public class EnemyScript : MonoBehaviour {
         ReceiveActPts();
         //cScript = GetComponent<CameraScript>();
         transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
+
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (active)
-        {
+		//if (active)
+		//{
             if (health <= 0)
             {
                 Destroy();
@@ -70,8 +71,6 @@ public class EnemyScript : MonoBehaviour {
 
             if (myTurn == true)
             {
-                //do pathfinding ya dummy
-                // de va här de sprack osv
                 eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
                         cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
                         cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
@@ -90,7 +89,7 @@ public class EnemyScript : MonoBehaviour {
                 eHandler.GetComponent<EnemyHandler>().PassTurn();
             }
             turnIsOver = false;
-        }
+		//}
     }
 
     public IEnumerator MakeAMove()

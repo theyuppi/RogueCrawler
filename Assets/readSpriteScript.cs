@@ -12,9 +12,10 @@ public class ReadSpriteScript : MonoBehaviour
 	public GameObject targetPrefab;
 	public EnemyHandler eHandler;
 	public PlayerHandler pHandler;
+    public CameraScript cScript;
 
-	private int gridSizeX = 120;
-	private int gridSizeY = 120;
+	public int gridSizeX = 40;
+	public int gridSizeY = 40;
 	private int tileSizeX = 100;
 	private int tileSizeY = 100;
     private float mplX;
@@ -37,7 +38,7 @@ public class ReadSpriteScript : MonoBehaviour
         selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
         //CreateRoom("maproom" + 1 + "newer");
-        MakeRoom(0 , 40,  "bigmap1_12");
+        MakeRoom(0 , 0,  "bigmap1_00");
         //MakeRoom(40, 80, "bigmap1_11");
         //MakeRoom(40, 40, "bigmap1_10");
 		//MakeRoom(40, 0, "bigmap1_09");
@@ -147,8 +148,13 @@ public class ReadSpriteScript : MonoBehaviour
 
         if (roomList.Count != 0)
         {
+            for (int i = 0; i < eHandler.enemyList.Count; i++)
+            {
+                Destroy(eHandler.enemyList[i]);
+            }
+            eHandler.enemyList.Clear();
             Destroy(roomList[0]);
-            
+            roomList.Clear();
         }
             
         GameObject Room = new GameObject();
@@ -164,8 +170,8 @@ public class ReadSpriteScript : MonoBehaviour
                 string tileType = ColorToHex(pixelCol);
                 if (!tileType.Equals("FFFFFF"))
                 {
-                    //GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
-                    GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
+                    //GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
+                    GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
 
                     if (tileType.Equals("C4AA6C"))
                     {
@@ -217,8 +223,8 @@ public class ReadSpriteScript : MonoBehaviour
                         tile.tag = "VDoor";
                         //Debug.Log("VDoor");
                     }
-                    myTileArray[(int)j + x, (int)i + y] = tile;
-                    tile.GetComponent<TileScript>().myID = new Vector2(j + x, i + y);
+                    myTileArray[(int)i + y, (int)j + x] = tile;
+                    tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;
                     eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
                     tile.GetComponent<TileScript>().player = selectedUnit;
@@ -227,7 +233,7 @@ public class ReadSpriteScript : MonoBehaviour
                 }
             }
         }
-        
+        cScript.MergeList();
         Application.Quit();
     }
 
@@ -279,7 +285,7 @@ public class ReadSpriteScript : MonoBehaviour
 		//myThread.Join();
 	}
 
-	public Vector3 TileCoordToWorldCoord(int y, int x)
+	public Vector3 TileCoordToWorldCoord(int x, int y)
 	{
 		return new Vector3(x * mplX, (y * mplY), 0);
 	}

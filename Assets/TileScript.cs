@@ -214,11 +214,11 @@ public class TileScript : MonoBehaviour
         }
     }
 
-    void OnDestroy()
-    {
-        //if (occupant != null)
-        //{
-        //    occupant.GetComponent<EnemyScript>().Destroy();
-        //}
-    }
+    //void OnDestroy()
+    //{
+    //    if (occupant != null)
+    //    {
+    //        occupant.GetComponent<EnemyScript>().Destroy();
+    //    }
+    //}
 }

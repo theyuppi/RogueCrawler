@@ -179,7 +179,7 @@ public class EnemyScript : MonoBehaviour {
             }
 
             // Check if tile has a player, if so check direction and perform attack
-            if (map.myTileArray[tileX + (int)roundDir.y, tileY + (int)roundDir.x].GetComponent<TileScript>().hasPlayer == true)
+            if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasPlayer == true)
             {
                 if (roundDir == Vector2.up)
                 {
@@ -319,7 +319,7 @@ public class EnemyScript : MonoBehaviour {
                 break;
         }
         currActPts -= 2;
-        map.myTileArray[tileX + (int)roundDir.y, tileY + (int)roundDir.x].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
+        map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
         map.ClearOldPath();
         StartCoroutine(SetAttackFalse());
 

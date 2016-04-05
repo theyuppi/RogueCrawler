@@ -16,11 +16,12 @@ public class DoorScript : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
-        {
-            levelHandler.MakeRoom(40, 40, "bigmap1_10");
-            //levelHandler.GetComponent<PlayerHandler>().BumpPlayer(0, 2);
-            other.GetComponent<PlayerScript>().BumpMe(2, 0);
-        }
+        // Dumma saker som vi inte ens behöver längre
+        //if (other.tag == "Player")
+        //{
+        //    levelHandler.MakeRoom(40, 40, "bigmap1_10");
+        //    //levelHandler.GetComponent<PlayerHandler>().BumpPlayer(0, 2);
+        //    other.GetComponent<PlayerScript>().BumpMe(0, 2);
+        //}
     }
 }

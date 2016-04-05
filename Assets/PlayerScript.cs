@@ -41,6 +41,8 @@ public class PlayerScript : MonoBehaviour
     public float myOffsetX = 0;
     public float myOffsetY = 0.2f;
 
+    int dumint = 0;
+
 
     private enum direction
     {
@@ -194,8 +196,20 @@ public class PlayerScript : MonoBehaviour
             // Walking in to door
             if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isDoor == true)
             {
-                map.MakeRoom(40, 40, "bigmap1_10");
-                BumpMe(0, 3);
+                yield return new WaitForSeconds(0.05f);
+                if (dumint == 0)
+                {
+                    map.MakeRoom(0, 0, "bigmap1_02");
+                    dumint++;
+                }
+
+                else if (dumint == 1)
+                {
+                    map.MakeRoom(0, 0, "bigmap1_00");
+                    dumint--;
+                }
+
+                BumpMe(true);
             }
 
             else if (currentPath != null)
@@ -344,17 +358,38 @@ public class PlayerScript : MonoBehaviour
         xp += gainedXP;
     }
 
-    public void BumpMe(int x, int y)
+    //public void BumpMe(int x, int y)
+    //{
+
+    //    Vector2 pos = transform.position;
+    //    pos = new Vector2(pos.x + x, pos.y + y);
+    //    transform.position = pos;
+    //    if (x > 0)
+    //        x -= 1;
+    //    if (y > 0)
+    //        y -= 1;
+    //    tileX += x;
+    //    tileY += y;
+    //}
+
+    public void BumpMe(bool verticalBump)
     {
-        
-        Vector2 pos = transform.position;
-        pos = new Vector2(pos.x + x, pos.y + y);
-        transform.position = pos;
-        if (x > 0)
-            x -= 1;
-        if (y > 0)
-            y -= 1;
-        tileX += y;
-        tileY += x;
+        if (verticalBump == true)
+        {
+            if (tileY == 0)
+                tileY = 2;
+            tileY = (map.gridSizeY) - tileY ;
+            Vector2 pos = transform.position;
+            pos = new Vector2(pos.x, tileY + myOffsetY);
+            transform.position = pos;
+
+        }
+        else if (verticalBump == false)
+        {
+            tileX = (map.gridSizeX) - tileX;
+            Vector2 pos = transform.position;
+            pos = new Vector2(tileX, pos.y);
+            transform.position = pos;
+        }
     }
 }

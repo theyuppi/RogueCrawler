@@ -31,9 +31,10 @@ public class PlayerHandler : MonoBehaviour {
         player.GetComponent<PlayerScript>().GainXP(gainedXP);
     }
 
-    public void BumpPlayer(int x, int y)
-    {
-        player.GetComponent<PlayerScript>().BumpMe(x, y);
-    }
+    // Också dumt (ta bort sen)
+    //public void BumpPlayer(int x, int y)
+    //{
+    //    player.GetComponent<PlayerScript>().BumpMe(x, y);
+    //}
 
 }

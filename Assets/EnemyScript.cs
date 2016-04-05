@@ -69,27 +69,31 @@ public class EnemyScript : MonoBehaviour {
                 Destroy();
             }
 
-            if (myTurn == true)
-            {
-                eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
-                        cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
-                        cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
-                        this.gameObject, false);
-                //if (currActPts >= 2 && isMoving == false)
-                //{
+        if (myTurn == true)
+        {
+            eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
+                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
+                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
+                    this.gameObject, false);
 
+            if (currentPath != null
+                && currentPath.Count < 15
+                && currentPath.Count > 0)
+            {
                 StartCoroutine(MakeAMove());
-
-                //}
-
-                myTurn = false;
             }
-            if (turnIsOver == true)
+            else
             {
-                eHandler.GetComponent<EnemyHandler>().PassTurn();
+                turnIsOver = true;
             }
-            turnIsOver = false;
-		//}
+            myTurn = false;
+        }
+        if (turnIsOver == true)
+        {
+            eHandler.GetComponent<EnemyHandler>().PassTurn();
+        }
+        turnIsOver = false;
+        //}
     }
 
     public IEnumerator MakeAMove()

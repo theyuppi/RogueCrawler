@@ -21,6 +21,8 @@ public class TileScript : MonoBehaviour
 	public GameObject chestPrefab;
 	public GameObject spikePrefab;
 	public GameObject holePrefab;
+    public GameObject doorHprefab;
+    public GameObject doorVprefab;
     public GameObject occupant;
 
 	public float moveCost = 1.0f;
@@ -35,6 +37,7 @@ public class TileScript : MonoBehaviour
     public bool hasEnemy = false;
     public bool hasPlayer = false;
     public bool unReachable = false;
+    public bool isDoor = false;
     
 
 	void Awake()
@@ -75,8 +78,26 @@ public class TileScript : MonoBehaviour
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
 		}
+        else if (myTileType == TileTypes.HDoor)
+        {
+            spr.sprite = mySprite[(int)TileTypes.Floor];
+            GameObject tileAddon = Instantiate(doorHprefab, transform.position, transform.rotation) as GameObject;
+            tileAddon.transform.parent = transform;
+            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            walkable = false;
+            isDoor = true;
+        }
+        else if (myTileType == TileTypes.VDoor)
+        {
+            spr.sprite = mySprite[(int)TileTypes.Floor];
+            GameObject tileAddon = Instantiate(doorVprefab, transform.position, transform.rotation) as GameObject;
+            tileAddon.transform.parent = transform;
+            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            walkable = false;
+            isDoor = true;
+        }
         //OccupyTile();
-	}
+    }
 
 	void OnMouseUp()
 	{
@@ -106,7 +127,7 @@ public class TileScript : MonoBehaviour
             }
 
             // Generate new movement path (Clicked on another tile)
-            else
+            else if (player.GetComponent<PlayerScript>().currentPath != null)
             {
                 levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
                 levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
@@ -170,7 +191,7 @@ public class TileScript : MonoBehaviour
             if (isPlayer)
             {
                 Debug.Log("myID: " + myID);
-                Debug.Log("occutpant: " + occupant.ToString());
+                Debug.Log("occupant: " + occupant.ToString());
                 StartCoroutine(occupant.GetComponent<PlayerScript>().GetHit(damageAmount));
                 
             }
@@ -191,5 +212,13 @@ public class TileScript : MonoBehaviour
         {
             occupant.GetComponent<PlayerScript>().tile = this.gameObject;
         }
+    }
+
+    void OnDestroy()
+    {
+        //if (occupant != null)
+        //{
+        //    occupant.GetComponent<EnemyScript>().Destroy();
+        //}
     }
 }

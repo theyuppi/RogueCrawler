@@ -18,9 +18,9 @@ public class PlayerScript : MonoBehaviour
     public const float stepAttackDuration = 0.15f;
     public List<Node> currentPath = null;
     public ReadSpriteScript map;
-    public int tileX = 16;
+    public int tileX = 0;
     public int tileY = 0;
-    public int tileXmoved = 16;
+    public int tileXmoved = 0;
     public int tileYmoved = 0;
     public bool isMoving = false;
     public bool isPerformingAttack = false;
@@ -74,6 +74,7 @@ public class PlayerScript : MonoBehaviour
 		}
     }
 
+    #region ManualMove
     private IEnumerator Move(Vector2 direction)
     {
         Vector2 startPosition = transform.position;
@@ -91,6 +92,7 @@ public class PlayerScript : MonoBehaviour
 
         playerMovement = null;
     }
+    #endregion
 
     public IEnumerator MakeAMove()
     {
@@ -106,13 +108,13 @@ public class PlayerScript : MonoBehaviour
                 Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
                     new Vector3(0, 0, -1f);
 
-                Debug.DrawLine(start, end, Color.red);
+                //Debug.DrawLine(start, end, Color.red);
 
                 currNode++;
 
                 StartCoroutine(MoveNextTile(currNode));
 
-                if (currNode == currentPath.Count - 1)
+                if (currentPath == null || currNode == currentPath.Count - 1)
                 {
                     isMoving = false;
                 }
@@ -158,6 +160,7 @@ public class PlayerScript : MonoBehaviour
                 break;
         }
 
+        // Attacking enemy or walking in to wall
         if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
         {
             if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().hasEnemy == true)
@@ -188,13 +191,19 @@ public class PlayerScript : MonoBehaviour
                     }
                 }
             }
+            // Walking in to door
+            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isDoor == true)
+            {
+                map.MakeRoom(40, 40, "bigmap1_10");
+                BumpMe(0, 3);
+            }
 
-            if (currentPath != null)
+            else if (currentPath != null)
             {
                 tileX = currentPath[currNode - 1].x;
                 tileY = currentPath[currNode - 1].y;
             }
-            
+
         }
 
         else
@@ -333,5 +342,19 @@ public class PlayerScript : MonoBehaviour
     public void GainXP(int gainedXP)
     {
         xp += gainedXP;
+    }
+
+    public void BumpMe(int x, int y)
+    {
+        
+        Vector2 pos = transform.position;
+        pos = new Vector2(pos.x + x, pos.y + y);
+        transform.position = pos;
+        if (x > 0)
+            x -= 1;
+        if (y > 0)
+            y -= 1;
+        tileX += y;
+        tileY += x;
     }
 }

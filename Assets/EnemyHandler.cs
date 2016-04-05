@@ -23,24 +23,24 @@ public class EnemyHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (Time.time % 2 == 0)
-		{
-			
-		
-		for (int i = 0; i < enemyList.Count -1; i++)
-		{
-			if (enemyList[i].GetComponent<SpriteRenderer>().isVisible || enemyList[i].GetComponent<EnemyScript>().myTurn)
-			{
-				enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
-			}
-			else
-			{
-				enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
-			}
+        //if (Time.time % 2 == 0)
+        //{
 
-		}
-		}
-	}
+
+        //    for (int i = 0; i < enemyList.Count - 1; i++)
+        //    {
+        //        if (enemyList[i].GetComponent<SpriteRenderer>().isVisible || enemyList[i].GetComponent<EnemyScript>().myTurn)
+        //        {
+        //            enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        //        }
+        //        else
+        //        {
+        //            enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        //        }
+
+        //    }
+        //}
+    }
 
     public GameObject SpawnEnemy(enemies enemyType, Vector2 position, int tileX, int tileY)
     {
@@ -49,8 +49,8 @@ public class EnemyHandler : MonoBehaviour {
             case enemies.axeSkeleton:
                 GameObject enemy = Instantiate(skeletonPrefab, position, transform.rotation) as GameObject;
                 enemy.transform.parent = transform;
-                enemy.GetComponent<EnemyScript>().tileX = tileY;
-                enemy.GetComponent<EnemyScript>().tileY = tileX;
+                enemy.GetComponent<EnemyScript>().tileX = tileX;
+                enemy.GetComponent<EnemyScript>().tileY = tileY;
                 enemy.GetComponent<EnemyScript>().eHandler = this;
                 enemy.GetComponent<EnemyScript>().cScript = cScript.GetComponent<CameraScript>();
                 enemy.GetComponent<EnemyScript>().map = cScript.GetComponent<ReadSpriteScript>();

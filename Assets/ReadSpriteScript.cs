@@ -28,8 +28,10 @@ public class ReadSpriteScript : MonoBehaviour
 	public bool unReachable = false;
     public List<GameObject> roomList = new List<GameObject>();
 
-	//test
-	private System.Threading.Thread myThread = null;
+	////test
+	//private System.Threading.Thread myThread = null;
+	public string[,] roomNode = new string[12, 5];
+
 
 	void Start()
 	{
@@ -37,6 +39,79 @@ public class ReadSpriteScript : MonoBehaviour
         mplY = (float)tileSizeY / 100;
         selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
+		#region RoomNodeAlignment
+		roomNode[0, 0] = "bigmap1_00";
+		roomNode[0, 1] = "bigmap1_02";
+		roomNode[0, 2] = null;
+		roomNode[0, 3] = null;
+		roomNode[0, 4] = null;
+
+		roomNode[1, 0] = "bigmap1_01";
+		roomNode[1, 1] = "bigmap1_04";
+		roomNode[1, 2] = null;
+		roomNode[1, 3] = null;
+		roomNode[1, 4] = "bigmap1_02";
+
+		roomNode[2, 0] = "bigmap1_02";
+		roomNode[2, 1] = null;
+		roomNode[2, 2] = "bigmap1_00";
+		roomNode[2, 3] = "bigmap1_01";
+		roomNode[2, 4] = "bigmap1_03";
+
+		roomNode[3, 0] = "bigmap1_03";
+		roomNode[3, 1] = "bigmap1_05";
+		roomNode[3, 2] = null;
+		roomNode[3, 3] = "bigmap1_02";
+		roomNode[3, 4] = null;
+
+		roomNode[4, 0] = "bigmap1_04";
+		roomNode[4, 1] = "bigmap1_07";
+		roomNode[4, 2] = "bigmap1_01";
+		roomNode[4, 3] = null;
+		roomNode[4, 4] = null;
+
+		roomNode[5, 0] = "bigmap1_05";
+		roomNode[5, 1] = null;
+		roomNode[5, 2] = "bigmap1_03";
+		roomNode[5, 3] = null;
+		roomNode[5, 4] = "bigmap1_06";
+
+		roomNode[6, 0] = "bigmap1_06";
+		roomNode[6, 1] = "bigmap1_10";
+		roomNode[6, 2] = null;
+		roomNode[6, 3] = "bigmap1_05";
+		roomNode[6, 4] = null;
+
+		roomNode[7, 0] = "bigmap1_07";
+		roomNode[7, 1] = null;
+		roomNode[7, 2] = "bigmap1_04";
+		roomNode[7, 3] = null;
+		roomNode[7, 4] = "bigmap1_08";
+
+		roomNode[8, 0] = "bigmap1_08";
+		roomNode[8, 1] = "bigmap1_11";
+		roomNode[8, 2] = null;
+		roomNode[8, 3] = "bigmap1_07";
+		roomNode[8, 4] = "bigmap1_09";
+
+		roomNode[9, 0] = "bigmap1_09";
+		roomNode[9, 1] = null;
+		roomNode[9, 2] = null;
+		roomNode[9, 3] = "bigmap1_08";
+		roomNode[9, 4] = "bigmap1_10";
+
+		roomNode[10, 0] = "bigmap1_10";
+		roomNode[10, 1] = null;
+		roomNode[10, 2] = "bigmap1_06";
+		roomNode[10, 3] = "bigmap1_09";
+		roomNode[10, 4] = null;
+
+		roomNode[11, 0] = "bigmap1_11";
+		roomNode[11, 1] = null;
+		roomNode[11, 2] = "bigmap1_08";
+		roomNode[11, 3] = null;
+		roomNode[11, 4] = null;
+		#endregion
         //CreateRoom("maproom" + 1 + "newer");
         MakeRoom(0 , 0,  "bigmap1_00");
         //MakeRoom(40, 80, "bigmap1_11");
@@ -53,96 +128,25 @@ public class ReadSpriteScript : MonoBehaviour
 		GeneratePathfindingGraph();
 		//myThread = new System.Threading.Thread(delegate() { GeneratePathfindingGraph(); });
 		//myThread.Start();
+
+	
+
+		//for (int a = 0; a < roomNode.GetLength(0); a++)
+		//{
+		//	for (int b = 0; b < roomNode.GetLength(1); b++)
+		//	{
+		//		Debug.Log("A is: " + a + " - B is: " + b + " || " + roomNode[a,b]);
+		//	}
+		//}
+
 	}
 
 	void Update()
 	{ }
 
-    //void CreateRoom(string levelName)
-    //{
-    //	spr = Resources.Load<Sprite>(levelName);
-
-    //	float sizeY = spr.texture.width; //Rows
-    //	float sizeX = spr.texture.width; //Columns
-
-    //	for (float j = sizeY; j > 0; j--) //Rows
-    //	{
-    //		for (float i = 0; i < sizeX; i++) //Columns
-    //		{
-    //			Color pixelCol = new Color(spr.texture.GetPixel((int)i, (int)j).r, spr.texture.GetPixel((int)i, (int)j).g, spr.texture.GetPixel((int)i, (int)j).b, spr.texture.GetPixel((int)i, (int)j).a);
-    //			string tileType = ColorToHex(pixelCol);
-    //			if (!tileType.Equals("FFFFFF"))
-    //			{
-    //				//GameObject tile = Instantiate(tilePrefab, new Vector2(i * 0.8f, (sizeX - j) * -0.8f), transform.rotation) as GameObject;
-    //				GameObject tile = Instantiate(tilePrefab, new Vector2(i * mplX, j * mplY), transform.rotation) as GameObject;
-
-    //				if (tileType.Equals("C4AA6C"))
-    //				{
-    //					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
-    //					tile.tag = "Floor";
-    //					//Debug.Log("Floor");
-    //				}
-    //				else if (tileType.Equals("584A33"))
-    //				{
-    //					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
-    //					tile.tag = "Wall";
-    //					//Debug.Log("Wall");
-    //				}
-    //				else if (tileType.Equals("FF0000"))
-    //				{
-    //					//eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * 0.8f, j * 0.8f));
-    //					tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2(i * mplX, j * mplY), (int)i, (int)j);
-    //					tile.GetComponent<TileScript>().walkable = false;
-    //					tile.GetComponent<TileScript>().hasEnemy = true;
-    //					tile.tag = "Floor";
-    //					//Debug.Log("Enemy");
-    //				}
-    //				else if (tileType.Equals("FFFF00"))
-    //				{
-    //					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
-    //					tile.tag = "Chest";
-    //					//Debug.Log("Treasure");
-    //				}
-    //				else if (tileType.Equals("505050"))
-    //				{
-    //					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
-    //					tile.tag = "Spike";
-    //					//Debug.Log("Spikes");
-    //				}
-    //				else if (tileType.Equals("000000"))
-    //				{
-    //					tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
-    //					tile.tag = "Hole";
-    //					//Debug.Log("Hole");
-    //				}
-    //                   else if (tileType.Equals("8D4800"))
-    //                   {
-    //                       tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.HDoor;
-    //                       tile.tag = "HDoor";
-    //                       //Debug.Log("HDoor");
-    //                   }
-    //                   else if (tileType.Equals("492601"))
-    //                   {
-    //                       tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.VDoor;
-    //                       tile.tag = "VDoor";
-    //                       //Debug.Log("VDoor");
-    //                   }
-    //                   myTileArray[(int)j, (int)i] = tile;
-    //				tile.GetComponent<TileScript>().myID = new Vector2(j, i);
-    //				tile.GetComponent<TileScript>().levelHandler = this.gameObject;
-    //				eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
-    //				tile.GetComponent<TileScript>().player = selectedUnit;
-    //				//tile.GetComponent<TileScript>().transform.parent = transform;
-    //			}
-    //		}
-    //	}
-    //	Application.Quit();
-    //}
-
     public void MakeRoom(int x, int y, string levelName)
     {
         spr = Resources.Load<Sprite>(levelName);
-
         float sizeY = spr.texture.height; //Rows
         float sizeX = spr.texture.width; //Columns
 
@@ -160,7 +164,6 @@ public class ReadSpriteScript : MonoBehaviour
         GameObject Room = new GameObject();
         Room.name = "Room";
         roomList.Add(Room);
-
 
         for (float j = sizeY-1; j >= 0; j--) //Rows
         {
@@ -215,12 +218,28 @@ public class ReadSpriteScript : MonoBehaviour
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.HDoor;
                         tile.tag = "HDoor";
+
+						for (int a = 0; a < roomNode.GetLength(0); a++)
+						{
+							if (roomNode[a,0] == levelName)
+							{
+								tile.GetComponent<TileScript>().owner = roomNode[a, 0];	
+							}	
+						}
                         //Debug.Log("HDoor");
                     }
                     else if (tileType.Equals("492601"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.VDoor;
                         tile.tag = "VDoor";
+
+						for (int a = 0; a < roomNode.GetLength(0); a++)
+						{
+							if (roomNode[a, 0] == levelName)
+							{
+								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+							}
+						}
                         //Debug.Log("VDoor");
                     }
                     myTileArray[(int)i + y, (int)j + x] = tile;

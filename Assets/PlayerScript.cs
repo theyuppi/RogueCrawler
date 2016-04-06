@@ -41,9 +41,6 @@ public class PlayerScript : MonoBehaviour
     public float myOffsetX = 0;
     public float myOffsetY = 0.2f;
 
-    int dumint = 0;
-
-
     private enum direction
     {
         Up,
@@ -197,19 +194,56 @@ public class PlayerScript : MonoBehaviour
             if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isDoor == true)
             {
                 yield return new WaitForSeconds(0.05f);
-                if (dumint == 0)
-                {
-                    map.MakeRoom(0, 0, "bigmap1_02");
-                    dumint++;
-                }
 
-                else if (dumint == 1)
-                {
-                    map.MakeRoom(0, 0, "bigmap1_00");
-                    dumint--;
-                }
-
-                BumpMe(true);
+				if (tileX < 2)
+				{
+					for (int a = 0; a < map.roomNode.GetLength(0); a++)
+					{
+						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
+						{
+							Debug.Log("Creating room: " + map.roomNode[a, 3]);
+							map.MakeRoom(0, 0, map.roomNode[a, 3]); //West
+						}
+					}
+					BumpMe(false);
+				}
+				else if (tileX > 36)
+				{
+					for (int a = 0; a < map.roomNode.GetLength(0); a++)
+					{
+						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
+						{
+							Debug.Log("Creating room: " + map.roomNode[a, 4]);
+							map.MakeRoom(0, 0, map.roomNode[a, 4]); //East
+						}
+					}
+					BumpMe(false);
+				}
+				else if (tileY < 2)
+				{
+					for (int a = 0; a < map.roomNode.GetLength(0); a++)
+					{
+						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
+						{
+							Debug.Log("Creating room: " + map.roomNode[a, 2]);
+							map.MakeRoom(0, 0, map.roomNode[a, 2]); //South
+						}
+					}
+					BumpMe(true);
+				}
+				else if (tileY > 36)
+				{	
+					for (int a = 0; a < map.roomNode.GetLength(0); a++)
+					{
+						//Debug.Log(map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner);
+						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
+						{
+							Debug.Log("Creating room: " + map.roomNode[a, 1]);
+							map.MakeRoom(0, 0, map.roomNode[a, 1]); //Pacifica North
+						}
+					}
+					BumpMe(true);
+				}
             }
 
             else if (currentPath != null)
@@ -385,7 +419,9 @@ public class PlayerScript : MonoBehaviour
 
         }
         else if (verticalBump == false)
-        {
+		{
+			if (tileX == 0)
+				tileX = 2;
             tileX = (map.gridSizeX) - tileX;
             Vector2 pos = transform.position;
             pos = new Vector2(tileX, pos.y);

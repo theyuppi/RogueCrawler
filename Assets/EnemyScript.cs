@@ -205,13 +205,10 @@ public class EnemyScript : MonoBehaviour {
                     }
                 }
             }
-            else if (map.myTileArray[tileX + (int)roundDir.y, tileY + (int)roundDir.x].GetComponent<TileScript>().hasEnemy == true)
+            else if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasEnemy == true)
             {
                 isBlocked = true;
             }
-
-            
-
         }
 
         else

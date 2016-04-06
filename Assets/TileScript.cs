@@ -25,6 +25,7 @@ public class TileScript : MonoBehaviour
     public GameObject doorVprefab;
     public GameObject occupant;
 
+	public string owner;
 	public float moveCost = 1.0f;
 	public bool walkable = true;
 	public Vector2 myID;

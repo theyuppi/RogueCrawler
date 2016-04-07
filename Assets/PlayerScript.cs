@@ -39,7 +39,7 @@ public class PlayerScript : MonoBehaviour
 	};
 
     public float myOffsetX = 0;
-    public float myOffsetY = 0.2f;
+    public float myOffsetY = 20f;
 
     private enum direction
     {
@@ -329,7 +329,7 @@ public class PlayerScript : MonoBehaviour
     private IEnumerator PerformAttackMove(Vector2 dir)
     {
         Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * 0.4f);
+        Vector2 destinationPosition = startPosition + (dir * 40f);
         float t = 0.0f;
         while (t < 1.1f)
         {
@@ -414,7 +414,7 @@ public class PlayerScript : MonoBehaviour
                 tileY = 2;
             tileY = (map.gridSizeY) - tileY ;
             Vector2 pos = transform.position;
-            pos = new Vector2(pos.x, tileY + myOffsetY);
+            pos = new Vector2(pos.x, tileY*100 + myOffsetY);
             transform.position = pos;
 
         }
@@ -424,7 +424,7 @@ public class PlayerScript : MonoBehaviour
 				tileX = 2;
             tileX = (map.gridSizeX) - tileX;
             Vector2 pos = transform.position;
-            pos = new Vector2(tileX, pos.y);
+            pos = new Vector2(tileX*100, pos.y);
             transform.position = pos;
         }
     }

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 0ac854b3ee42caf48be3a0e340703ab5
-timeCreated: 1458663323
+timeCreated: 1460034742
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,7 @@ TextureImporter:
     21300008: BigTiles_4
     21300010: BigTiles_5
     21300012: BigTiles_6
+    21300014: BigTiles_7
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -33,10 +34,10 @@ TextureImporter:
   cubemapConvolutionSteps: 7
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 1
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -47,40 +48,40 @@ TextureImporter:
   allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 1
   alphaIsTransparency: 1
-  textureType: 8
+  textureType: 5
   buildTargetSettings: []
   spriteSheet:
     sprites:
     - name: BigTiles_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 2
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -50, y: 50}
-        - {x: -50, y: -50}
+      - - {x: -50, y: -50}
         - {x: 50, y: -50}
-        - {x: 50, y: 50}
+        - {x: 50, y: 12}
+        - {x: -50, y: 12}
     - name: BigTiles_1
       rect:
         serializedVersion: 2
-        x: 100
-        y: 0
+        x: 106
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -50, y: 50}
@@ -90,98 +91,153 @@ TextureImporter:
     - name: BigTiles_2
       rect:
         serializedVersion: 2
-        x: 200
-        y: 0
+        x: 210
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -32, y: 20}
-        - {x: -34, y: 13}
-        - {x: -34, y: -20}
-        - {x: -26, y: -24}
-        - {x: 31, y: -24}
-        - {x: 34, y: -18}
-        - {x: 34, y: 7}
-        - {x: 29, y: 20}
+      - - {x: -50, y: 50}
+        - {x: -50, y: -50}
+        - {x: 50, y: -50}
+        - {x: 50, y: 50}
     - name: BigTiles_3
       rect:
         serializedVersion: 2
-        x: 300
-        y: 0
+        x: 314
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -14, y: -4}
-        - {x: -18, y: -8}
-        - {x: -18, y: -16}
-        - {x: -16, y: -20}
-        - {x: -6, y: -20}
-        - {x: -4, y: -17}
-        - {x: -4, y: -9}
-        - {x: -9, y: -4}
-      - - {x: 10, y: -4}
-        - {x: 6, y: -10}
-        - {x: 6, y: -18}
-        - {x: 10, y: -20}
-        - {x: 19, y: -20}
-        - {x: 20, y: -19}
-        - {x: 20, y: -9}
-        - {x: 15, y: -4}
-      - - {x: -30, y: -4}
-        - {x: -29, y: -8}
-        - {x: -18, y: -8}
-        - {x: -16, y: -7}
-        - {x: -16, y: 1}
-        - {x: -20, y: 8}
-        - {x: -26, y: 8}
-        - {x: -30, y: 2}
-      - - {x: 3, y: 8}
-        - {x: -2, y: 8}
-        - {x: -6, y: 2}
-        - {x: -6, y: -4}
-        - {x: -2, y: -8}
-        - {x: 4, y: -8}
-        - {x: 8, y: -4}
-        - {x: 8, y: 1}
-      - - {x: 22, y: 8}
-        - {x: 18, y: 2}
-        - {x: 18, y: -4}
-        - {x: 22, y: -8}
-        - {x: 30, y: -8}
-        - {x: 32, y: -4}
-        - {x: 32, y: 3}
-        - {x: 27, y: 8}
-      - - {x: -14, y: 20}
-        - {x: -18, y: 16}
-        - {x: -18, y: 8}
-        - {x: -16, y: 4}
-        - {x: -6, y: 4}
-        - {x: -4, y: 7}
-        - {x: -4, y: 15}
-        - {x: -9, y: 20}
-      - - {x: 10, y: 20}
-        - {x: 6, y: 14}
-        - {x: 6, y: 8}
-        - {x: 10, y: 4}
-        - {x: 18, y: 4}
-        - {x: 20, y: 8}
-        - {x: 20, y: 15}
-        - {x: 15, y: 20}
+      - - {x: -29, y: 28}
+        - {x: -44, y: 6}
+        - {x: -44, y: -23}
+        - {x: -23, y: -32}
+        - {x: 34, y: -32}
+        - {x: 44, y: -16}
+        - {x: 44, y: 9}
+        - {x: 28, y: 28}
     - name: BigTiles_4
       rect:
         serializedVersion: 2
-        x: 400
-        y: 0
+        x: 418
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: -22}
+        - {x: -8, y: -29}
+        - {x: -5, y: -34}
+        - {x: 5, y: -34}
+        - {x: 8, y: -31}
+        - {x: 8, y: -24}
+        - {x: 7, y: -22}
+      - - {x: -32, y: -14}
+        - {x: -34, y: -16}
+        - {x: -34, y: -20}
+        - {x: -28, y: -26}
+        - {x: -22, y: -26}
+        - {x: -18, y: -22}
+        - {x: -18, y: -16}
+        - {x: -20, y: -14}
+      - - {x: 20, y: -14}
+        - {x: 20, y: -20}
+        - {x: 26, y: -26}
+        - {x: 33, y: -26}
+        - {x: 36, y: -22}
+        - {x: 36, y: -14}
+      - - {x: -28, y: 0}
+        - {x: -28, y: -12}
+        - {x: -24, y: -22}
+        - {x: -3, y: -22}
+        - {x: -2, y: -21}
+        - {x: -2, y: -7}
+        - {x: -7, y: 0}
+      - - {x: 8, y: 0}
+        - {x: 8, y: -1}
+        - {x: 0, y: -8}
+        - {x: 0, y: -16}
+        - {x: 6, y: -22}
+        - {x: 14, y: -22}
+        - {x: 26, y: -10}
+        - {x: 26, y: 0}
+      - - {x: -46, y: 2}
+        - {x: -46, y: -8}
+        - {x: -41, y: -10}
+        - {x: -30, y: -10}
+        - {x: -30, y: 2}
+      - - {x: -6, y: 2}
+        - {x: -8, y: 0}
+        - {x: -8, y: -4}
+        - {x: -2, y: -10}
+        - {x: 5, y: -10}
+        - {x: 8, y: -7}
+        - {x: 8, y: 0}
+        - {x: 7, y: 2}
+      - - {x: 30, y: 2}
+        - {x: 28, y: 0}
+        - {x: 28, y: -4}
+        - {x: 34, y: -10}
+        - {x: 40, y: -10}
+        - {x: 44, y: -6}
+        - {x: 44, y: 0}
+        - {x: 42, y: 2}
+      - - {x: -16, y: 14}
+        - {x: -18, y: 12}
+        - {x: -18, y: 8}
+        - {x: -12, y: 2}
+        - {x: -6, y: 2}
+        - {x: -2, y: 6}
+        - {x: -2, y: 12}
+        - {x: -4, y: 14}
+      - - {x: 3, y: 14}
+        - {x: 2, y: 12}
+        - {x: 2, y: 4}
+        - {x: 6, y: 2}
+        - {x: 17, y: 2}
+        - {x: 18, y: 6}
+        - {x: 18, y: 13}
+        - {x: 16, y: 14}
+      - - {x: -33, y: 18}
+        - {x: -34, y: 16}
+        - {x: -34, y: 10}
+        - {x: -28, y: 6}
+        - {x: -22, y: 6}
+        - {x: -18, y: 8}
+        - {x: -18, y: 18}
+      - - {x: 22, y: 18}
+        - {x: 20, y: 16}
+        - {x: 20, y: 12}
+        - {x: 26, y: 6}
+        - {x: 32, y: 6}
+        - {x: 36, y: 10}
+        - {x: 36, y: 16}
+        - {x: 34, y: 18}
+      - - {x: -6, y: 28}
+        - {x: -8, y: 26}
+        - {x: -8, y: 22}
+        - {x: -2, y: 16}
+        - {x: 4, y: 16}
+        - {x: 8, y: 20}
+        - {x: 8, y: 26}
+        - {x: 6, y: 28}
+    - name: BigTiles_5
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 2
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -24, y: 16}
@@ -190,36 +246,36 @@ TextureImporter:
         - {x: 32, y: 16}
         - {x: 28, y: 20}
         - {x: -20, y: 20}
-    - name: BigTiles_5
-      rect:
-        serializedVersion: 2
-        x: 500
-        y: 0
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -6, y: -40}
-        - {x: 14, y: -40}
-        - {x: 14, y: 44}
-        - {x: -6, y: 44}
     - name: BigTiles_6
       rect:
         serializedVersion: 2
-        x: 600
-        y: 0
+        x: 626
+        y: 2
         width: 100
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 42, y: -10}
-        - {x: 42, y: 10}
-        - {x: -42, y: 10}
-        - {x: -42, y: -10}
+      - - {x: 16, y: -50}
+        - {x: 16, y: 50}
+        - {x: -16, y: 50}
+        - {x: -16, y: -50}
+    - name: BigTiles_7
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 2
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -50, y: -16}
+        - {x: 50, y: -16}
+        - {x: 50, y: 16}
+        - {x: -50, y: 16}
     outline: []
   spritePackingTag: 
   userData: 

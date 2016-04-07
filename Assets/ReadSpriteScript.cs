@@ -35,10 +35,11 @@ public class ReadSpriteScript : MonoBehaviour
 
 	void Start()
 	{
-        mplX = (float)tileSizeX / 100;
-        mplY = (float)tileSizeY / 100;
+        mplX = (float)tileSizeX;
+        mplY = (float)tileSizeY;
         selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
+
 		#region RoomNodeAlignment
 		roomNode[0, 0] = "bigmap1_00";
 		roomNode[0, 1] = "bigmap1_02";
@@ -112,6 +113,7 @@ public class ReadSpriteScript : MonoBehaviour
 		roomNode[11, 3] = null;
 		roomNode[11, 4] = null;
 		#endregion
+
         //CreateRoom("maproom" + 1 + "newer");
         MakeRoom(0 , 0,  "bigmap1_00");
         //MakeRoom(40, 80, "bigmap1_11");

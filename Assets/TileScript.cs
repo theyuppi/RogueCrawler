@@ -9,8 +9,10 @@ public class TileScript : MonoBehaviour
 	public Sprite[] mySprite;
 	public enum TileTypes
 	{
+        Wall,
 		Floor,
-		Wall,
+
+        Innan,
 		Hole,
 		Spike,
 		Chest,
@@ -23,6 +25,7 @@ public class TileScript : MonoBehaviour
 	public GameObject holePrefab;
     public GameObject doorHprefab;
     public GameObject doorVprefab;
+    public GameObject roofPrefab;
     public GameObject occupant;
 
 	public string owner;
@@ -46,6 +49,7 @@ public class TileScript : MonoBehaviour
         //mySprite = Resources.LoadAll<Sprite>("tileSet");
         //mySprite = Resources.LoadAll<Sprite>("tilesSquashed");
         mySprite = Resources.LoadAll<Sprite>("bigtiles");
+        myTileType = TileTypes.Floor;
     }
 
 	void Start()
@@ -71,7 +75,13 @@ public class TileScript : MonoBehaviour
 		else if (myTileType == TileTypes.Wall)
 		{
 			walkable = false;
-		}
+            GameObject tileAddon = Instantiate(roofPrefab, transform.position, transform.rotation) as GameObject;
+            tileAddon.transform.parent = transform;
+            var locPos = tileAddon.transform.localPosition;
+            locPos.y = 60f;
+            tileAddon.transform.localPosition = locPos;
+            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 9;
+        }
 		else if (myTileType == TileTypes.Hole)
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];

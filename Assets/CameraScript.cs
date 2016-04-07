@@ -41,6 +41,8 @@ public class CameraScript : MonoBehaviour
 			UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
 		}
 
+        
+
         if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0)
         {
             NextTurn(true);
@@ -100,6 +102,7 @@ public class CameraScript : MonoBehaviour
         if (currentTarget > 0)  //It's an enemys turn
         {
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = false;
+            characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
             //eHandler.levelHandler.GetComponent<TileScript>().OccupyTile();
             //eHandler.GetComponent<EnemyHandler>().levelHandler.GetComponent<ReadSpriteScript>().
             //    ClearCertainPath(characterList[currentTarget].GetComponent<EnemyScript>().currentPath);
@@ -132,6 +135,7 @@ public class CameraScript : MonoBehaviour
         {
 			characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
+            characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 4;
             //eHandler.levelHandler.GetComponent<TileScript>().occupant = null;
             characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();

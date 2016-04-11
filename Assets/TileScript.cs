@@ -70,7 +70,8 @@ public class TileScript : MonoBehaviour
 			spr.sprite = mySprite[(int)TileTypes.Floor];
 			GameObject tileAddon = Instantiate(spikePrefab, transform.position, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			//tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			moveCost = 5.0f;
 		}
 		else if (myTileType == TileTypes.Wall)
 		{
@@ -88,6 +89,7 @@ public class TileScript : MonoBehaviour
 			GameObject tileAddon = Instantiate(holePrefab, transform.position, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			moveCost = 30.0f;
 		}
         else if (myTileType == TileTypes.HDoor)
         {

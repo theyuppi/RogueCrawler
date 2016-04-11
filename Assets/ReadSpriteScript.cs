@@ -115,7 +115,7 @@ public class ReadSpriteScript : MonoBehaviour
 		#endregion
 
         //CreateRoom("maproom" + 1 + "newer");
-        MakeRoom(0 , 0,  "bigmap1_00");
+        MakeRoom(0 , 0,  "bigmap1_01");
         //MakeRoom(40, 80, "bigmap1_11");
         //MakeRoom(40, 40, "bigmap1_10");
 		//MakeRoom(40, 0, "bigmap1_09");

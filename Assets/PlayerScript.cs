@@ -32,6 +32,8 @@ public class PlayerScript : MonoBehaviour
     private int health = 100;
     public Text healthText;
     public int xp = 0;
+
+	public bool stunned = false;
     
     public int charLVL = 1;
 	public List<int> xpLevels = new List<int>{
@@ -99,7 +101,11 @@ public class PlayerScript : MonoBehaviour
         int currNode = 0;
         isMoving = true;
         while (isMoving == true && currentPath != null && currNode < currentPath.Count - 1)
-        {
+        {if (stunned)
+				{
+					yield return new WaitForSeconds(0.5f);
+					stunned = false;
+				}
             if (currActPts > 0)
             {
                 Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
@@ -111,6 +117,7 @@ public class PlayerScript : MonoBehaviour
 
                 currNode++;
 
+				
                 StartCoroutine(MoveNextTile(currNode));
 
                 if (currentPath == null || currNode == currentPath.Count - 1)
@@ -201,7 +208,7 @@ public class PlayerScript : MonoBehaviour
 					{
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							Debug.Log("Creating room: " + map.roomNode[a, 3]);
+							//Debug.Log("Creating room: " + map.roomNode[a, 3]);
 							map.MakeRoom(0, 0, map.roomNode[a, 3]); //West
 						}
 					}
@@ -213,7 +220,7 @@ public class PlayerScript : MonoBehaviour
 					{
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							Debug.Log("Creating room: " + map.roomNode[a, 4]);
+							//Debug.Log("Creating room: " + map.roomNode[a, 4]);
 							map.MakeRoom(0, 0, map.roomNode[a, 4]); //East
 						}
 					}
@@ -225,7 +232,7 @@ public class PlayerScript : MonoBehaviour
 					{
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							Debug.Log("Creating room: " + map.roomNode[a, 2]);
+							//Debug.Log("Creating room: " + map.roomNode[a, 2]);
 							map.MakeRoom(0, 0, map.roomNode[a, 2]); //South
 						}
 					}
@@ -238,7 +245,7 @@ public class PlayerScript : MonoBehaviour
 						//Debug.Log(map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner);
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							Debug.Log("Creating room: " + map.roomNode[a, 1]);
+							//Debug.Log("Creating room: " + map.roomNode[a, 1]);
 							map.MakeRoom(0, 0, map.roomNode[a, 1]); //Pacifica North
 						}
 					}

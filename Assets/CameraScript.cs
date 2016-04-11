@@ -43,7 +43,7 @@ public class CameraScript : MonoBehaviour
 
         
 
-        if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0)
+        if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0 && !characterList[0].GetComponent<PlayerScript>().isMoving)
         {
             NextTurn(true);
 
@@ -110,6 +110,7 @@ public class CameraScript : MonoBehaviour
         else  //It's players turn
         {
             characterList[currentTarget].GetComponent<PlayerScript>().myTurn = false;
+			characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
         }
 
         if (forwardTurnOrder)
@@ -135,7 +136,7 @@ public class CameraScript : MonoBehaviour
         {
 			characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
             characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
-            characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 4;
+            characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
             //eHandler.levelHandler.GetComponent<TileScript>().occupant = null;
             characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
@@ -143,6 +144,7 @@ public class CameraScript : MonoBehaviour
         else  //Pass turn to a player
         {
             characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
+			characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
             characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
         }

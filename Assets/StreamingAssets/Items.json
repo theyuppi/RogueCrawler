@@ -1,0 +1,100 @@
+[
+    {
+        "id": 0,
+        "title": "Pers Gloves",
+        "value": 15,
+        "stats": {
+            "power": 1,
+            "defence": 4,
+            "vitality": 0
+        },
+        "description": "Jettefina handskar med elegant utseende.",
+        "stackable": false,
+        "rarity": 2,
+        "slug":  "gauntlet"
+    },
+    { 
+        "id": 1,
+        "title": "Pers Yxa",
+        "value": 25,
+        "stats": {
+            "power": 170,
+            "defence": -5,
+            "vitality": 15
+        },
+        "description": "Den mektigaste yxan i hela Midgaard",
+        "stackable": false,
+        "rarity": 8,
+        "slug":  "axe"
+    },
+    { 
+        "id": 2,
+        "title": "Pers Kniv",
+        "value": 6,
+        "stats": {
+            "power": 2,
+            "defence": 0,
+            "vitality": 0
+        },
+        "description": "Den mesigaste kniven i hela Midgaard",
+        "stackable": false,
+        "rarity": 150,
+        "slug":  "dagger"
+    },
+    { 
+        "id": 3,
+        "title": "Pers Rustning",
+        "value": 2500,
+        "stats": {
+            "power": 30,
+            "defence": 1700,
+            "vitality": 100
+        },
+        "description": "Tillsammans e ni oslagbara!",
+        "stackable": false,
+        "rarity": 190,
+        "slug":  "armor"
+    },
+    { 
+        "id": 4,
+        "title": "Pers Hjelm",
+        "value": 8,
+        "stats": {
+            "power": 10,
+            "defence": 15,
+            "vitality": 15
+        },
+        "description": "Den wowigaste hjelmen i hela Midgaard",
+        "stackable": false,
+        "rarity": 12,
+        "slug":  "helmet"
+    },
+    {
+        "id": 4,
+        "title": "Pers Skjieold",
+        "value": 1,
+        "stats": {
+            "power": 10,
+            "defence": 45,
+            "vitality": 25
+        },
+        "description": "Den hårdaste skjiolden i hela Midgaard",
+        "stackable": false,
+        "rarity": 22,
+        "slug": "shield"
+    },
+    { 
+        "id": 4,
+        "title": "Pers Sverd",
+        "value": 88,
+        "stats": {
+            "power": 55,
+            "defence": 5,
+            "vitality": 5
+        },
+        "description": "Den vassaste kniven i hela Midgaard",
+        "stackable": false,
+        "rarity": 11,
+        "slug":  "sword"
+    }
+]

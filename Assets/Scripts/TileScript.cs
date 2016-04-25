@@ -16,15 +16,19 @@ public class TileScript : MonoBehaviour
 		Hole,
 		Spike,
 		Chest,
-		HDoor,
-		VDoor
+		LDoor,
+		RDoor,
+		UDoor,
+		DDoor
 	}
 	public TileTypes myTileType = TileTypes.Floor;
 	public GameObject chestPrefab;
 	public GameObject spikePrefab;
 	public GameObject holePrefab;
-    public GameObject doorHprefab;
-    public GameObject doorVprefab;
+    public GameObject doorLprefab;
+	public GameObject doorRprefab;
+    public GameObject doorUprefab;
+	public GameObject doorDprefab;
     public GameObject roofPrefab;
     public GameObject occupant;
 
@@ -55,9 +59,12 @@ public class TileScript : MonoBehaviour
 	void Start()
 	{
 		spr = GetComponent<SpriteRenderer>();
-		spr.sprite = mySprite[(int)myTileType];
+		//spr.sprite = mySprite[(int)myTileType];
 
-
+		if (myTileType == TileTypes.Floor)
+		{
+			spr.sprite = mySprite[(int)TileTypes.Floor];
+		}
 		if (myTileType == TileTypes.Chest)
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
@@ -75,6 +82,7 @@ public class TileScript : MonoBehaviour
 		}
 		else if (myTileType == TileTypes.Wall)
 		{
+			spr.sprite = mySprite[(int)TileTypes.Wall];
 			walkable = false;
             GameObject tileAddon = Instantiate(roofPrefab, transform.position, transform.rotation) as GameObject;
             tileAddon.transform.parent = transform;
@@ -91,24 +99,42 @@ public class TileScript : MonoBehaviour
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
 			moveCost = 30.0f;
 		}
-        else if (myTileType == TileTypes.HDoor)
+        else if (myTileType == TileTypes.LDoor)
         {
             spr.sprite = mySprite[(int)TileTypes.Floor];
-            GameObject tileAddon = Instantiate(doorHprefab, transform.position, transform.rotation) as GameObject;
+            GameObject tileAddon = Instantiate(doorLprefab, transform.position, transform.rotation) as GameObject;
             tileAddon.transform.parent = transform;
             tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
             walkable = false;
             isDoor = true;
         }
-        else if (myTileType == TileTypes.VDoor)
+        else if (myTileType == TileTypes.RDoor)
         {
             spr.sprite = mySprite[(int)TileTypes.Floor];
-            GameObject tileAddon = Instantiate(doorVprefab, transform.position, transform.rotation) as GameObject;
+            GameObject tileAddon = Instantiate(doorRprefab, transform.position, transform.rotation) as GameObject;
             tileAddon.transform.parent = transform;
             tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
             walkable = false;
             isDoor = true;
         }
+		else if (myTileType == TileTypes.UDoor)
+		{
+			spr.sprite = mySprite[(int)TileTypes.Floor];
+			GameObject tileAddon = Instantiate(doorUprefab, transform.position, transform.rotation) as GameObject;
+			tileAddon.transform.parent = transform;
+			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			walkable = false;
+			isDoor = true;
+		}
+		else if (myTileType == TileTypes.DDoor)
+		{
+			spr.sprite = mySprite[(int)TileTypes.Floor];
+			GameObject tileAddon = Instantiate(doorDprefab, transform.position, transform.rotation) as GameObject;
+			tileAddon.transform.parent = transform;
+			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			walkable = false;
+			isDoor = true;
+		}
         //OccupyTile();
     }
 
@@ -170,7 +196,6 @@ public class TileScript : MonoBehaviour
 
 	private void StepColor()
 	{
-        //GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<SpriteRenderer>().color = Color.green;
     }
 

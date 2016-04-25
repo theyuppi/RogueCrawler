@@ -28,8 +28,6 @@ public class ReadSpriteScript : MonoBehaviour
 	public bool unReachable = false;
     public List<GameObject> roomList = new List<GameObject>();
 
-	////test
-	//private System.Threading.Thread myThread = null;
 	public string[,] roomNode = new string[12, 5];
 
 
@@ -127,20 +125,7 @@ public class ReadSpriteScript : MonoBehaviour
 		//MakeRoom(120, 40, "bigmap1_03");
 		//MakeRoom(120, 0, "bigmap1_02");
 		//MakeRoom(160, 40, "bigmap1_01");
-		GeneratePathfindingGraph();
-		//myThread = new System.Threading.Thread(delegate() { GeneratePathfindingGraph(); });
-		//myThread.Start();
-
-	
-
-		//for (int a = 0; a < roomNode.GetLength(0); a++)
-		//{
-		//	for (int b = 0; b < roomNode.GetLength(1); b++)
-		//	{
-		//		Debug.Log("A is: " + a + " - B is: " + b + " || " + roomNode[a,b]);
-		//	}
-		//}
-
+		GeneratePathfindingGraph();	
 	}
 
 	void Update()
@@ -216,9 +201,9 @@ public class ReadSpriteScript : MonoBehaviour
                         tile.tag = "Hole";
                         //Debug.Log("Hole");
                     }
-                    else if (tileType.Equals("8D4800"))
+					else if (tileType.Equals("F58003")) //TopDoor
                     {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.HDoor;
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.UDoor;
                         tile.tag = "HDoor";
 
 						for (int a = 0; a < roomNode.GetLength(0); a++)
@@ -228,11 +213,25 @@ public class ReadSpriteScript : MonoBehaviour
 								tile.GetComponent<TileScript>().owner = roomNode[a, 0];	
 							}	
 						}
-                        //Debug.Log("HDoor");
+                        //Debug.Log("TopDoor");
                     }
-                    else if (tileType.Equals("492601"))
+					else if (tileType.Equals("C46702")) //BotBoor
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.DDoor;
+						tile.tag = "HDoor";
+
+						for (int a = 0; a < roomNode.GetLength(0); a++)
+						{
+							if (roomNode[a, 0] == levelName)
+							{
+								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+							}
+						}
+						//Debug.Log("BotDoor");
+					}
+					else if (tileType.Equals("492601")) //LeftDoor
                     {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.VDoor;
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.LDoor;
                         tile.tag = "VDoor";
 
 						for (int a = 0; a < roomNode.GetLength(0); a++)
@@ -242,14 +241,27 @@ public class ReadSpriteScript : MonoBehaviour
 								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
 							}
 						}
-                        //Debug.Log("VDoor");
+                        //Debug.Log("LeftDoor");
                     }
+					else if (tileType.Equals("2C1701")) //RightDoor
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.RDoor;
+						tile.tag = "VDoor";
+
+						for (int a = 0; a < roomNode.GetLength(0); a++)
+						{
+							if (roomNode[a, 0] == levelName)
+							{
+								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+							}
+						}
+						//Debug.Log("RightDoor");
+					}
                     myTileArray[(int)i + y, (int)j + x] = tile;
                     tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;
                     eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
                     tile.GetComponent<TileScript>().player = selectedUnit;
-                    //tile.GetComponent<TileScript>().transform.parent = transform;
                     tile.transform.parent = Room.transform;
                 }
             }
@@ -303,7 +315,6 @@ public class ReadSpriteScript : MonoBehaviour
 					graph[x, y].neighbours.Add(graph[x, y + 1]);
 			}
 		}
-		//myThread.Join();
 	}
 
 	public Vector3 TileCoordToWorldCoord(int x, int y)
@@ -539,14 +550,7 @@ public class ReadSpriteScript : MonoBehaviour
 			pathRequester.GetComponent<EnemyScript>().currentPath = currentPath;
 		}
 	}
-
-	public void GeneratePathTo2(int x, int y, GameObject pathRequester, bool isPlayer)
-	{
-		//myThread = new System.Threading.Thread(delegate() { GeneratePathTo2(x, y, pathRequester, isPlayer); });
-		//myThread.Start();
-	}
 	
-
 	public void ClearOldPath()
 	{
 		if (selectedUnit.GetComponent<PlayerScript>().currentPath != null)
@@ -590,6 +594,4 @@ public class ReadSpriteScript : MonoBehaviour
     //        }
     //    }
     //}
-
-    
 }

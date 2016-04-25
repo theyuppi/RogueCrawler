@@ -6,7 +6,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PlayerScript : MonoBehaviour
 {
-
     private Rigidbody2D rBody;
     private Coroutine playerMovement;
     private SpriteRenderer sRender;
@@ -25,14 +24,24 @@ public class PlayerScript : MonoBehaviour
     public bool isMoving = false;
     public bool isPerformingAttack = false;
     public bool lastNotWalkable = false;
-    public int attackPower = 20;
+	public bool myTurn = false;
+	public Text healthText;
+
+	//Stats
+	public int xp = 0;
+	private int health = 100;
+	public int attackPower = 20;
     public int currActPts = 0;
     private int maxActPts = 100;
-    public bool myTurn = false;
-    private int health = 100;
-    public Text healthText;
-    public int xp = 0;
-
+	//Eventuella
+	private int strength = 0;
+	private int defence = 0;
+	private int speed = 0;
+	private int agility = 0;
+	private int recoveryRate = 0;
+	private int combatStartAP = 0; //Actionpoints at start of combat
+	
+	//States
 	public bool stunned = false;
     
     public int charLVL = 1;

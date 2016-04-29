@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class ReadSpriteScript : MonoBehaviour
 {
 	SpriteRenderer sr;
@@ -162,7 +163,6 @@ public class ReadSpriteScript : MonoBehaviour
                 {
                     //GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
                     GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
-
                     if (tileType.Equals("C4AA6C"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
@@ -262,7 +262,8 @@ public class ReadSpriteScript : MonoBehaviour
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;
                     eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
                     tile.GetComponent<TileScript>().player = selectedUnit;
-                    tile.transform.parent = Room.transform;
+					tile.transform.SetParent(Room.transform);
+                    //tile.transform.parent = Room.transform;
                 }
             }
         }

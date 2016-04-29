@@ -33,14 +33,23 @@ public class PlayerScript : MonoBehaviour
 	public int attackPower = 20;
     public int currActPts = 0;
     private int maxActPts = 100;
-	//Eventuella
+	private int base_vitality = 5;
+	private int base_strength = 5;
+	private int base_defence = 5;
+	private int base_speed = 5;
+	private int base_agility = 5;
+
+	private int vitality = 0;
 	private int strength = 0;
 	private int defence = 0;
 	private int speed = 0;
 	private int agility = 0;
 	private int recoveryRate = 0;
 	private int combatStartAP = 0; //Actionpoints at start of combat
-	
+	//Test
+	public InventoryScript inventory;
+
+
 	//States
 	public bool stunned = false;
     
@@ -83,6 +92,39 @@ public class PlayerScript : MonoBehaviour
 			charLVL++;
 		}
     }
+
+	public void UpdateStats()
+	{
+		Debug.Log("Stats before:");
+		Debug.Log("Vitality: " + vitality);
+		Debug.Log("Strength: " + strength);
+		Debug.Log("Defence: " + defence);
+
+		Item mainhand_Slot = inventory.eqSlots[1].GetComponentInChildren<ItemDataScript>().item; //Mainhand
+		Item offhand_Slot = inventory.eqSlots[2].GetComponentInChildren<ItemDataScript>().item; //Offhand
+		Item helm_Slot = inventory.eqSlots[0].GetComponentInChildren<ItemDataScript>().item; //Helm
+		Item armor_Slot = inventory.eqSlots[3].GetComponentInChildren<ItemDataScript>().item; //Armor
+		Item leggings_Slot = inventory.eqSlots[4].GetComponentInChildren<ItemDataScript>().item; //Leggings
+
+		//Item mainhand_Slot = inventory.slots[inventory.slots.Count - 4].GetComponentInChildren<ItemDataScript>().item; //Mainhand
+		//Item offhand_Slot = inventory.slots[inventory.slots.Count - 3].GetComponentInChildren<ItemDataScript>().item; //Offhand
+		//Item helm_Slot = inventory.slots[inventory.slots.Count - 5].GetComponentInChildren<ItemDataScript>().item; //Helm
+		//Item armor_Slot = inventory.slots[inventory.slots.Count - 2].GetComponentInChildren<ItemDataScript>().item; //Armor
+		//Item leggings_Slot = inventory.slots[inventory.slots.Count - 1].GetComponentInChildren<ItemDataScript>().item; //Leggings
+
+		int bonusStr = mainhand_Slot.stats.power + offhand_Slot.stats.power + helm_Slot.stats.power + armor_Slot.stats.power + leggings_Slot.stats.power;
+		int bonusDef = mainhand_Slot.stats.defence + offhand_Slot.stats.defence + helm_Slot.stats.defence + armor_Slot.stats.defence + leggings_Slot.stats.defence;
+		int bonusVit = mainhand_Slot.stats.vitality + offhand_Slot.stats.vitality + helm_Slot.stats.vitality + armor_Slot.stats.vitality + leggings_Slot.stats.vitality;
+
+		strength = base_strength + bonusStr;
+		defence = base_defence + bonusDef;
+		vitality = base_vitality + bonusVit;
+
+		Debug.Log("Stats after:");
+		Debug.Log("Vitality: " + vitality);
+		Debug.Log("Strength: " + strength);
+		Debug.Log("Defence: " + defence);
+	}
 
     #region ManualMove
     private IEnumerator Move(Vector2 direction)

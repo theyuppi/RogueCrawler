@@ -4,6 +4,7 @@ using LitJson;
 using System.Collections.Generic;
 using System.IO;
 
+[System.Serializable]
 public class ItemDbScript : MonoBehaviour
 {
 	private List<Item> database = new List<Item>();
@@ -38,18 +39,23 @@ public class Item
 	public int id = 0;
 	public string title = "";
 	public int value = 0;
-	public int power = 0;
-	public int defence = 0;
-	public int vitality = 0;
 	public string description = "";
 	public bool stackable = false;
 	public int rarity = 0;
 	public string slug = "";
 	public Sprite sprite;
+	public string category = "";
+	public stats stats;
 
 	public Item()
 	{
 		this.id = -1;
-		//this.sprite = Resources.Load<Sprite>("Inventory/" + slug);
 	}
+}
+
+public struct stats
+{
+	public int power;
+	public int defence;
+	public int vitality;
 }

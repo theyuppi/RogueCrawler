@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+//using UnityEngine.EventSystems;
 
-public class CameraScript : MonoBehaviour
+[System.Serializable]
+public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
 {
 	public Transform target;
 	public static float smoothTime = 0.0f;
@@ -61,11 +63,13 @@ public class CameraScript : MonoBehaviour
 			if (inInv == true)
 			{
 				inInv = false;
+				invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
 				invCanvas.GetComponent<Canvas>().targetDisplay = 7;
 			}
 			else
 			{
 				inInv = true;
+				invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
 				invCanvas.GetComponent<Canvas>().targetDisplay = 0;
 			}
 		}
@@ -151,4 +155,33 @@ public class CameraScript : MonoBehaviour
 			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
 		}
 	}
+
+	//public void OnPointerDown(PointerEventData eventData)
+	//{
+	//	Debug.Log(eventData.pointerEnter.name);
+	//	//Debug.Log("Now over tile: " + eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().myID);
+	//	Debug.Log("OnPointerDown");
+	//}
+
+	//public void OnPointerClick(PointerEventData eventData)
+	//{
+	//	Debug.Log(eventData.pointerPressRaycast);
+
+	//	Debug.Log("OnPointerClick");
+	//	//eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().GotClicked();
+	//	if (eventData.pointerCurrentRaycast.gameObject.tag == "Floor")
+	//	{
+	//		Debug.Log("OnPointerClick");
+	//	}
+	//}
+
+	//public void OnPointerUp(PointerEventData eventData)
+	//{
+	//	Debug.Log("OnPointerUp");
+	//}
+
+	//public void OnPointerEnter(PointerEventData eventData)
+	//{
+	//	Debug.Log(eventData.pointerEnter.name);
+	//}
 }

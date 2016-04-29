@@ -11,7 +11,8 @@
         "description": "Jettefina handskar med elegant utseende.",
         "stackable": false,
         "rarity": 2,
-        "slug":  "gauntlet"
+        "slug": "gauntlet",
+        "category": "leggings"
     },
     { 
         "id": 1,
@@ -25,7 +26,8 @@
         "description": "Den mektigaste yxan i hela Midgaard",
         "stackable": false,
         "rarity": 8,
-        "slug":  "axe"
+        "slug": "axe",
+        "category": "mainhand"
     },
     { 
         "id": 2,
@@ -39,7 +41,8 @@
         "description": "Den mesigaste kniven i hela Midgaard",
         "stackable": false,
         "rarity": 150,
-        "slug":  "dagger"
+        "slug": "dagger",
+        "category": "mainhand"
     },
     { 
         "id": 3,
@@ -53,7 +56,8 @@
         "description": "Tillsammans e ni oslagbara!",
         "stackable": false,
         "rarity": 190,
-        "slug":  "armor"
+        "slug": "armor",
+        "category": "armor"
     },
     { 
         "id": 4,
@@ -67,10 +71,11 @@
         "description": "Den wowigaste hjelmen i hela Midgaard",
         "stackable": false,
         "rarity": 12,
-        "slug":  "helmet"
+        "slug": "helmet",
+        "category": "helm"
     },
     {
-        "id": 4,
+        "id": 5,
         "title": "Pers Skjieold",
         "value": 1,
         "stats": {
@@ -81,10 +86,11 @@
         "description": "Den hårdaste skjiolden i hela Midgaard",
         "stackable": false,
         "rarity": 22,
-        "slug": "shield"
+        "slug": "shield",
+        "category": "offhand"
     },
     { 
-        "id": 4,
+        "id": 6,
         "title": "Pers Sverd",
         "value": 88,
         "stats": {
@@ -95,6 +101,7 @@
         "description": "Den vassaste kniven i hela Midgaard",
         "stackable": false,
         "rarity": 11,
-        "slug":  "sword"
+        "slug": "sword",
+        "category": "mainhand"
     }
 ]

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class InventoryScript : MonoBehaviour
 {
 	GameObject inventoryPanel;
@@ -10,6 +11,7 @@ public class InventoryScript : MonoBehaviour
 	ItemDbScript database;
 	public GameObject inventorySlot;
 	public GameObject inventoryItem;
+	public PlayerHandler phandler;
 
 	public List<Item> items = new List<Item>();
 	public List<GameObject> slots = new List<GameObject>();
@@ -36,6 +38,8 @@ public class InventoryScript : MonoBehaviour
 		AddItem(2);
 		AddItem(3);
 		AddItem(4);
+		AddItem(5);
+		AddItem(6);
 
 		//Debug.Log("Items is: " + items.Count);
 		for (int i = 0; i < eqSlots.Count; i++)

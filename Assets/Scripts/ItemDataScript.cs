@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
+[System.Serializable]
 public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 
@@ -24,7 +25,6 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 			offset = eventData.position - new Vector2(this.transform.position.x, this.transform.position.y);
 			this.transform.position = eventData.position - offset;
 		}
-		//Debug.Log(eventData.pointerCurrentRaycast.gameObject.tag);
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
@@ -43,11 +43,6 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 			this.transform.position = eventData.position - offset;
 			inv.items[slot] = new Item();
 		}
-		
-		//if (eventData.pointerCurrentRaycast.gameObject.tag == "Floor")
-		//{
-		//	//Debug.Log("Now over tile: " + eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().myID);
-		//}
 	}
 
 	public void OnEndDrag(PointerEventData eventData)

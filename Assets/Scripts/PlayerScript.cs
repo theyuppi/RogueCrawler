@@ -15,6 +15,8 @@ public class PlayerScript : MonoBehaviour
 
     public const float stepDuration = 0.2f;
     public const float stepAttackDuration = 0.15f;
+    public const float stepDoorDuration = 0.5f;
+    public const float stepDoorDistance = 140;
     public List<Node> currentPath = null;
     public ReadSpriteScript map;
     public int tileX = 0;
@@ -48,6 +50,7 @@ public class PlayerScript : MonoBehaviour
 	private int combatStartAP = 0; //Actionpoints at start of combat
 
 	public InventoryScript inventory;
+    public List<Text> statsLabels;
 
 
 	//States
@@ -95,10 +98,10 @@ public class PlayerScript : MonoBehaviour
 
 	public void UpdateStats()
 	{
-		Debug.Log("Stats before:");
-		Debug.Log("Vitality: " + vitality);
-		Debug.Log("Strength: " + strength);
-		Debug.Log("Defence: " + defence);
+		//Debug.Log("Stats before:");
+		//Debug.Log("Vitality: " + vitality);
+		//Debug.Log("Strength: " + strength);
+		//Debug.Log("Defence: " + defence);
 
 		Item mainhand_Slot = inventory.eqSlots[1].GetComponentInChildren<ItemDataScript>().item; //Mainhand
 		Item offhand_Slot = inventory.eqSlots[2].GetComponentInChildren<ItemDataScript>().item; //Offhand
@@ -120,10 +123,12 @@ public class PlayerScript : MonoBehaviour
 		defence = base_defence + bonusDef;
 		vitality = base_vitality + bonusVit;
 
-		Debug.Log("Stats after:");
-		Debug.Log("Vitality: " + vitality);
-		Debug.Log("Strength: " + strength);
-		Debug.Log("Defence: " + defence);
+        //Debug.Log("Stats after:");
+        //Debug.Log("Vitality: " + vitality);
+        //Debug.Log("Strength: " + strength);
+        //Debug.Log("Defence: " + defence);
+
+        statsLabels[5].text = strength.ToString();
 	}
 
     #region ManualMove
@@ -260,10 +265,9 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 3]);
-							map.MakeRoom(0, 0, map.roomNode[a, 3]); //West
+							StartCoroutine(FadeInOut(a, 3)); //West
 						}
 					}
-					BumpMe(false);
 				}
 				else if (tileX > 36)
 				{
@@ -271,11 +275,10 @@ public class PlayerScript : MonoBehaviour
 					{
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							//Debug.Log("Creating room: " + map.roomNode[a, 4]);
-							map.MakeRoom(0, 0, map.roomNode[a, 4]); //East
-						}
+                            //Debug.Log("Creating room: " + map.roomNode[a, 4]);
+                            StartCoroutine(FadeInOut(a, 4)); //East
+                        }
 					}
-					BumpMe(false);
 				}
 				else if (tileY < 2)
 				{
@@ -284,10 +287,9 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 2]);
-							map.MakeRoom(0, 0, map.roomNode[a, 2]); //South
+							StartCoroutine(FadeInOut(a, 2)); //South
 						}
 					}
-					BumpMe(true);
 				}
 				else if (tileY > 36)
 				{	
@@ -296,11 +298,11 @@ public class PlayerScript : MonoBehaviour
 						//Debug.Log(map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner);
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
-							//Debug.Log("Creating room: " + map.roomNode[a, 1]);
-							map.MakeRoom(0, 0, map.roomNode[a, 1]); //Pacifica North
-						}
+                            //Debug.Log("Creating room: " + map.roomNode[a, 1]);
+                            StartCoroutine(FadeInOut(a, 1)); //Pacifica North
+                        }
 					}
-					BumpMe(true);
+					
 				}
             }
 
@@ -464,26 +466,76 @@ public class PlayerScript : MonoBehaviour
     //    tileY += y;
     //}
 
-    public void BumpMe(bool verticalBump)
+    public void BumpMe(int dir)
     {
-        if (verticalBump == true)
+        if (dir == 1 || dir == 2)
         {
             if (tileY == 0)
                 tileY = 2;
             tileY = (map.gridSizeY) - tileY ;
             Vector2 pos = transform.position;
-            pos = new Vector2(pos.x, tileY*100 + myOffsetY);
+            if (dir == 2)
+                pos = new Vector2(pos.x, tileY * 100 + myOffsetY + stepDoorDistance);
+            else
+                pos = new Vector2(pos.x, tileY * 100 + myOffsetY - stepDoorDistance);
             transform.position = pos;
 
         }
-        else if (verticalBump == false)
-		{
+        else if (dir == 3 || dir == 4)
+        {
 			if (tileX == 0)
 				tileX = 2;
             tileX = (map.gridSizeX) - tileX;
             Vector2 pos = transform.position;
-            pos = new Vector2(tileX*100, pos.y);
+            if (dir == 3)
+                pos = new Vector2(tileX * 100 + stepDoorDistance, pos.y);
+            else
+                pos = new Vector2(tileX * 100 - stepDoorDistance, pos.y);
             transform.position = pos;
+        }
+    }
+
+    private IEnumerator FadeInOut(int a, int b)
+    {
+        if (b == 1)
+            StartCoroutine(MoveToDoor(Vector2.up));
+        else if (b == 2)
+            StartCoroutine(MoveToDoor(Vector2.down));
+        else if (b == 3)
+            StartCoroutine(MoveToDoor(Vector2.left));
+        else if (b == 4)
+            StartCoroutine(MoveToDoor(Vector2.right));
+
+        yield return new WaitForSeconds(1f);
+        float fadeTime = GetComponent<Fading>().BeginFade(1);
+        yield return new WaitForSeconds(fadeTime);
+        map.MakeRoom(0, 0, map.roomNode[a, b]);
+        BumpMe(b);
+        //yield return new WaitForSeconds(fadeTime);
+
+        GetComponent<Fading>().BeginFade(-1);
+        yield return new WaitForSeconds(1f);
+
+        if (b == 1)
+            StartCoroutine(MoveToDoor(Vector2.up));
+        else if (b == 2)
+            StartCoroutine(MoveToDoor(Vector2.down));
+        else if (b == 3)
+            StartCoroutine(MoveToDoor(Vector2.left));
+        else if (b == 4)
+            StartCoroutine(MoveToDoor(Vector2.right));
+    }
+
+    private IEnumerator MoveToDoor(Vector2 dir)
+    {
+        Vector2 startPosition = transform.position;
+        Vector2 destinationPosition = startPosition + (dir * stepDoorDistance);
+        float t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+            t += Time.deltaTime / stepDoorDuration;
+            yield return new WaitForEndOfFrame();
         }
     }
 }

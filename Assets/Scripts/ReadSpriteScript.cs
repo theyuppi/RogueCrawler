@@ -115,17 +115,6 @@ public class ReadSpriteScript : MonoBehaviour
 
         //CreateRoom("maproom" + 1 + "newer");
         MakeRoom(0 , 0,  "bigmap1_03");
-        //MakeRoom(40, 80, "bigmap1_11");
-        //MakeRoom(40, 40, "bigmap1_10");
-		//MakeRoom(40, 0, "bigmap1_09");
-		//MakeRoom(80, 120, "bigmap1_08");
-		//MakeRoom(80, 80, "bigmap1_07");
-		//MakeRoom(80, 0, "bigmap1_06");
-		//MakeRoom(120, 120, "bigmap1_05");
-		//MakeRoom(120, 80, "bigmap1_04");
-		//MakeRoom(120, 40, "bigmap1_03");
-		//MakeRoom(120, 0, "bigmap1_02");
-		//MakeRoom(160, 40, "bigmap1_01");
 		GeneratePathfindingGraph();	
 	}
 
@@ -584,6 +573,8 @@ public class ReadSpriteScript : MonoBehaviour
 
 		return cost;
 	}
+
+    
 
     //public void ClearCertainPath(List<Node> currentPath)
     //{

@@ -16,12 +16,13 @@ public class InventoryScript : MonoBehaviour
 	public List<Item> items = new List<Item>();
 	public List<GameObject> slots = new List<GameObject>();
 	public List<GameObject> eqSlots = new List<GameObject>();
+	public List<GameObject> lootSlots = new List<GameObject>();
 	public int slotCount;
 
 	void Start()
 	{
 		database = GetComponent<ItemDbScript>();
-		slotCount = 32;
+		slotCount = 40;
 		inventoryPanel = GameObject.Find("Inventory Panel");
 		slotPanel = inventoryPanel.transform.FindChild("Slot Panel").gameObject;
 
@@ -70,6 +71,24 @@ public class InventoryScript : MonoBehaviour
 				slots[i].name = "Slot: " + itemToAdd.title;
 				break;
 			}
+		}
+	}
+
+
+	public void clearLootSlots()
+	{
+		for (int i = 0; i < lootSlots.Count; i++)
+		{
+			lootSlots[i] = null;
+		}
+	}
+
+	public void ShowItemsInChest(GameObject chest)
+	{
+		for (int i = 0; i < chest.GetComponent<ChestScript>().itemList.Count; i++)
+		{
+			Debug.Log(chest.GetComponent<ChestScript>().itemList[i].description);
+			//lootSlots[i].name = chest.GetComponent<ChestScript>().itemList[i].ToString();
 		}
 	}
 }

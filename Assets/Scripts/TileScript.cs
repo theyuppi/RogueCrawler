@@ -103,38 +103,42 @@ public class TileScript : MonoBehaviour
         else if (myTileType == TileTypes.LDoor)
         {
             spr.sprite = mySprite[(int)TileTypes.Floor];
-            GameObject tileAddon = Instantiate(doorLprefab, transform.position, transform.rotation) as GameObject;
+			var pos = transform.position;
+			pos.x -= 49;
+			pos.y += 33;
+            GameObject tileAddon = Instantiate(doorLprefab, pos, transform.rotation) as GameObject;
             tileAddon.transform.parent = transform;
-            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
             walkable = false;
             isDoor = true;
         }
         else if (myTileType == TileTypes.RDoor)
         {
             spr.sprite = mySprite[(int)TileTypes.Floor];
-            GameObject tileAddon = Instantiate(doorRprefab, transform.position, transform.rotation) as GameObject;
+			var pos = transform.position;
+			pos.x += 49;
+			pos.y += 33;
+			GameObject tileAddon = Instantiate(doorRprefab, pos, transform.rotation) as GameObject;
             tileAddon.transform.parent = transform;
-            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
             walkable = false;
             isDoor = true;
         }
 		else if (myTileType == TileTypes.UDoor)
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(doorUprefab, transform.position, transform.rotation) as GameObject;
+			var pos = transform.position;
+			pos.y += 22;
+			GameObject tileAddon = Instantiate(doorUprefab, pos, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 4;
-			tileAddon.GetComponentInChildren<SpriteRenderer>().sortingOrder = 3;
 			walkable = false;
 			isDoor = true;
 		}
 		else if (myTileType == TileTypes.DDoor)
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(doorDprefab, transform.position, transform.rotation) as GameObject;
+			var pos = transform.position;
+			pos.y += 24;
+			GameObject tileAddon = Instantiate(doorDprefab, pos, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 4;
-			//tileAddon.GetComponentInChildren<SpriteRenderer>().sortingOrder = 3;
 			walkable = false;
 			isDoor = true;
 		}

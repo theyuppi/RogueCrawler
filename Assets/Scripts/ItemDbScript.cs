@@ -32,6 +32,16 @@ public class ItemDbScript : MonoBehaviour
 		}
 		return null;
 	}
+
+	public List<Item> FillChest(int slots)
+	{
+		List<Item> itemList = new List<Item>();
+		for (int i = 0; i < slots; i++)
+		{
+			itemList.Add(FetchItemByID(Random.Range(0, 5)));
+		}
+		return itemList;
+	}
 }
 
 public class Item

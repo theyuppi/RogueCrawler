@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour
 	private int agility = 0;
 	private int recoveryRate = 0;
 	private int combatStartAP = 0; //Actionpoints at start of combat
-	//Test
+
 	public InventoryScript inventory;
 
 

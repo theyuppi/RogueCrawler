@@ -9,10 +9,12 @@ public class SlotScript : MonoBehaviour, IDropHandler
 	public int id;
 	private InventoryScript inv;
 	public string slotCategory = "";
+	PlayerScript player;
 
 	void Start()
 	{
 		inv = GameObject.Find("Inventory").GetComponent<InventoryScript>();
+		player = GameObject.Find("Player").GetComponent<PlayerScript>();
 	}
 
 	public void OnDrop(PointerEventData eventData)
@@ -74,7 +76,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 				//Is item eligible?
 				if (droppedItem.GetComponent<ItemDataScript>().item.category == inv.slots[id].GetComponent<SlotScript>().slotCategory)
 				{
-					Transform item = this.transform.GetChild(0);
+					Transform item = this.transform.GetChild(1);
 					item.GetComponent<ItemDataScript>().slot = droppedItem.slot;
 					item.transform.SetParent(inv.slots[droppedItem.slot].transform);
 					item.transform.position = inv.slots[droppedItem.slot].transform.position;
@@ -118,6 +120,6 @@ public class SlotScript : MonoBehaviour, IDropHandler
 				droppedItem.slot = id;
 			}
 		}
-		GameObject.Find("Player").GetComponent<PlayerScript>().UpdateStats();
+		//player.UpdateStats();
 	}
 }

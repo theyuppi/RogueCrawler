@@ -175,6 +175,7 @@ public class ReadSpriteScript : MonoBehaviour
                     else if (tileType.Equals("FFFF00"))
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
+						tile.GetComponent<TileScript>().walkable = false;
                         tile.tag = "Chest";
                         //Debug.Log("Treasure");
                     }

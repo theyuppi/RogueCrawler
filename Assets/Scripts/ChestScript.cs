@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ChestScript : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class ChestScript : MonoBehaviour
 	public ItemDbScript invDB;
 	private int slots = 5; //How many slots in this chest?
 
+	public GameObject item;
+
 	public void Start()
 	{
 		GameHandler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
@@ -19,9 +22,9 @@ public class ChestScript : MonoBehaviour
 		invDB = inv.GetComponent<ItemDbScript>();
 		invScript = inv.GetComponent<InventoryScript>();
 
-		
 		//Query itemDatabase for items
 		itemList = invDB.FillChest(slots);
+		//PopulateChest();
 	}
 
 	public void Click(BaseEventData bEventData)
@@ -29,15 +32,27 @@ public class ChestScript : MonoBehaviour
 		PointerEventData pEventData = (PointerEventData)bEventData;
 		if (pEventData.button == PointerEventData.InputButton.Right) //React on right-click only
 		{
-			//GameHandler.inInv = true;
 			GameHandler.ChestClicked();
 			invScript.ShowItemsInChest(this.gameObject);
 		}
+		else
+		{
+			this.GetComponentInParent<TileScript>().GotClicked();
+		}
+	}
 
-		////Print all items in list
-		//for (int i = 0; i < itemList.Count; i++)
-		//{
-		//	Debug.Log(itemList[i].description);
-		//}
+	public void PopulateChest(List<GameObject> slots)
+	{
+		for (int i = 0; i < itemList.Count; i++)
+		{
+			GameObject itm = Instantiate(item);
+			itm.GetComponent<ItemDataScript>().item = itemList[i];
+			itm.GetComponent<ItemDataScript>().slot = i;
+			itm.transform.SetParent(slots[i].transform);
+			itm.GetComponent<Image>().sprite = itemList[i].sprite;
+			itm.transform.position = Vector2.zero;
+			itm.name = itemList[i].title;
+			itm.GetComponent<RectTransform>().localPosition = Vector2.zero;
+		}
 	}
 }

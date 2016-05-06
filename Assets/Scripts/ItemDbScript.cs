@@ -68,4 +68,6 @@ public struct stats
 	public int power;
 	public int defence;
 	public int vitality;
+	public int speed;
+	public int agility;
 }

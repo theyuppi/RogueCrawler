@@ -12,10 +12,12 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
 	private Vector2 offset;
 	private InventoryScript inv;
+	private Transform invCanvasTransform;
 
 	void Start()
 	{
 		inv = GameObject.Find("Inventory").GetComponent<InventoryScript>();
+		invCanvasTransform = GameObject.Find("InventoryCanvas").transform;
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
@@ -42,6 +44,8 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 		{
 			this.transform.position = eventData.position - offset;
 			inv.items[slot] = new Item();
+			this.transform.SetParent(invCanvasTransform);
+			Cursor.visible = false;
 		}
 	}
 
@@ -50,5 +54,6 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 		this.transform.SetParent(inv.slots[slot].transform);
 		this.transform.position = inv.slots[slot].transform.position;
 		GetComponent<CanvasGroup>().blocksRaycasts = true;
+		Cursor.visible = true;
 	}
 }

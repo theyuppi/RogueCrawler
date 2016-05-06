@@ -195,4 +195,20 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		invCanvas.GetComponent<Canvas>().targetDisplay = 0;
 		lootPanel.localScale = new Vector3(1, 1, 1);
 	}
+
+	public void ChestClosed()
+	{
+		inInv = false;
+		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+		lootPanel.localScale = new Vector3(0, 0, 0);
+	}
+
+	public void InvClosed()
+	{
+		inInv = false;
+		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+		lootPanel.localScale = new Vector3(0, 0, 0);
+	}
 }

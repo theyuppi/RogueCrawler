@@ -33,6 +33,10 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 	{
 		if (item != null)
 		{
+			if (transform.parent.parent.parent.tag == "LootPanel")
+			{
+				item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
+			}
 			this.transform.SetParent(this.transform.parent.parent);
 			GetComponent<CanvasGroup>().blocksRaycasts = false;
 		}

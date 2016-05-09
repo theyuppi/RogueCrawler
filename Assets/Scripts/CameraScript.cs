@@ -19,6 +19,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 
 	public Canvas invCanvas;
 	public bool inInv = false;
+	public bool inChest = false;
 	public RectTransform lootPanel;
 
 	void Start()
@@ -191,6 +192,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 	public void ChestClicked()
 	{
 		inInv = true;
+		inChest = true;
 		invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
 		invCanvas.GetComponent<Canvas>().targetDisplay = 0;
 		lootPanel.localScale = new Vector3(1, 1, 1);
@@ -199,6 +201,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 	public void ChestClosed()
 	{
 		inInv = false;
+		inChest = false;
 		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
 		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
 		lootPanel.localScale = new Vector3(0, 0, 0);
@@ -207,6 +210,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 	public void InvClosed()
 	{
 		inInv = false;
+		inChest = false;
 		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
 		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
 		lootPanel.localScale = new Vector3(0, 0, 0);

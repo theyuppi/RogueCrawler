@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\CanvasEnablerScript.cs" />
     <Compile Include="Assets\Scripts\ChestScript.cs" />
+    <Compile Include="Assets\Scripts\DetectPlayerPresence.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\EnemyHandler.cs" />
     <Compile Include="Assets\Scripts\EnemyScript.cs" />

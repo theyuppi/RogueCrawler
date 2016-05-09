@@ -114,12 +114,9 @@ public class ReadSpriteScript : MonoBehaviour
 		#endregion
 
         //CreateRoom("maproom" + 1 + "newer");
-        MakeRoom(0 , 0,  "bigmap1_03");
+        MakeRoom(0 , 0,  "bigmap1_01");
 		GeneratePathfindingGraph();	
 	}
-
-	void Update()
-	{ }
 
     public void MakeRoom(int x, int y, string levelName)
     {
@@ -152,19 +149,19 @@ public class ReadSpriteScript : MonoBehaviour
                 {
                     //GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
                     GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
-                    if (tileType.Equals("C4AA6C"))
+                    if (tileType.Equals("C4AA6C")) //Floor
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
                         tile.tag = "Floor";
                         //Debug.Log("Floor");
                     }
-                    else if (tileType.Equals("584A33"))
+                    else if (tileType.Equals("584A33")) //Wall
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
                         tile.tag = "Wall";
                         //Debug.Log("Wall");
                     }
-                    else if (tileType.Equals("FF0000"))
+                    else if (tileType.Equals("FF0000")) //Enemy
                     {
                         tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x);
                         tile.GetComponent<TileScript>().walkable = false;
@@ -172,20 +169,20 @@ public class ReadSpriteScript : MonoBehaviour
                         tile.tag = "Floor";
                         //Debug.Log("Enemy");
                     }
-                    else if (tileType.Equals("FFFF00"))
+                    else if (tileType.Equals("FFFF00")) //Treasure
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
 						tile.GetComponent<TileScript>().walkable = false;
                         tile.tag = "Chest";
                         //Debug.Log("Treasure");
                     }
-                    else if (tileType.Equals("505050"))
+                    else if (tileType.Equals("505050")) //Spikes
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
                         tile.tag = "Spike";
                         //Debug.Log("Spikes");
                     }
-                    else if (tileType.Equals("000000"))
+                    else if (tileType.Equals("000000")) //Hole
                     {
                         tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
                         tile.tag = "Hole";
@@ -247,6 +244,13 @@ public class ReadSpriteScript : MonoBehaviour
 						}
 						//Debug.Log("RightDoor");
 					}
+					else if (tileType.Equals("0000FF")) //EndTile
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.FloorEnd;
+						//Debug.Log("EndTile");
+					}
+
+
                     myTileArray[(int)i + y, (int)j + x] = tile;
                     tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
                     tile.GetComponent<TileScript>().levelHandler = this.gameObject;

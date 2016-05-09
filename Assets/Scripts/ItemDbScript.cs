@@ -56,6 +56,8 @@ public class Item
 	public Sprite sprite;
 	public string category = "";
 	public stats stats;
+	public GameObject belongsToChest;
+	public int myInti = 0;
 
 	public Item()
 	{

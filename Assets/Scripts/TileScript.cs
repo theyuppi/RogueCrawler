@@ -20,7 +20,8 @@ public class TileScript : MonoBehaviour
 		LDoor,
 		RDoor,
 		UDoor,
-		DDoor
+		DDoor,
+		FloorEnd
 	}
 	public TileTypes myTileType = TileTypes.Floor;
 	public GameObject chestPrefab;
@@ -32,6 +33,7 @@ public class TileScript : MonoBehaviour
 	public GameObject doorDprefab;
     public GameObject roofPrefab;
     public GameObject occupant;
+	public GameObject endPortalPrefab;
 
 	public string owner;
 	public float moveCost = 1.0f;
@@ -143,6 +145,15 @@ public class TileScript : MonoBehaviour
 			isDoor = true;
 		}
         //OccupyTile();
+
+
+		else if (myTileType == TileTypes.FloorEnd)  //EndTile
+		{
+			spr.sprite = mySprite[(int)TileTypes.Floor];
+			GameObject tileAddon = Instantiate(endPortalPrefab, transform.position, transform.rotation) as GameObject;
+			tileAddon.transform.parent = transform;
+			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+		}
 
     }
 	

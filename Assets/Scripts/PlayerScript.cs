@@ -95,7 +95,7 @@ public class PlayerScript : MonoBehaviour
 		animaThor.SetInteger("State", 0);
 		healthText = GetComponentInChildren<Text>();
 		healthText.text = health.ToString();
-		
+
 		StringBuilder str = new StringBuilder();
 		str.Append(health.ToString());
 		str.Append(" / ");
@@ -397,6 +397,7 @@ public class PlayerScript : MonoBehaviour
 
 				}
 			}
+			
 
 			else if (currentPath != null)
 			{
@@ -405,7 +406,29 @@ public class PlayerScript : MonoBehaviour
 			}
 
 		}
-
+		// Walking in to portal
+		if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
+		{
+			Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
+			if (roundDir == Vector2.up)
+			{
+				myDirection = direction.Up;
+			}
+			else if (roundDir == Vector2.down)
+			{
+				myDirection = direction.Down;
+			}
+			else if (roundDir == Vector2.left)
+			{
+				myDirection = direction.Left;
+			}
+			else if (roundDir == Vector2.right)
+			{
+				myDirection = direction.Right;
+			}
+			
+			StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
+		}
 		else
 		{
 			// Lerp to new position
@@ -631,5 +654,27 @@ public class PlayerScript : MonoBehaviour
 			t += Time.deltaTime / stepDoorDuration;
 			yield return new WaitForEndOfFrame();
 		}
+	}
+
+
+	private IEnumerator EnterPortal(int b)
+	{
+		if (b == 0)
+			StartCoroutine(MoveToDoor(Vector2.up));
+		else if (b == 1)
+			StartCoroutine(MoveToDoor(Vector2.down));
+		else if (b == 2)
+			StartCoroutine(MoveToDoor(Vector2.left));
+		else if (b == 3)
+			StartCoroutine(MoveToDoor(Vector2.right));
+
+		yield return new WaitForSeconds(1f);
+		float fadeTime = GetComponent<Fading>().BeginFade(1);
+		yield return new WaitForSeconds(fadeTime);
+		//map.MakeRoom(0, 0, map.roomNode[a, b]);
+		//BumpMe(b);
+		//yield return new WaitForSeconds(fadeTime);
+		map.GoToLevel(1);
+		GetComponent<Fading>().BeginFade(-1);
 	}
 }

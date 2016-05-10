@@ -49,6 +49,7 @@ public class TileScript : MonoBehaviour
     public bool hasPlayer = false;
     public bool unReachable = false;
     public bool isDoor = false;
+	public bool isEndPortal = false;
     
 
 	void Awake()
@@ -146,54 +147,18 @@ public class TileScript : MonoBehaviour
 		}
         //OccupyTile();
 
-
 		else if (myTileType == TileTypes.FloorEnd)  //EndTile
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(endPortalPrefab, transform.position, transform.rotation) as GameObject;
+			var pos = transform.position;
+			pos.x -= 12;
+			GameObject tileAddon = Instantiate(endPortalPrefab, pos, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+			isEndPortal = true;
 		}
-
     }
 	
-	void OnMouseUp()
-	{
-		//if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().myTurn == true)
-		//{
-		//	// Clicked while moving to cancel movement
-		//	if (player.GetComponent<PlayerScript>().isMoving == true)
-		//	{
-		//		doubleclicked = 0;
-		//		player.GetComponent<PlayerScript>().isMoving = false;
-		//		levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
-		//		player.GetComponent<PlayerScript>().currentPath = null;
-		//	}
-
-		//	// Generate movement path (First click)
-		//	if (player.GetComponent<PlayerScript>().currentPath == null)
-		//	{
-		//		if (doubleclicked > 0)
-		//			levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
-		//	}
-
-		//	// Move through generated path (Second click on same tile)
-		//	else if (myID.x == player.GetComponent<PlayerScript>().GetGoalTileX()
-		//		&& myID.y == player.GetComponent<PlayerScript>().GetGoalTileY())
-		//	{
-		//		StartCoroutine(player.GetComponent<PlayerScript>().MakeAMove());
-		//	}
-
-		//	// Generate new movement path (Clicked on another tile)
-		//	else if (player.GetComponent<PlayerScript>().currentPath != null)
-		//	{
-		//		levelHandler.GetComponent<ReadSpriteScript>().ClearOldPath();
-		//		levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
-		//	}
-		//	doubleclicked++;
-		//}
-    }
-
 	void FixedUpdate()
 	{
         if (unReachable)

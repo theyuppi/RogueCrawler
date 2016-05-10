@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class ReadSpriteScript : MonoBehaviour
@@ -29,11 +30,30 @@ public class ReadSpriteScript : MonoBehaviour
 	public bool unReachable = false;
     public List<GameObject> roomList = new List<GameObject>();
 
-	public string[,] roomNode = new string[12, 5];
-
+	public string[,] roomNode = new string[22, 5];
+	public List<string> mapNamesList = new List<string>();
+	public List<string> mapNamesStartRoomList = new List<string>();
 
 	void Start()
 	{
+		mapNamesList.Add("bigmap1_");
+		mapNamesStartRoomList.Add("11");
+		mapNamesList.Add("bigmap2_");
+		mapNamesStartRoomList.Add("07");
+		mapNamesList.Add("bigmap3_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap4_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap5_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap6_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap7_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap8_");
+		mapNamesStartRoomList.Add("00");
+		mapNamesList.Add("bigmap9_");	
+
         mplX = (float)tileSizeX;
         mplY = (float)tileSizeY;
         selectedUnit.GetComponent<PlayerScript>().map = this;
@@ -114,7 +134,118 @@ public class ReadSpriteScript : MonoBehaviour
 		#endregion
 
         //CreateRoom("maproom" + 1 + "newer");
-        MakeRoom(0 , 0,  "bigmap1_01");
+		MakeRoom(0, 0, mapNamesList[0] + mapNamesStartRoomList[0]);
+		GeneratePathfindingGraph();	
+	}
+	public void GoToLevel(int id)
+	{
+		//myTileArray = new GameObject[gridSizeX, gridSizeY];
+		Array.Clear(myTileArray, 0, myTileArray.Length);
+		
+		#region RoomNodeAlignment
+		roomNode[0, 0] = "bigmap2_00";
+		roomNode[0, 1] = "bigmap2_04";
+		roomNode[0, 2] = null;
+		roomNode[0, 3] = null;
+		roomNode[0, 4] = "bigmap2_01";
+
+		roomNode[1, 0] = "bigmap2_01";
+		roomNode[1, 1] = null;
+		roomNode[1, 2] = null;
+		roomNode[1, 3] = "bigmap2_00";
+		roomNode[1, 4] = "bigmap2_02";
+
+		roomNode[2, 0] = "bigmap2_02";
+		roomNode[2, 1] = "bigmap2_05";
+		roomNode[2, 2] = null;
+		roomNode[2, 3] = "bigmap2_01";
+		roomNode[2, 4] = null;
+
+		roomNode[3, 0] = "bigmap2_03";
+		roomNode[3, 1] = "bigmap2_04";
+		roomNode[3, 2] = null;
+		roomNode[3, 3] = null;
+		roomNode[3, 4] = "bigmap2_01";
+
+		roomNode[4, 0] = "bigmap2_04";
+		roomNode[4, 1] = null;
+		roomNode[4, 2] = "bigmap2_00";
+		roomNode[4, 3] = "bigmap2_03";
+		roomNode[4, 4] = null;
+
+		roomNode[5, 0] = "bigmap2_05";
+		roomNode[5, 1] = "bigmap2_11";
+		roomNode[5, 2] = "bigmap2_02";
+		roomNode[5, 3] = null;
+		roomNode[5, 4] = "bigmap2_06";
+
+		roomNode[6, 0] = "bigmap2_06";
+		roomNode[6, 1] = null;
+		roomNode[6, 2] = null;
+		roomNode[6, 3] = "bigmap2_05";
+		roomNode[6, 4] = null;
+
+		roomNode[7, 0] = "bigmap2_07";
+		roomNode[7, 1] = null;
+		roomNode[7, 2] = null;
+		roomNode[7, 3] = null;
+		roomNode[7, 4] = "bigmap2_08";
+
+		roomNode[8, 0] = "bigmap2_08";
+		roomNode[8, 1] = "bigmap2_12";
+		roomNode[8, 2] = "bigmap2_03";
+		roomNode[8, 3] = "bigmap2_07";
+		roomNode[8, 4] = "bigmap2_09";
+
+		roomNode[9, 0] = "bigmap2_09";
+		roomNode[9, 1] = null;
+		roomNode[9, 2] = null;
+		roomNode[9, 3] = "bigmap2_08";
+		roomNode[9, 4] = "bigmap2_10";
+
+		roomNode[10, 0] = "bigmap2_10";
+		roomNode[10, 1] = "bigmap2_14";
+		roomNode[10, 2] = null;
+		roomNode[10, 3] = "bigmap2_09";
+		roomNode[10, 4] = "bigmap2_11";
+
+		roomNode[11, 0] = "bigmap2_11";
+		roomNode[10, 1] = null;
+		roomNode[10, 2] = "bigmap2_05";
+		roomNode[10, 3] = "bigmap2_10";
+		roomNode[10, 4] = null;
+
+		roomNode[12, 0] = "bigmap2_12";
+		roomNode[12, 1] = null;
+		roomNode[12, 2] = "bigmap2_08";
+		roomNode[12, 3] = null;
+		roomNode[12, 4] = "bigmap2_13";
+
+		roomNode[13, 0] = "bigmap2_13";
+		roomNode[13, 1] = "bigmap2_15";
+		roomNode[13, 2] = null;
+		roomNode[13, 3] = "bigmap2_12";
+		roomNode[13, 4] = null;
+
+		roomNode[14, 0] = "bigmap2_14";
+		roomNode[14, 1] = "bigmap2_16";
+		roomNode[14, 2] = "bigmap2_10";
+		roomNode[14, 3] = null;
+		roomNode[14, 4] = null;
+
+		roomNode[15, 0] = "bigmap2_15";
+		roomNode[15, 1] = null;
+		roomNode[15, 2] = "bigmap2_13";
+		roomNode[15, 3] = null;
+		roomNode[15, 4] = "bigmap2_16";
+
+		roomNode[16, 0] = "bigmap2_16";
+		roomNode[16, 1] = null;
+		roomNode[16, 2] = "bigmap2_14";
+		roomNode[16, 3] = "bigmap2_15";
+		roomNode[16, 4] = null;
+		#endregion
+		MakeRoom(0, 0, mapNamesList[id] + mapNamesStartRoomList[id]);
 		GeneratePathfindingGraph();	
 	}
 
@@ -249,7 +380,12 @@ public class ReadSpriteScript : MonoBehaviour
 						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.FloorEnd;
 						//Debug.Log("EndTile");
 					}
-
+					else if (tileType.Equals("00FF00")) //StartTile
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
+						
+						//Debug.Log("StartTile");
+					}
 
                     myTileArray[(int)i + y, (int)j + x] = tile;
                     tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
@@ -258,6 +394,15 @@ public class ReadSpriteScript : MonoBehaviour
                     tile.GetComponent<TileScript>().player = selectedUnit;
 					tile.transform.SetParent(Room.transform);
                     //tile.transform.parent = Room.transform;
+
+					if (tileType.Equals("00FF00"))
+					{
+						pHandler.player.transform.position = tile.transform.position;
+						pHandler.player.GetComponent<PlayerScript>().tileX = (int)tile.GetComponent<TileScript>().myID.x;
+						pHandler.player.GetComponent<PlayerScript>().tileY = (int)tile.GetComponent<TileScript>().myID.y;
+						pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tile.GetComponent<TileScript>().myID.x;
+						pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tile.GetComponent<TileScript>().myID.y;
+					}
                 }
             }
         }

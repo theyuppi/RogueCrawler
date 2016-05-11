@@ -38,6 +38,7 @@ public class ReadSpriteScript : MonoBehaviour
 	public List<string> mapNamesStartRoomList = new List<string>();
 	public List<string> lootedChests = new List<string>();
 	public bool permadeathMode = false;
+    public bool teleported = false;
 
 	void Start()
 	{
@@ -55,7 +56,7 @@ public class ReadSpriteScript : MonoBehaviour
 		#endregion
 
 		mapNamesList.Add("bigmap1_");
-		mapNamesStartRoomList.Add("03");
+		mapNamesStartRoomList.Add("11");
 		mapNamesList.Add("bigmap2_");
 		mapNamesStartRoomList.Add("07");
 		mapNamesList.Add("bigmap3_");
@@ -439,7 +440,14 @@ public class ReadSpriteScript : MonoBehaviour
 						//Debug.Log("StartTile");
 					}
 
-					myTileArray[(int)i + y, (int)j + x] = tile;
+                    else if (tileType.Equals("00FFFF")) //Tiles beside door
+                    {
+                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.SideDoor;
+
+                        //Debug.Log("StartTile");
+                    }
+
+                    myTileArray[(int)i + y, (int)j + x] = tile;
 					tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
 					tile.GetComponent<TileScript>().levelHandler = this.gameObject;
 					eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
@@ -449,11 +457,16 @@ public class ReadSpriteScript : MonoBehaviour
 
 					if (tileType.Equals("00FF00"))
 					{
-						pHandler.player.transform.position = tile.transform.position;
-						pHandler.player.GetComponent<PlayerScript>().tileX = (int)tile.GetComponent<TileScript>().myID.x;
-						pHandler.player.GetComponent<PlayerScript>().tileY = (int)tile.GetComponent<TileScript>().myID.y;
-						pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tile.GetComponent<TileScript>().myID.x;
-						pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tile.GetComponent<TileScript>().myID.y;
+                        if (teleported == true)
+                        {
+                            pHandler.player.transform.position = tile.transform.position;
+                            pHandler.player.transform.position = new Vector2(pHandler.player.transform.position.x, pHandler.player.transform.position.y + 25f);
+                            pHandler.player.GetComponent<PlayerScript>().tileX = (int)tile.GetComponent<TileScript>().myID.x;
+                            pHandler.player.GetComponent<PlayerScript>().tileY = (int)tile.GetComponent<TileScript>().myID.y;
+                            pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tile.GetComponent<TileScript>().myID.x;
+                            pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tile.GetComponent<TileScript>().myID.y;
+                            teleported = false;
+                        }
 					}
 				}
 			}

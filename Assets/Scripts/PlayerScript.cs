@@ -74,7 +74,7 @@ public class PlayerScript : MonoBehaviour
 
 	public int charLVL = 1;
 	public List<int> xpLevels = new List<int>{
-		10, 20, 30, 40, 50
+		10, 20, 30, 40, 50, 60, 70, 80, 90, 100
 	};
 
 	public float myOffsetX = 0;
@@ -419,42 +419,43 @@ public class PlayerScript : MonoBehaviour
 							StartCoroutine(FadeInOut(a, 1)); //Pacifica North
 						}
 					}
-
 				}
 			}
 
+            // Walking in to portal
+            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
+            {
+                map.teleported = true;
+                Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
+                if (roundDir == Vector2.up)
+                {
+                    myDirection = direction.Up;
+                }
+                else if (roundDir == Vector2.down)
+                {
+                    myDirection = direction.Down;
+                }
+                else if (roundDir == Vector2.left)
+                {
+                    myDirection = direction.Left;
+                }
+                else if (roundDir == Vector2.right)
+                {
+                    myDirection = direction.Right;
+                }
 
-			else if (currentPath != null)
+                StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
+            }
+
+
+            else if (currentPath != null)
 			{
 				tileX = currentPath[currNode - 1].x;
 				tileY = currentPath[currNode - 1].y;
 			}
 
 		}
-		// Walking in to portal
-		if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
-		{
-			Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
-			if (roundDir == Vector2.up)
-			{
-				myDirection = direction.Up;
-			}
-			else if (roundDir == Vector2.down)
-			{
-				myDirection = direction.Down;
-			}
-			else if (roundDir == Vector2.left)
-			{
-				myDirection = direction.Left;
-			}
-			else if (roundDir == Vector2.right)
-			{
-				myDirection = direction.Right;
-			}
-
-			StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
-		}
-		else
+        else
 		{
 			// Lerp to new position
 			currActPts--;
@@ -505,55 +506,55 @@ public class PlayerScript : MonoBehaviour
 
 	private void PerformAttack(direction dir)
 	{
-		isPerformingAttack = true;
-		switch (dir)
-		{
-			case direction.Up:
-				StartCoroutine(PerformAttackMove(Vector2.up * 0.5f));
-				animaThor.SetInteger("State", 1);
-				break;
-			case direction.Down:
-				StartCoroutine(PerformAttackMove(Vector2.down * 0.5f));
-				animaThor.SetInteger("State", 2);
-				break;
-			case direction.Left:
-				StartCoroutine(PerformAttackMove(Vector2.left * 0.5f));
-				animaThor.SetInteger("State", 1);
-				break;
-			case direction.Right:
-				StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
-				animaThor.SetInteger("State", 1);
+        isPerformingAttack = true;
+        switch (dir)
+        {
+            case direction.Up:
+                StartCoroutine(PerformAttackMove(Vector2.up * 0.5f));
+                animaThor.SetInteger("State", 1);
+                break;
+            case direction.Down:
+                StartCoroutine(PerformAttackMove(Vector2.down * 0.5f));
+                animaThor.SetInteger("State", 2);
+                break;
+            case direction.Left:
+                StartCoroutine(PerformAttackMove(Vector2.left * 0.5f));
+                animaThor.SetInteger("State", 1);
+                break;
+            case direction.Right:
+                StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
+                animaThor.SetInteger("State", 1);
 
-				break;
-			default:
-				break;
-		}
-		map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
-		map.ClearOldPath();
-		StartCoroutine(SetAttackFalse());
-	}
+                break;
+            default:
+                break;
+        }
+        map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
+        map.ClearOldPath();
+        StartCoroutine(SetAttackFalse());
+    }
 
-	private IEnumerator PerformAttackMove(Vector2 dir)
+    private IEnumerator PerformAttackMove(Vector2 dir)
 	{
-		Vector2 startPosition = transform.position;
-		Vector2 destinationPosition = startPosition + (dir * 40f);
-		float t = 0.0f;
-		while (t < 1.1f)
-		{
-			transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-			t += Time.deltaTime / stepAttackDuration;
-			yield return new WaitForEndOfFrame();
-		}
-		yield return new WaitForSeconds(0.6f);
-		animaThor.SetInteger("State", 0);
-		t = 0.0f;
-		while (t < 1.1f)
-		{
-			transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
-			t += Time.deltaTime / stepAttackDuration;
-			yield return new WaitForEndOfFrame();
-		}
-	}
+        Vector2 startPosition = transform.position;
+        Vector2 destinationPosition = startPosition + (dir * 60f);
+        float t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+            t += Time.deltaTime / stepAttackDuration;
+            yield return new WaitForEndOfFrame();
+        }
+        yield return new WaitForSeconds(0.6f);
+        animaThor.SetInteger("State", 0);
+        t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
+            t += Time.deltaTime / stepAttackDuration;
+            yield return new WaitForEndOfFrame();
+        }
+    }
 
 	private IEnumerator SetAttackFalse()
 	{
@@ -601,27 +602,14 @@ public class PlayerScript : MonoBehaviour
 		xp += gainedXP;
 	}
 
-	//public void BumpMe(int x, int y)
-	//{
-
-	//    Vector2 pos = transform.position;
-	//    pos = new Vector2(pos.x + x, pos.y + y);
-	//    transform.position = pos;
-	//    if (x > 0)
-	//        x -= 1;
-	//    if (y > 0)
-	//        y -= 1;
-	//    tileX += x;
-	//    tileY += y;
-	//}
 
 	public void BumpMe(int dir)
 	{
 		if (dir == 1 || dir == 2)
 		{
 			if (tileY == 0)
-				tileY = 2;
-			tileY = (map.gridSizeY) - tileY;
+				tileY = 1;
+			tileY = (map.gridSizeY) - tileY - 1;
 			Vector2 pos = transform.position;
 			if (dir == 2)
 				pos = new Vector2(pos.x, tileY * 100 + myOffsetY + stepDoorDistance);
@@ -633,8 +621,8 @@ public class PlayerScript : MonoBehaviour
 		else if (dir == 3 || dir == 4)
 		{
 			if (tileX == 0)
-				tileX = 2;
-			tileX = (map.gridSizeX) - tileX;
+				tileX = 1;
+            tileX = (map.gridSizeX) - tileX - 1;
 			Vector2 pos = transform.position;
 			if (dir == 3)
 				pos = new Vector2(tileX * 100 + stepDoorDistance, pos.y);

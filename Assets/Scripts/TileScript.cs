@@ -21,7 +21,8 @@ public class TileScript : MonoBehaviour
 		RDoor,
 		UDoor,
 		DDoor,
-		FloorEnd
+		FloorEnd,
+        SideDoor
 	}
 	public TileTypes myTileType = TileTypes.Floor;
 	public GameObject chestPrefab;
@@ -156,8 +157,15 @@ public class TileScript : MonoBehaviour
 			GameObject tileAddon = Instantiate(endPortalPrefab, pos, transform.rotation) as GameObject;
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-			isEndPortal = true;
+            walkable = false;
+            isEndPortal = true;
 		}
+        
+        else if (myTileType == TileTypes.SideDoor) //Tile beside door
+        {
+            spr.sprite = mySprite[(int)TileTypes.Floor];
+            walkable = false;
+        }
     }
 	
 	void FixedUpdate()

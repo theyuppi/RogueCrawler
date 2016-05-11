@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System;
+using System.IO;
 
 [System.Serializable]
 public class PlayerScript : MonoBehaviour
@@ -31,6 +33,7 @@ public class PlayerScript : MonoBehaviour
 	public Text healthText;
 
 	//Stats
+	public string playerName = "";
 	public int xp = 0;
 	private int health = 100;
 	private int maxHealth = 100;
@@ -103,6 +106,21 @@ public class PlayerScript : MonoBehaviour
 		statsLabels[9].text = str.ToString();
 
 		ReceiveActPts();
+
+		playerName = PlayerPrefs.GetString("pName");
+		charLVL = PlayerPrefs.GetInt("pLevel");
+		xp = PlayerPrefs.GetInt("pCurrXp");
+		maxActPts = PlayerPrefs.GetInt("pMaxAP");
+		maxHealth = PlayerPrefs.GetInt("pMaxHealth");
+		base_vitality = PlayerPrefs.GetInt("pVitality");
+		base_strength = PlayerPrefs.GetInt("pStrength");
+		base_agility = PlayerPrefs.GetInt("pAgility");
+		base_speed = PlayerPrefs.GetInt("pSpeed");
+		base_defence = PlayerPrefs.GetInt("pDefence");
+		if (charLVL == 0)
+		{
+			charLVL = 1;
+		}
 	}
 
 	private void FixedUpdate()
@@ -113,6 +131,12 @@ public class PlayerScript : MonoBehaviour
 			xp = 0;
 			charLVL++;
 		}
+
+		if (health <= 0)
+		{
+			map.PlayerDied();
+		}
+
 		UpdateStats();
 	}
 
@@ -203,6 +227,7 @@ public class PlayerScript : MonoBehaviour
 		vitality = base_vitality + bonusVit;
 		maxHealth = 100 + vitality;
 
+		statsLabels[0].text = playerName;
 		statsLabels[1].text = charLVL.ToString();
 		statsLabels[2].text = xp.ToString();
 		statsLabels[3].text = maxActPts.ToString();
@@ -219,7 +244,7 @@ public class PlayerScript : MonoBehaviour
 		str.Append(maxHealth.ToString());
 		statsLabels[9].text = str.ToString();
 
-		attackPower = strength;  //Magic formula(TM)
+		attackPower = strength + 500;  //Magic formula(TM)
 	}
 
 	#region ManualMove
@@ -397,7 +422,7 @@ public class PlayerScript : MonoBehaviour
 
 				}
 			}
-			
+
 
 			else if (currentPath != null)
 			{
@@ -426,7 +451,7 @@ public class PlayerScript : MonoBehaviour
 			{
 				myDirection = direction.Right;
 			}
-			
+
 			StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
 		}
 		else
@@ -446,8 +471,16 @@ public class PlayerScript : MonoBehaviour
 				tileXmoved = currentPath[currNode].x;
 				tileYmoved = currentPath[currNode].y;
 			}
+			try
+			{
+				map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();  //Får fel ibland för att man går igenom en dörr och den försöker ta bort grön färg på rutor i gamla rummet
 
-			map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
+			}
+			catch (Exception e)
+			{
+				Debug.Log("Exception: " + e);
+			}
+
 		}
 
 
@@ -476,19 +509,19 @@ public class PlayerScript : MonoBehaviour
 		switch (dir)
 		{
 			case direction.Up:
-				StartCoroutine(PerformAttackMove(Vector2.up));
+				StartCoroutine(PerformAttackMove(Vector2.up * 0.5f));
 				animaThor.SetInteger("State", 1);
 				break;
 			case direction.Down:
-				StartCoroutine(PerformAttackMove(Vector2.down));
+				StartCoroutine(PerformAttackMove(Vector2.down * 0.5f));
 				animaThor.SetInteger("State", 2);
 				break;
 			case direction.Left:
-				StartCoroutine(PerformAttackMove(Vector2.left));
+				StartCoroutine(PerformAttackMove(Vector2.left * 0.5f));
 				animaThor.SetInteger("State", 1);
 				break;
 			case direction.Right:
-				StartCoroutine(PerformAttackMove(Vector2.right));
+				StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
 				animaThor.SetInteger("State", 1);
 
 				break;
@@ -498,7 +531,6 @@ public class PlayerScript : MonoBehaviour
 		map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
 		map.ClearOldPath();
 		StartCoroutine(SetAttackFalse());
-
 	}
 
 	private IEnumerator PerformAttackMove(Vector2 dir)
@@ -656,7 +688,6 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-
 	private IEnumerator EnterPortal(int b)
 	{
 		if (b == 0)
@@ -671,10 +702,16 @@ public class PlayerScript : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 		float fadeTime = GetComponent<Fading>().BeginFade(1);
 		yield return new WaitForSeconds(fadeTime);
-		//map.MakeRoom(0, 0, map.roomNode[a, b]);
-		//BumpMe(b);
-		//yield return new WaitForSeconds(fadeTime);
 		map.GoToLevel(1);
 		GetComponent<Fading>().BeginFade(-1);
+	}
+
+	private void NonPermaDeathSpawn()
+	{
+
+	}
+	private void PermaDeathSpawn()
+	{
+
 	}
 }

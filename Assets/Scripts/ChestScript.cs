@@ -7,18 +7,21 @@ using UnityEngine.UI;
 public class ChestScript : MonoBehaviour
 {
 	public CameraScript GameHandler;
+	public ReadSpriteScript RSS;
 	public List<Item> itemList;
 	public GameObject inv;
 	public InventoryScript invScript;
 	public ItemDbScript invDB;
 	private int slots = 5; //How many slots in this chest?
 	public bool playerInRange = false;
+	public string myIdString = "";
 
 	public GameObject item;
 
 	public void Start()
 	{
 		GameHandler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+		RSS = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ReadSpriteScript>();
 		inv = GameObject.FindGameObjectWithTag("Inventory");
 		invDB = inv.GetComponent<ItemDbScript>();
 		invScript = inv.GetComponent<InventoryScript>();
@@ -39,6 +42,7 @@ public class ChestScript : MonoBehaviour
 				{
 					GameHandler.ChestClicked();
 					invScript.ShowItemsInChest(this.gameObject);
+					RSS.lootedChests.Add(myIdString);
 				}
 			}
 		}

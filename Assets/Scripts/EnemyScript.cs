@@ -34,6 +34,8 @@ public class EnemyScript : MonoBehaviour {
     Vector2 roundDir;
     public bool active = false;
 
+	public string myIdString = "";
+
     public float myOffsetX = 0;
     public float myOffsetY = 20f;
 
@@ -280,6 +282,7 @@ public class EnemyScript : MonoBehaviour {
 
     public void Destroy()
     {
+		eHandler.killedEnemies.Add(myIdString);
         tile.GetComponent<TileScript>().hasEnemy = false;
         tile.GetComponent<TileScript>().walkable = true;
         tile.GetComponent<TileScript>().occupant = null;

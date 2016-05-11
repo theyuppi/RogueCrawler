@@ -16,7 +16,10 @@ public class EnemyHandler : MonoBehaviour {
         fireSkeleton
     }
     //enemies enemyType;
-    
+
+	public List<string> killedEnemies = new List<string>();
+
+
 	void Start () {
 	
 	}
@@ -42,7 +45,7 @@ public class EnemyHandler : MonoBehaviour {
         //}
     }
 
-    public GameObject SpawnEnemy(enemies enemyType, Vector2 position, int tileX, int tileY)
+    public GameObject SpawnEnemy(enemies enemyType, Vector2 position, int tileX, int tileY, int currentLvl, string currentRoom)
     {
         switch (enemyType)
         {
@@ -55,6 +58,7 @@ public class EnemyHandler : MonoBehaviour {
                 enemy.GetComponent<EnemyScript>().cScript = cScript.GetComponent<CameraScript>();
                 enemy.GetComponent<EnemyScript>().map = cScript.GetComponent<ReadSpriteScript>();
                 enemyList.Add(enemy);
+				enemy.GetComponent<EnemyScript>().myIdString = currentLvl.ToString() + currentRoom + tileX.ToString() + tileY.ToString();
                 return enemy;
 
             case enemies.fireSkeleton:

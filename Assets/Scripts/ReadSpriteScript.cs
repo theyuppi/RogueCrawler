@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 [System.Serializable]
 public class ReadSpriteScript : MonoBehaviour
@@ -14,30 +15,47 @@ public class ReadSpriteScript : MonoBehaviour
 	public GameObject targetPrefab;
 	public EnemyHandler eHandler;
 	public PlayerHandler pHandler;
-    public CameraScript cScript;
+	public CameraScript cScript;
 
 	public int gridSizeX = 40;
 	public int gridSizeY = 40;
 	private int tileSizeX = 100;
 	private int tileSizeY = 100;
-    private float mplX;
-    private float mplY;
+	private float mplX;
+	private float mplY;
 
-    public GameObject[,] myTileArray;
+	public GameObject[,] myTileArray;
 	Node[,] graph;
-    
+
 	float completeCost = 0;
 	public bool unReachable = false;
-    public List<GameObject> roomList = new List<GameObject>();
+	public List<GameObject> roomList = new List<GameObject>();
 
+	public int currentLevel = 0;
+	public string currentRoom = "";
 	public string[,] roomNode = new string[22, 5];
 	public List<string> mapNamesList = new List<string>();
 	public List<string> mapNamesStartRoomList = new List<string>();
+	public List<string> lootedChests = new List<string>();
+	public bool permadeathMode = false;
 
 	void Start()
 	{
+		#region Set global stats
+		PlayerPrefs.SetString("pName", "Urban");
+		PlayerPrefs.SetInt("pLevel", 0);
+		PlayerPrefs.SetInt("pCurrXp", 0);
+		PlayerPrefs.SetInt("pMaxAP", 100);
+		PlayerPrefs.SetInt("pMaxHealth", 100);
+		PlayerPrefs.SetInt("pVitality", 5);
+		PlayerPrefs.SetInt("pStrength", 5);
+		PlayerPrefs.SetInt("pAgility", 5);
+		PlayerPrefs.SetInt("pSpeed", 5);
+		PlayerPrefs.SetInt("pDefence", 5);
+		#endregion
+
 		mapNamesList.Add("bigmap1_");
-		mapNamesStartRoomList.Add("11");
+		mapNamesStartRoomList.Add("03");
 		mapNamesList.Add("bigmap2_");
 		mapNamesStartRoomList.Add("07");
 		mapNamesList.Add("bigmap3_");
@@ -52,11 +70,11 @@ public class ReadSpriteScript : MonoBehaviour
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap8_");
 		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap9_");	
+		mapNamesList.Add("bigmap9_");
 
-        mplX = (float)tileSizeX;
-        mplY = (float)tileSizeY;
-        selectedUnit.GetComponent<PlayerScript>().map = this;
+		mplX = (float)tileSizeX;
+		mplY = (float)tileSizeY;
+		selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
 
 		#region RoomNodeAlignment
@@ -133,15 +151,14 @@ public class ReadSpriteScript : MonoBehaviour
 		roomNode[11, 4] = null;
 		#endregion
 
-        //CreateRoom("maproom" + 1 + "newer");
 		MakeRoom(0, 0, mapNamesList[0] + mapNamesStartRoomList[0]);
-		GeneratePathfindingGraph();	
+		GeneratePathfindingGraph();
 	}
 	public void GoToLevel(int id)
 	{
 		//myTileArray = new GameObject[gridSizeX, gridSizeY];
 		Array.Clear(myTileArray, 0, myTileArray.Length);
-		
+		currentLevel = id;
 		#region RoomNodeAlignment
 		roomNode[0, 0] = "bigmap2_00";
 		roomNode[0, 1] = "bigmap2_04";
@@ -210,10 +227,10 @@ public class ReadSpriteScript : MonoBehaviour
 		roomNode[10, 4] = "bigmap2_11";
 
 		roomNode[11, 0] = "bigmap2_11";
-		roomNode[10, 1] = null;
-		roomNode[10, 2] = "bigmap2_05";
-		roomNode[10, 3] = "bigmap2_10";
-		roomNode[10, 4] = null;
+		roomNode[11, 1] = null;
+		roomNode[11, 2] = "bigmap2_05";
+		roomNode[11, 3] = "bigmap2_10";
+		roomNode[11, 4] = null;
 
 		roomNode[12, 0] = "bigmap2_12";
 		roomNode[12, 1] = null;
@@ -246,93 +263,128 @@ public class ReadSpriteScript : MonoBehaviour
 		roomNode[16, 4] = null;
 		#endregion
 		MakeRoom(0, 0, mapNamesList[id] + mapNamesStartRoomList[id]);
-		GeneratePathfindingGraph();	
+		GeneratePathfindingGraph();
 	}
 
-    public void MakeRoom(int x, int y, string levelName)
-    {
-        spr = Resources.Load<Sprite>(levelName);
-        float sizeY = spr.texture.height; //Rows
-        float sizeX = spr.texture.width; //Columns
+	public void MakeRoom(int x, int y, string levelName)
+	{
+		currentRoom = levelName;
+		//Debug.Log("Levelname: " + levelName);
+		spr = Resources.Load<Sprite>(levelName);
+		float sizeY = spr.texture.height; //Rows
+		float sizeX = spr.texture.width; //Columns
 
-        if (roomList.Count != 0)
-        {
-            for (int i = 0; i < eHandler.enemyList.Count; i++)
-            {
-                Destroy(eHandler.enemyList[i]);
-            }
-            eHandler.enemyList.Clear();
-            Destroy(roomList[0]);
-            roomList.Clear();
-        }
-            
-        GameObject Room = new GameObject();
-        Room.name = "Room";
-        roomList.Add(Room);
+		if (roomList.Count != 0)
+		{
+			for (int i = 0; i < eHandler.enemyList.Count; i++)
+			{
+				Destroy(eHandler.enemyList[i]);
+			}
+			eHandler.enemyList.Clear();
+			Destroy(roomList[0]);
+			roomList.Clear();
+		}
 
-        for (float j = sizeY-1; j >= 0; j--) //Rows
-        {
-            for (float i = 0; i < sizeX; i++) //Columns
-            {
-                Color pixelCol = new Color(spr.texture.GetPixel((int)i, (int)j).r, spr.texture.GetPixel((int)i, (int)j).g, spr.texture.GetPixel((int)i, (int)j).b, spr.texture.GetPixel((int)i, (int)j).a);
-                string tileType = ColorToHex(pixelCol);
-                if (!tileType.Equals("FFFFFF"))
-                {
-                    //GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
-                    GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
-                    if (tileType.Equals("C4AA6C")) //Floor
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
-                        tile.tag = "Floor";
-                        //Debug.Log("Floor");
-                    }
-                    else if (tileType.Equals("584A33")) //Wall
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
-                        tile.tag = "Wall";
-                        //Debug.Log("Wall");
-                    }
-                    else if (tileType.Equals("FF0000")) //Enemy
-                    {
-                        tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x);
-                        tile.GetComponent<TileScript>().walkable = false;
-                        tile.GetComponent<TileScript>().hasEnemy = true;
-                        tile.tag = "Floor";
-                        //Debug.Log("Enemy");
-                    }
-                    else if (tileType.Equals("FFFF00")) //Treasure
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
-						tile.GetComponent<TileScript>().walkable = false;
-                        tile.tag = "Chest";
-                        //Debug.Log("Treasure");
-                    }
-                    else if (tileType.Equals("505050")) //Spikes
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
-                        tile.tag = "Spike";
-                        //Debug.Log("Spikes");
-                    }
-                    else if (tileType.Equals("000000")) //Hole
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
-                        tile.tag = "Hole";
-                        //Debug.Log("Hole");
-                    }
+		GameObject Room = new GameObject();
+		Room.name = "Room";
+		roomList.Add(Room);
+
+		for (float j = sizeY - 1; j >= 0; j--) //Rows
+		{
+			for (float i = 0; i < sizeX; i++) //Columns
+			{
+				Color pixelCol = new Color(spr.texture.GetPixel((int)i, (int)j).r, spr.texture.GetPixel((int)i, (int)j).g, spr.texture.GetPixel((int)i, (int)j).b, spr.texture.GetPixel((int)i, (int)j).a);
+				string tileType = ColorToHex(pixelCol);
+				if (!tileType.Equals("FFFFFF"))
+				{
+					//GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
+					GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
+					if (tileType.Equals("C4AA6C")) //Floor
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
+						tile.tag = "Floor";
+						//Debug.Log("Floor");
+					}
+					else if (tileType.Equals("584A33")) //Wall
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
+						tile.tag = "Wall";
+						//Debug.Log("Wall");
+					}
+					else if (tileType.Equals("FF0000")) //Enemy
+					{
+						string eSpawnID = currentLevel.ToString() + currentRoom + ((int)i + y).ToString() + ((int)j + x).ToString();
+						bool shouldSpawn = true;
+
+						for (int k = 0; k < eHandler.killedEnemies.Count; k++)
+						{
+							if (eHandler.killedEnemies[k] == eSpawnID)
+							{
+								shouldSpawn = false;
+							}
+						}
+
+						if (shouldSpawn)
+						{
+							tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x, currentLevel, currentRoom);
+							tile.GetComponent<TileScript>().walkable = false;
+							tile.GetComponent<TileScript>().hasEnemy = true;
+						}
+
+						tile.tag = "Floor";
+						//Debug.Log("Enemy");
+					}
+					else if (tileType.Equals("FFFF00")) //Treasure
+					{
+						string cSpawnID = currentLevel.ToString() + currentRoom + ((int)i + y).ToString() + ((int)j + x).ToString();
+						bool shouldSpawn = true;
+
+						for (int k = 0; k < lootedChests.Count; k++)
+						{
+							if (lootedChests[k] == cSpawnID)
+							{
+								shouldSpawn = false;
+							}
+						}
+						if (shouldSpawn)
+						{
+							tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
+							tile.GetComponent<TileScript>().walkable = false;
+							tile.tag = "Chest";
+						}
+						else
+						{
+							tile.tag = "Floor";
+						}
+
+						//Debug.Log("Treasure");
+					}
+					else if (tileType.Equals("505050")) //Spikes
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
+						tile.tag = "Spike";
+						//Debug.Log("Spikes");
+					}
+					else if (tileType.Equals("000000")) //Hole
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
+						tile.tag = "Hole";
+						//Debug.Log("Hole");
+					}
 					else if (tileType.Equals("F58003")) //TopDoor
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.UDoor;
-                        tile.tag = "HDoor";
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.UDoor;
+						tile.tag = "HDoor";
 
 						for (int a = 0; a < roomNode.GetLength(0); a++)
 						{
-							if (roomNode[a,0] == levelName)
+							if (roomNode[a, 0] == levelName)
 							{
-								tile.GetComponent<TileScript>().owner = roomNode[a, 0];	
-							}	
+								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+							}
 						}
-                        //Debug.Log("TopDoor");
-                    }
+						//Debug.Log("TopDoor");
+					}
 					else if (tileType.Equals("C46702")) //BotBoor
 					{
 						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.DDoor;
@@ -348,9 +400,9 @@ public class ReadSpriteScript : MonoBehaviour
 						//Debug.Log("BotDoor");
 					}
 					else if (tileType.Equals("492601")) //LeftDoor
-                    {
-                        tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.LDoor;
-                        tile.tag = "VDoor";
+					{
+						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.LDoor;
+						tile.tag = "VDoor";
 
 						for (int a = 0; a < roomNode.GetLength(0); a++)
 						{
@@ -359,8 +411,8 @@ public class ReadSpriteScript : MonoBehaviour
 								tile.GetComponent<TileScript>().owner = roomNode[a, 0];
 							}
 						}
-                        //Debug.Log("LeftDoor");
-                    }
+						//Debug.Log("LeftDoor");
+					}
 					else if (tileType.Equals("2C1701")) //RightDoor
 					{
 						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.RDoor;
@@ -383,17 +435,17 @@ public class ReadSpriteScript : MonoBehaviour
 					else if (tileType.Equals("00FF00")) //StartTile
 					{
 						tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
-						
+
 						//Debug.Log("StartTile");
 					}
 
-                    myTileArray[(int)i + y, (int)j + x] = tile;
-                    tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
-                    tile.GetComponent<TileScript>().levelHandler = this.gameObject;
-                    eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
-                    tile.GetComponent<TileScript>().player = selectedUnit;
+					myTileArray[(int)i + y, (int)j + x] = tile;
+					tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
+					tile.GetComponent<TileScript>().levelHandler = this.gameObject;
+					eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
+					tile.GetComponent<TileScript>().player = selectedUnit;
 					tile.transform.SetParent(Room.transform);
-                    //tile.transform.parent = Room.transform;
+					//tile.transform.parent = Room.transform;
 
 					if (tileType.Equals("00FF00"))
 					{
@@ -403,14 +455,14 @@ public class ReadSpriteScript : MonoBehaviour
 						pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tile.GetComponent<TileScript>().myID.x;
 						pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tile.GetComponent<TileScript>().myID.y;
 					}
-                }
-            }
-        }
-        cScript.MergeList();
-        Application.Quit();
-    }
+				}
+			}
+		}
+		cScript.MergeList();
+		Application.Quit();
+	}
 
-    string ColorToHex(Color32 color)
+	string ColorToHex(Color32 color)
 	{
 		string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
 		return hex;
@@ -517,52 +569,52 @@ public class ReadSpriteScript : MonoBehaviour
 		dist[source] = 0;
 		prev[source] = null;
 
-        // Initialize everything to have INFINITY distance, since
-        // we don't know any better right now. Also, it's possible
-        // that some nodes CAN'T be reached from the source,
-        // which would make INFINITY a reasonable value
-        //foreach (Node v in graph)
-        //{
-        //	if (v != source)
-        //	{
-        //		dist[v] = Mathf.Infinity;
-        //		prev[v] = null;
-        //	}
+		// Initialize everything to have INFINITY distance, since
+		// we don't know any better right now. Also, it's possible
+		// that some nodes CAN'T be reached from the source,
+		// which would make INFINITY a reasonable value
+		//foreach (Node v in graph)
+		//{
+		//	if (v != source)
+		//	{
+		//		dist[v] = Mathf.Infinity;
+		//		prev[v] = null;
+		//	}
 
-        //	unvisited.Add(v);
-        //}
-        foreach (Node v in graph)
-        {
-            if (v != source)
-            {
-                dist[v] = Mathf.Infinity;
-                prev[v] = null;
-            }
+		//	unvisited.Add(v);
+		//}
+		foreach (Node v in graph)
+		{
+			if (v != source)
+			{
+				dist[v] = Mathf.Infinity;
+				prev[v] = null;
+			}
 
-            switch (isPlayer)
-            {
-                case true:
-                    if (x < (pathRequester.GetComponent<PlayerScript>().tileX - 12)
-                     || x > (pathRequester.GetComponent<PlayerScript>().tileX + 12)
-                     || y < (pathRequester.GetComponent<PlayerScript>().tileY - 12)
-                     || y > (pathRequester.GetComponent<PlayerScript>().tileY + 12)
-                )
-                    {
-                    }
-                    else
-                    {
-                        unvisited.Add(v);
-                    }
-                    break;
-                case false:
-                    unvisited.Add(v);
-                    break;
-                default:
-                    break;
-            }
-        }
+			switch (isPlayer)
+			{
+				case true:
+					if (x < (pathRequester.GetComponent<PlayerScript>().tileX - 12)
+					 || x > (pathRequester.GetComponent<PlayerScript>().tileX + 12)
+					 || y < (pathRequester.GetComponent<PlayerScript>().tileY - 12)
+					 || y > (pathRequester.GetComponent<PlayerScript>().tileY + 12)
+				)
+					{
+					}
+					else
+					{
+						unvisited.Add(v);
+					}
+					break;
+				case false:
+					unvisited.Add(v);
+					break;
+				default:
+					break;
+			}
+		}
 
-        while (unvisited.Count > 0)
+		while (unvisited.Count > 0)
 		{
 			// "u" is going to be the unvisited node with the smallest distance.
 			Node u = null;
@@ -690,7 +742,7 @@ public class ReadSpriteScript : MonoBehaviour
 			pathRequester.GetComponent<EnemyScript>().currentPath = currentPath;
 		}
 	}
-	
+
 	public void ClearOldPath()
 	{
 		if (selectedUnit.GetComponent<PlayerScript>().currentPath != null)
@@ -698,13 +750,13 @@ public class ReadSpriteScript : MonoBehaviour
 			//Clear old path
 			for (int i = 0; i < selectedUnit.GetComponent<PlayerScript>().currentPath.Count; i++)
 			{
-                if (myTileArray[selectedUnit.GetComponent<PlayerScript>().currentPath[i].x,
-                    selectedUnit.GetComponent<PlayerScript>().currentPath[i].y] != null)
-                {
-                    myTileArray[selectedUnit.GetComponent<PlayerScript>().currentPath[i].x,
-                        selectedUnit.GetComponent<PlayerScript>().currentPath[i].y].GetComponent<TileScript>().ResetColor();
-                }
-				
+				if (myTileArray[selectedUnit.GetComponent<PlayerScript>().currentPath[i].x,
+					selectedUnit.GetComponent<PlayerScript>().currentPath[i].y] != null)
+				{
+					myTileArray[selectedUnit.GetComponent<PlayerScript>().currentPath[i].x,
+						selectedUnit.GetComponent<PlayerScript>().currentPath[i].y].GetComponent<TileScript>().ResetColor();
+				}
+
 			}
 			targetPrefab.GetComponent<SpriteRenderer>().enabled = false;
 		}
@@ -724,16 +776,41 @@ public class ReadSpriteScript : MonoBehaviour
 		return cost;
 	}
 
-    
 
-    //public void ClearCertainPath(List<Node> currentPath)
-    //{
-    //    if (currentPath != null)
-    //    {
-    //        for (int i = 0; i < currentPath.Count; i++)
-    //        {
-    //            myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().ResetColor();
-    //        }
-    //    }
-    //}
+	public void PlayerDied()
+	{
+		if (permadeathMode)
+		{
+			string newName = Path.GetRandomFileName();
+			newName = newName.Replace(".", "");
+			PlayerPrefs.SetString("pName", newName);
+			PlayerPrefs.SetInt("pLevel", 0);
+			PlayerPrefs.SetInt("pCurrXp", 0);
+			PlayerPrefs.SetInt("pMaxAP", 100);
+			PlayerPrefs.SetInt("pMaxHealth", 100);
+			PlayerPrefs.SetInt("pVitality", 5);
+			PlayerPrefs.SetInt("pStrength", 5);
+			PlayerPrefs.SetInt("pAgility", 5);
+			PlayerPrefs.SetInt("pSpeed", 5);
+			PlayerPrefs.SetInt("pDefence", 5);
+
+			Application.LoadLevel("GameOverSceen");
+		}
+		else
+		{
+			Application.LoadLevel("MainScene");
+		}
+	}
+
+
+	//public void ClearCertainPath(List<Node> currentPath)
+	//{
+	//    if (currentPath != null)
+	//    {
+	//        for (int i = 0; i < currentPath.Count; i++)
+	//        {
+	//            myTileArray[currentPath[i].x, currentPath[i].y].GetComponent<TileScript>().ResetColor();
+	//        }
+	//    }
+	//}
 }

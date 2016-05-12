@@ -20,7 +20,8 @@ public class PlayerScript : MonoBehaviour
 	public const float stepAttackDuration = 0.15f;
 	public const float stepDoorDuration = 0.5f;
 	public const float stepDoorDistance = 140;
-	public List<Node> currentPath = null;
+    public const float stepPortalDistance = 100;
+    public List<Node> currentPath = null;
 	public ReadSpriteScript map;
 	public int tileX = 0;
 	public int tileY = 0;
@@ -39,7 +40,7 @@ public class PlayerScript : MonoBehaviour
 	private int maxHealth = 100;
 	public int attackPower = 0;
 	public int currActPts = 0;
-	private int maxActPts = 100;
+	private int maxActPts = 200;
 	public int skillPointsRemaining = 0;
 	public int skillPointsPerLevel = 2;
 	private int base_vitality = 5;
@@ -301,7 +302,8 @@ public class PlayerScript : MonoBehaviour
 			}
 			else
 			{
-				break;
+                isMoving = false;
+                break;
 			}
 		}
 
@@ -676,21 +678,40 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	private IEnumerator EnterPortal(int b)
+    private IEnumerator MoveToPortal(Vector2 dir)
+    {
+        Vector2 startPosition = transform.position;
+        Vector2 destinationPosition = startPosition + (dir * stepPortalDistance);
+        float t = 0.0f;
+        while (t < 1.1f)
+        {
+            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+            t += Time.deltaTime / stepDoorDuration;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator EnterPortal(int b)
 	{
 		if (b == 0)
-			StartCoroutine(MoveToDoor(Vector2.up));
+			StartCoroutine(MoveToPortal(Vector2.up));
 		else if (b == 1)
-			StartCoroutine(MoveToDoor(Vector2.down));
+			StartCoroutine(MoveToPortal(Vector2.down));
 		else if (b == 2)
-			StartCoroutine(MoveToDoor(Vector2.left));
+			StartCoroutine(MoveToPortal(Vector2.left));
 		else if (b == 3)
-			StartCoroutine(MoveToDoor(Vector2.right));
+			StartCoroutine(MoveToPortal(Vector2.right));
 
 		yield return new WaitForSeconds(1f);
 		float fadeTime = GetComponent<Fading>().BeginFade(1);
 		yield return new WaitForSeconds(fadeTime);
-		map.GoToLevel(1);
+        Debug.Log("currentLevel: " + map.currentLevel);
+        if (map.currentLevel < 3)
+		    map.GoToLevel(map.currentLevel);
+        else
+        {
+            Debug.Log("GG, you win!");
+        }
 		GetComponent<Fading>().BeginFade(-1);
 	}
 

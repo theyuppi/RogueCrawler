@@ -37,8 +37,8 @@ public class ReadSpriteScript : MonoBehaviour
 	public List<string> mapNamesList = new List<string>();
 	public List<string> mapNamesStartRoomList = new List<string>();
 	public List<string> lootedChests = new List<string>();
-	public bool permadeathMode = false;
-    public bool teleported = false;
+	public bool permadeathMode = true;
+    public bool teleported = true;
 
 	void Start()
 	{
@@ -46,21 +46,21 @@ public class ReadSpriteScript : MonoBehaviour
 		PlayerPrefs.SetString("pName", "Urban");
 		PlayerPrefs.SetInt("pLevel", 0);
 		PlayerPrefs.SetInt("pCurrXp", 0);
-		PlayerPrefs.SetInt("pMaxAP", 100);
+		PlayerPrefs.SetInt("pMaxAP", 20);
 		PlayerPrefs.SetInt("pMaxHealth", 100);
 		PlayerPrefs.SetInt("pVitality", 5);
 		PlayerPrefs.SetInt("pStrength", 5);
 		PlayerPrefs.SetInt("pAgility", 5);
 		PlayerPrefs.SetInt("pSpeed", 5);
 		PlayerPrefs.SetInt("pDefence", 5);
-		#endregion
+        #endregion
 
-		mapNamesList.Add("bigmap1_");
+        mapNamesList.Add("bigmap3_");
+        mapNamesStartRoomList.Add("00");
+        mapNamesList.Add("bigmap1_");
 		mapNamesStartRoomList.Add("11");
 		mapNamesList.Add("bigmap2_");
-		mapNamesStartRoomList.Add("07");
-		mapNamesList.Add("bigmap3_");
-		mapNamesStartRoomList.Add("00");
+		mapNamesStartRoomList.Add("06");
 		mapNamesList.Add("bigmap4_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap5_");
@@ -78,194 +78,258 @@ public class ReadSpriteScript : MonoBehaviour
 		selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
 
-		#region RoomNodeAlignment
-		roomNode[0, 0] = "bigmap1_00";
-		roomNode[0, 1] = "bigmap1_02";
-		roomNode[0, 2] = null;
-		roomNode[0, 3] = null;
-		roomNode[0, 4] = null;
+        RoomNodeAlignment(1);
 
-		roomNode[1, 0] = "bigmap1_01";
-		roomNode[1, 1] = "bigmap1_04";
-		roomNode[1, 2] = null;
-		roomNode[1, 3] = null;
-		roomNode[1, 4] = "bigmap1_02";
-
-		roomNode[2, 0] = "bigmap1_02";
-		roomNode[2, 1] = null;
-		roomNode[2, 2] = "bigmap1_00";
-		roomNode[2, 3] = "bigmap1_01";
-		roomNode[2, 4] = "bigmap1_03";
-
-		roomNode[3, 0] = "bigmap1_03";
-		roomNode[3, 1] = "bigmap1_05";
-		roomNode[3, 2] = null;
-		roomNode[3, 3] = "bigmap1_02";
-		roomNode[3, 4] = null;
-
-		roomNode[4, 0] = "bigmap1_04";
-		roomNode[4, 1] = "bigmap1_07";
-		roomNode[4, 2] = "bigmap1_01";
-		roomNode[4, 3] = null;
-		roomNode[4, 4] = null;
-
-		roomNode[5, 0] = "bigmap1_05";
-		roomNode[5, 1] = null;
-		roomNode[5, 2] = "bigmap1_03";
-		roomNode[5, 3] = null;
-		roomNode[5, 4] = "bigmap1_06";
-
-		roomNode[6, 0] = "bigmap1_06";
-		roomNode[6, 1] = "bigmap1_10";
-		roomNode[6, 2] = null;
-		roomNode[6, 3] = "bigmap1_05";
-		roomNode[6, 4] = null;
-
-		roomNode[7, 0] = "bigmap1_07";
-		roomNode[7, 1] = null;
-		roomNode[7, 2] = "bigmap1_04";
-		roomNode[7, 3] = null;
-		roomNode[7, 4] = "bigmap1_08";
-
-		roomNode[8, 0] = "bigmap1_08";
-		roomNode[8, 1] = "bigmap1_11";
-		roomNode[8, 2] = null;
-		roomNode[8, 3] = "bigmap1_07";
-		roomNode[8, 4] = "bigmap1_09";
-
-		roomNode[9, 0] = "bigmap1_09";
-		roomNode[9, 1] = null;
-		roomNode[9, 2] = null;
-		roomNode[9, 3] = "bigmap1_08";
-		roomNode[9, 4] = "bigmap1_10";
-
-		roomNode[10, 0] = "bigmap1_10";
-		roomNode[10, 1] = null;
-		roomNode[10, 2] = "bigmap1_06";
-		roomNode[10, 3] = "bigmap1_09";
-		roomNode[10, 4] = null;
-
-		roomNode[11, 0] = "bigmap1_11";
-		roomNode[11, 1] = null;
-		roomNode[11, 2] = "bigmap1_08";
-		roomNode[11, 3] = null;
-		roomNode[11, 4] = null;
-		#endregion
-
-		MakeRoom(0, 0, mapNamesList[0] + mapNamesStartRoomList[0]);
+        MakeRoom(0, 0, mapNamesList[0] + mapNamesStartRoomList[0]);
 		GeneratePathfindingGraph();
 	}
 	public void GoToLevel(int id)
 	{
 		//myTileArray = new GameObject[gridSizeX, gridSizeY];
 		Array.Clear(myTileArray, 0, myTileArray.Length);
-		currentLevel = id;
-		#region RoomNodeAlignment
-		roomNode[0, 0] = "bigmap2_00";
-		roomNode[0, 1] = "bigmap2_04";
-		roomNode[0, 2] = null;
-		roomNode[0, 3] = null;
-		roomNode[0, 4] = "bigmap2_01";
-
-		roomNode[1, 0] = "bigmap2_01";
-		roomNode[1, 1] = null;
-		roomNode[1, 2] = null;
-		roomNode[1, 3] = "bigmap2_00";
-		roomNode[1, 4] = "bigmap2_02";
-
-		roomNode[2, 0] = "bigmap2_02";
-		roomNode[2, 1] = "bigmap2_05";
-		roomNode[2, 2] = null;
-		roomNode[2, 3] = "bigmap2_01";
-		roomNode[2, 4] = null;
-
-		roomNode[3, 0] = "bigmap2_03";
-		roomNode[3, 1] = "bigmap2_04";
-		roomNode[3, 2] = null;
-		roomNode[3, 3] = null;
-		roomNode[3, 4] = "bigmap2_01";
-
-		roomNode[4, 0] = "bigmap2_04";
-		roomNode[4, 1] = null;
-		roomNode[4, 2] = "bigmap2_00";
-		roomNode[4, 3] = "bigmap2_03";
-		roomNode[4, 4] = null;
-
-		roomNode[5, 0] = "bigmap2_05";
-		roomNode[5, 1] = "bigmap2_11";
-		roomNode[5, 2] = "bigmap2_02";
-		roomNode[5, 3] = null;
-		roomNode[5, 4] = "bigmap2_06";
-
-		roomNode[6, 0] = "bigmap2_06";
-		roomNode[6, 1] = null;
-		roomNode[6, 2] = null;
-		roomNode[6, 3] = "bigmap2_05";
-		roomNode[6, 4] = null;
-
-		roomNode[7, 0] = "bigmap2_07";
-		roomNode[7, 1] = null;
-		roomNode[7, 2] = null;
-		roomNode[7, 3] = null;
-		roomNode[7, 4] = "bigmap2_08";
-
-		roomNode[8, 0] = "bigmap2_08";
-		roomNode[8, 1] = "bigmap2_12";
-		roomNode[8, 2] = "bigmap2_03";
-		roomNode[8, 3] = "bigmap2_07";
-		roomNode[8, 4] = "bigmap2_09";
-
-		roomNode[9, 0] = "bigmap2_09";
-		roomNode[9, 1] = null;
-		roomNode[9, 2] = null;
-		roomNode[9, 3] = "bigmap2_08";
-		roomNode[9, 4] = "bigmap2_10";
-
-		roomNode[10, 0] = "bigmap2_10";
-		roomNode[10, 1] = "bigmap2_14";
-		roomNode[10, 2] = null;
-		roomNode[10, 3] = "bigmap2_09";
-		roomNode[10, 4] = "bigmap2_11";
-
-		roomNode[11, 0] = "bigmap2_11";
-		roomNode[11, 1] = null;
-		roomNode[11, 2] = "bigmap2_05";
-		roomNode[11, 3] = "bigmap2_10";
-		roomNode[11, 4] = null;
-
-		roomNode[12, 0] = "bigmap2_12";
-		roomNode[12, 1] = null;
-		roomNode[12, 2] = "bigmap2_08";
-		roomNode[12, 3] = null;
-		roomNode[12, 4] = "bigmap2_13";
-
-		roomNode[13, 0] = "bigmap2_13";
-		roomNode[13, 1] = "bigmap2_15";
-		roomNode[13, 2] = null;
-		roomNode[13, 3] = "bigmap2_12";
-		roomNode[13, 4] = null;
-
-		roomNode[14, 0] = "bigmap2_14";
-		roomNode[14, 1] = "bigmap2_16";
-		roomNode[14, 2] = "bigmap2_10";
-		roomNode[14, 3] = null;
-		roomNode[14, 4] = null;
-
-		roomNode[15, 0] = "bigmap2_15";
-		roomNode[15, 1] = null;
-		roomNode[15, 2] = "bigmap2_13";
-		roomNode[15, 3] = null;
-		roomNode[15, 4] = "bigmap2_16";
-
-		roomNode[16, 0] = "bigmap2_16";
-		roomNode[16, 1] = null;
-		roomNode[16, 2] = "bigmap2_14";
-		roomNode[16, 3] = "bigmap2_15";
-		roomNode[16, 4] = null;
-		#endregion
+		currentLevel = id+1;
+        Debug.Log("currentLevel:" + currentLevel);
+        RoomNodeAlignment(id+1);
 		MakeRoom(0, 0, mapNamesList[id] + mapNamesStartRoomList[id]);
 		GeneratePathfindingGraph();
 	}
+
+    public void RoomNodeAlignment(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                #region RoomNodeAlignment bigmap_3
+                roomNode[0, 0] = "bigmap3_00";
+                roomNode[0, 1] = "bigmap3_01";
+                roomNode[0, 2] = null;
+                roomNode[0, 3] = null;
+                roomNode[0, 4] = null;
+
+                roomNode[1, 0] = "bigmap3_01";
+                roomNode[1, 1] = "bigmap3_03";
+                roomNode[1, 2] = "bigmap3_00";
+                roomNode[1, 3] = null;
+                roomNode[1, 4] = "bigmap3_02";
+
+                roomNode[2, 0] = "bigmap3_02";
+                roomNode[2, 1] = null;
+                roomNode[2, 2] = null;
+                roomNode[2, 3] = "bigmap3_01";
+                roomNode[2, 4] = null;
+
+                roomNode[3, 0] = "bigmap3_03";
+                roomNode[3, 1] = "bigmap3_05";
+                roomNode[3, 2] = "bigmap3_01";
+                roomNode[3, 3] = null;
+                roomNode[3, 4] = null;
+
+                roomNode[4, 0] = "bigmap3_04";
+                roomNode[4, 1] = null;
+                roomNode[4, 2] = null;
+                roomNode[4, 3] = null;
+                roomNode[4, 4] = "bigmap3_05";
+
+                roomNode[5, 0] = "bigmap3_05";
+                roomNode[5, 1] = "bigmap3_06";
+                roomNode[5, 2] = "bigmap3_03";
+                roomNode[5, 3] = "bigmap3_04";
+                roomNode[5, 4] = null;
+
+                roomNode[6, 0] = "bigmap3_06";
+                roomNode[6, 1] = null;
+                roomNode[6, 2] = "bigmap3_05";
+                roomNode[6, 3] = null;
+                roomNode[6, 4] = null;
+                #endregion
+                break;
+
+            case 2:
+                #region RoomNodeAlignment bigmap_1
+                roomNode[0, 0] = "bigmap1_00";
+                roomNode[0, 1] = "bigmap1_02";
+                roomNode[0, 2] = null;
+                roomNode[0, 3] = null;
+                roomNode[0, 4] = null;
+
+                roomNode[1, 0] = "bigmap1_01";
+                roomNode[1, 1] = "bigmap1_04";
+                roomNode[1, 2] = null;
+                roomNode[1, 3] = null;
+                roomNode[1, 4] = "bigmap1_02";
+
+                roomNode[2, 0] = "bigmap1_02";
+                roomNode[2, 1] = null;
+                roomNode[2, 2] = "bigmap1_00";
+                roomNode[2, 3] = "bigmap1_01";
+                roomNode[2, 4] = "bigmap1_03";
+
+                roomNode[3, 0] = "bigmap1_03";
+                roomNode[3, 1] = "bigmap1_05";
+                roomNode[3, 2] = null;
+                roomNode[3, 3] = "bigmap1_02";
+                roomNode[3, 4] = null;
+
+                roomNode[4, 0] = "bigmap1_04";
+                roomNode[4, 1] = "bigmap1_07";
+                roomNode[4, 2] = "bigmap1_01";
+                roomNode[4, 3] = null;
+                roomNode[4, 4] = null;
+
+                roomNode[5, 0] = "bigmap1_05";
+                roomNode[5, 1] = null;
+                roomNode[5, 2] = "bigmap1_03";
+                roomNode[5, 3] = null;
+                roomNode[5, 4] = "bigmap1_06";
+
+                roomNode[6, 0] = "bigmap1_06";
+                roomNode[6, 1] = "bigmap1_10";
+                roomNode[6, 2] = null;
+                roomNode[6, 3] = "bigmap1_05";
+                roomNode[6, 4] = null;
+
+                roomNode[7, 0] = "bigmap1_07";
+                roomNode[7, 1] = null;
+                roomNode[7, 2] = "bigmap1_04";
+                roomNode[7, 3] = null;
+                roomNode[7, 4] = "bigmap1_08";
+
+                roomNode[8, 0] = "bigmap1_08";
+                roomNode[8, 1] = "bigmap1_11";
+                roomNode[8, 2] = null;
+                roomNode[8, 3] = "bigmap1_07";
+                roomNode[8, 4] = "bigmap1_09";
+
+                roomNode[9, 0] = "bigmap1_09";
+                roomNode[9, 1] = null;
+                roomNode[9, 2] = null;
+                roomNode[9, 3] = "bigmap1_08";
+                roomNode[9, 4] = "bigmap1_10";
+
+                roomNode[10, 0] = "bigmap1_10";
+                roomNode[10, 1] = null;
+                roomNode[10, 2] = "bigmap1_06";
+                roomNode[10, 3] = "bigmap1_09";
+                roomNode[10, 4] = null;
+
+                roomNode[11, 0] = "bigmap1_11";
+                roomNode[11, 1] = null;
+                roomNode[11, 2] = "bigmap1_08";
+                roomNode[11, 3] = null;
+                roomNode[11, 4] = null;
+                #endregion
+                break;
+
+            case 3:
+                #region RoomNodeAlignment bigmap_2
+                roomNode[0, 0] = "bigmap2_00";
+                roomNode[0, 1] = "bigmap2_04";
+                roomNode[0, 2] = null;
+                roomNode[0, 3] = null;
+                roomNode[0, 4] = "bigmap2_01";
+
+                roomNode[1, 0] = "bigmap2_01";
+                roomNode[1, 1] = null;
+                roomNode[1, 2] = null;
+                roomNode[1, 3] = "bigmap2_00";
+                roomNode[1, 4] = "bigmap2_02";
+
+                roomNode[2, 0] = "bigmap2_02";
+                roomNode[2, 1] = "bigmap2_05";
+                roomNode[2, 2] = null;
+                roomNode[2, 3] = "bigmap2_01";
+                roomNode[2, 4] = null;
+
+                roomNode[3, 0] = "bigmap2_03";
+                roomNode[3, 1] = "bigmap2_08";
+                roomNode[3, 2] = null;
+                roomNode[3, 3] = null;
+                roomNode[3, 4] = "bigmap2_04";
+
+                roomNode[4, 0] = "bigmap2_04";
+                roomNode[4, 1] = null;
+                roomNode[4, 2] = "bigmap2_00";
+                roomNode[4, 3] = "bigmap2_03";
+                roomNode[4, 4] = null;
+
+                roomNode[5, 0] = "bigmap2_05";
+                roomNode[5, 1] = "bigmap2_11";
+                roomNode[5, 2] = "bigmap2_02";
+                roomNode[5, 3] = null;
+                roomNode[5, 4] = "bigmap2_06";
+
+                roomNode[6, 0] = "bigmap2_06";
+                roomNode[6, 1] = null;
+                roomNode[6, 2] = null;
+                roomNode[6, 3] = "bigmap2_05";
+                roomNode[6, 4] = null;
+
+                roomNode[7, 0] = "bigmap2_07";
+                roomNode[7, 1] = null;
+                roomNode[7, 2] = null;
+                roomNode[7, 3] = null;
+                roomNode[7, 4] = "bigmap2_08";
+
+                roomNode[8, 0] = "bigmap2_08";
+                roomNode[8, 1] = "bigmap2_12";
+                roomNode[8, 2] = "bigmap2_03";
+                roomNode[8, 3] = "bigmap2_07";
+                roomNode[8, 4] = "bigmap2_09";
+
+                roomNode[9, 0] = "bigmap2_09";
+                roomNode[9, 1] = null;
+                roomNode[9, 2] = null;
+                roomNode[9, 3] = "bigmap2_08";
+                roomNode[9, 4] = "bigmap2_10";
+
+                roomNode[10, 0] = "bigmap2_10";
+                roomNode[10, 1] = "bigmap2_14";
+                roomNode[10, 2] = null;
+                roomNode[10, 3] = "bigmap2_09";
+                roomNode[10, 4] = "bigmap2_11";
+
+                roomNode[11, 0] = "bigmap2_11";
+                roomNode[11, 1] = null;
+                roomNode[11, 2] = "bigmap2_05";
+                roomNode[11, 3] = "bigmap2_10";
+                roomNode[11, 4] = null;
+
+                roomNode[12, 0] = "bigmap2_12";
+                roomNode[12, 1] = null;
+                roomNode[12, 2] = "bigmap2_08";
+                roomNode[12, 3] = null;
+                roomNode[12, 4] = "bigmap2_13";
+
+                roomNode[13, 0] = "bigmap2_13";
+                roomNode[13, 1] = "bigmap2_15";
+                roomNode[13, 2] = null;
+                roomNode[13, 3] = "bigmap2_12";
+                roomNode[13, 4] = null;
+
+                roomNode[14, 0] = "bigmap2_14";
+                roomNode[14, 1] = "bigmap2_16";
+                roomNode[14, 2] = "bigmap2_10";
+                roomNode[14, 3] = null;
+                roomNode[14, 4] = null;
+
+                roomNode[15, 0] = "bigmap2_15";
+                roomNode[15, 1] = null;
+                roomNode[15, 2] = "bigmap2_13";
+                roomNode[15, 3] = null;
+                roomNode[15, 4] = "bigmap2_16";
+
+                roomNode[16, 0] = "bigmap2_16";
+                roomNode[16, 1] = null;
+                roomNode[16, 2] = "bigmap2_14";
+                roomNode[16, 3] = "bigmap2_15";
+                roomNode[16, 4] = null;
+                #endregion
+                break;
+
+            default:
+                break;
+        }
+    }
 
 	public void MakeRoom(int x, int y, string levelName)
 	{
@@ -799,7 +863,7 @@ public class ReadSpriteScript : MonoBehaviour
 			PlayerPrefs.SetString("pName", newName);
 			PlayerPrefs.SetInt("pLevel", 0);
 			PlayerPrefs.SetInt("pCurrXp", 0);
-			PlayerPrefs.SetInt("pMaxAP", 100);
+			PlayerPrefs.SetInt("pMaxAP", 20);
 			PlayerPrefs.SetInt("pMaxHealth", 100);
 			PlayerPrefs.SetInt("pVitality", 5);
 			PlayerPrefs.SetInt("pStrength", 5);
@@ -807,7 +871,7 @@ public class ReadSpriteScript : MonoBehaviour
 			PlayerPrefs.SetInt("pSpeed", 5);
 			PlayerPrefs.SetInt("pDefence", 5);
 
-			Application.LoadLevel("GameOverSceen");
+			Application.LoadLevel("GameOver");
 		}
 		else
 		{

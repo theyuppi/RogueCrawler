@@ -39,6 +39,9 @@ public class EnemyScript : MonoBehaviour {
     public float myOffsetX = 0;
     public float myOffsetY = 20f;
 
+    //States
+    public bool stunned = false;
+
     private enum direction
     {
         Up,
@@ -105,6 +108,12 @@ public class EnemyScript : MonoBehaviour {
         yield return new WaitForSeconds(0.8f);
         while (currentPath != null && currNode < currentPath.Count - 1)
         {
+            if (stunned)
+            {
+                yield return new WaitForSeconds(0.5f);
+                stunned = false;
+            }
+
             if (currActPts > 0)
             {
                 currNode++;
@@ -207,7 +216,8 @@ public class EnemyScript : MonoBehaviour {
                     }
                 }
             }
-            else if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasEnemy == true)
+            else if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasEnemy == true  ||
+                map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().walkable == false)
             {
                 isBlocked = true;
             }

@@ -12,7 +12,7 @@ public class ChestScript : MonoBehaviour
 	public GameObject inv;
 	public InventoryScript invScript;
 	public ItemDbScript invDB;
-	private int slots = 5; //How many slots in this chest?
+	private int slots = 2; //How many slots in this chest?
 	public bool playerInRange = false;
 	public string myIdString = "";
 

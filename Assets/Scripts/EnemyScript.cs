@@ -383,4 +383,9 @@ public class EnemyScript : MonoBehaviour {
     {
         currActPts = maxActPts;
     }
+
+	public void LevelBoostEnemy(int level)
+	{
+		health += level * 20;
+	}
 }

@@ -34,13 +34,8 @@ public class InventoryScript : MonoBehaviour
 			slots[i].transform.SetParent(slotPanel.transform);
 		}
 
-		AddItem(0);
-		AddItem(1);
 		AddItem(2);
-		AddItem(3);
-		AddItem(4);
-		AddItem(5);
-		AddItem(6);
+		AddItem(7);
 
 		//Debug.Log("Items is: " + items.Count);
 		for (int i = 0; i < eqSlots.Count; i++)

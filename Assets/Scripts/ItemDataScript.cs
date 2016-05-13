@@ -22,6 +22,15 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
+		if (item.slug == "potion_healing")
+		{
+			Debug.Log("Healed " + item.stats.power.ToString() + " hp");
+			GameObject.Find("PlayerHandler").GetComponent<PlayerHandler>().player.GetComponent<PlayerScript>().Heal(item.stats.power);
+			inv.items[slot] = new Item();
+			this.transform.SetParent(this.transform.parent.parent);  //Onödig men flyttar object från slot iaf
+			Destroy(this.gameObject);
+
+		}
 		if (item != null)
 		{
 			offset = eventData.position - new Vector2(this.transform.position.x, this.transform.position.y);

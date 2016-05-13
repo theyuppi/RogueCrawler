@@ -56,11 +56,11 @@ public class ReadSpriteScript : MonoBehaviour
         #endregion
 
         mapNamesList.Add("bigmap3_");
-        mapNamesStartRoomList.Add("00");
+        mapNamesStartRoomList.Add("06");
         mapNamesList.Add("bigmap1_");
-		mapNamesStartRoomList.Add("11");
+		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap2_");
-		mapNamesStartRoomList.Add("06");
+		mapNamesStartRoomList.Add("07");
 		mapNamesList.Add("bigmap4_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap5_");

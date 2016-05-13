@@ -30,6 +30,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
 		UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
 		UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
+		UItext[3].text = "Dungeon Floor: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
 	}
 
 	void Update()
@@ -46,6 +47,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		{
 			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + " / " + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
 			UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
+			UItext[3].text = "Dungeon Floor: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
 		}
 
 

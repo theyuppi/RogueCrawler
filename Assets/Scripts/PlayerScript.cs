@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour
 	private int maxHealth = 100;
 	public int attackPower = 0;
 	public int currActPts = 0;
-	private int maxActPts = 200;
+	private int maxActPts = 30;
 	public int skillPointsRemaining = 0;
 	public int skillPointsPerLevel = 2;
 	private int base_vitality = 5;
@@ -49,6 +49,13 @@ public class PlayerScript : MonoBehaviour
 	private int base_speed = 5;
 	private int base_agility = 5;
 
+
+	public int skill_vitality = 0;
+	public int skill_strength = 0;
+	public int skill_defence = 0;
+	public int skill_speed = 0;
+	public int skill_agility = 0;
+
 	private int vitality = 0;
 	private int strength = 0;
 	private int defence = 0;
@@ -56,6 +63,7 @@ public class PlayerScript : MonoBehaviour
 	private int agility = 0;
 	private int recoveryRate = 0;
 	private int combatStartAP = 0; //Actionpoints at start of combat
+
 
 	public InventoryScript inventory;
 	public List<Text> statsLabels;
@@ -131,6 +139,7 @@ public class PlayerScript : MonoBehaviour
 		{
 			xp = 0;
 			charLVL++;
+			skillPointsRemaining += (skillPointsPerLevel);
 		}
 
 		if (health <= 0)
@@ -223,9 +232,11 @@ public class PlayerScript : MonoBehaviour
 			bonusVit += leggings_Slot.stats.vitality;
 		}
 
-		strength = base_strength + bonusStr;
-		defence = base_defence + bonusDef;
-		vitality = base_vitality + bonusVit;
+		strength = base_strength + bonusStr + skill_strength;
+		defence = base_defence + bonusDef + skill_defence;
+		vitality = base_vitality + bonusVit + skill_vitality;
+		agility = base_agility + skill_agility;
+		speed = base_speed + skill_speed;
 		maxHealth = 100 + vitality;
 
 		statsLabels[0].text = playerName;
@@ -238,6 +249,7 @@ public class PlayerScript : MonoBehaviour
 		statsLabels[7].text = speed.ToString();
 		statsLabels[8].text = defence.ToString();
 		statsLabels[10].text = attackPower.ToString();
+		statsLabels[11].text = skillPointsRemaining.ToString();
 
 		StringBuilder str = new StringBuilder();
 		str.Append(health.ToString());
@@ -596,7 +608,7 @@ public class PlayerScript : MonoBehaviour
 
 	public void ReceiveActPts()
 	{
-		currActPts = maxActPts;
+		currActPts = maxActPts + (speed / 2);
 	}
 
 	public void GainXP(int gainedXP)
@@ -707,12 +719,15 @@ public class PlayerScript : MonoBehaviour
 		yield return new WaitForSeconds(fadeTime);
         Debug.Log("currentLevel: " + map.currentLevel);
         if (map.currentLevel < 3)
+		{
 		    map.GoToLevel(map.currentLevel);
+			GetComponent<Fading>().BeginFade(-1);
+		}
         else
         {
-            Debug.Log("GG, you win!");
+			Application.LoadLevel("YouWin");
+            //Debug.Log("GG, you win!");
         }
-		GetComponent<Fading>().BeginFade(-1);
 	}
 
 	private void NonPermaDeathSpawn()
@@ -722,5 +737,15 @@ public class PlayerScript : MonoBehaviour
 	private void PermaDeathSpawn()
 	{
 
+	}
+
+	public void Heal(int amount)
+	{
+		health += amount;
+
+		if (health > maxHealth)
+		{
+			health = maxHealth;
+		}
 	}
 }

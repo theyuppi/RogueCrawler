@@ -89,7 +89,7 @@
         "slug": "shield",
         "category": "offhand"
     },
-    { 
+    {
         "id": 6,
         "title": "Pers Sverd",
         "value": 88,
@@ -103,5 +103,20 @@
         "rarity": 11,
         "slug": "sword",
         "category": "mainhand"
+    },
+    {
+        "id": 7,
+        "title": "Healing Potion",
+        "value": 11,
+        "stats": {
+            "power": 10,
+            "defence": 0,
+            "vitality": 0
+        },
+        "description": "Healing Potion heals you!",
+        "stackable": false,
+        "rarity": 1,
+        "slug": "potion_healing",
+        "category": "potion"
     }
 ]

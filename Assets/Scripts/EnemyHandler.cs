@@ -59,6 +59,7 @@ public class EnemyHandler : MonoBehaviour {
                 enemy.GetComponent<EnemyScript>().map = cScript.GetComponent<ReadSpriteScript>();
                 enemyList.Add(enemy);
 				enemy.GetComponent<EnemyScript>().myIdString = currentLvl.ToString() + currentRoom + tileX.ToString() + tileY.ToString();
+				enemy.GetComponent<EnemyScript>().LevelBoostEnemy(currentLvl);
                 return enemy;
 
             case enemies.fireSkeleton:

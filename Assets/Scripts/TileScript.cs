@@ -77,7 +77,8 @@ public class TileScript : MonoBehaviour
 			tileAddon.GetComponent<ChestScript>().myIdString = levelHandler.GetComponent<ReadSpriteScript>().currentLevel.ToString() + levelHandler.GetComponent<ReadSpriteScript>().currentRoom + myID.x.ToString() + myID.y.ToString();
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-		}
+            moveCost = 30.0f;
+        }
 		else if (myTileType == TileTypes.Spike)
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
@@ -254,7 +255,8 @@ public class TileScript : MonoBehaviour
 
 	public void GotClicked()
 	{
-		if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().myTurn == true)
+        //Debug.Log("TileX: " + (int)myID.x + ", TileY: " + (int)myID.y);
+        if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().myTurn == true)
 		{
 			// Clicked while moving to cancel movement
 			if (player.GetComponent<PlayerScript>().isMoving == true)
@@ -270,6 +272,7 @@ public class TileScript : MonoBehaviour
 			{
 				if (doubleclicked > 0)
 					levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo((int)myID.x, (int)myID.y, player, true);
+                
 			}
 
 			// Move through generated path (Second click on same tile)

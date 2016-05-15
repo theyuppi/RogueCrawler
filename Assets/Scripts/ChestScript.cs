@@ -16,6 +16,8 @@ public class ChestScript : MonoBehaviour
 	public bool playerInRange = false;
 	public string myIdString = "";
 
+    public GameObject player;
+
 	public GameObject item;
 
 	public void Start()
@@ -25,32 +27,36 @@ public class ChestScript : MonoBehaviour
 		inv = GameObject.FindGameObjectWithTag("Inventory");
 		invDB = inv.GetComponent<ItemDbScript>();
 		invScript = inv.GetComponent<InventoryScript>();
+        player = GameObject.FindGameObjectWithTag("Player");
 
-		//Query itemDatabase for items
-		itemList = invDB.FillChest(slots);
+        //Query itemDatabase for items
+        itemList = invDB.FillChest(slots);
 		//PopulateChest();
 	}
 
 	public void Click(BaseEventData bEventData)
 	{
-		PointerEventData pEventData = (PointerEventData)bEventData;
-		if (pEventData.button == PointerEventData.InputButton.Right) //React on right-click only
-		{
-			if (playerInRange)
-			{
-				if (GameHandler.inChest == false)
-				{
-					GameHandler.ChestClicked();
-					invScript.ShowItemsInChest(this.gameObject);
-					RSS.lootedChests.Add(myIdString);
-				}
-			}
-		}
-		else
-		{
-			this.GetComponentInParent<TileScript>().GotClicked();
-		}
-	}
+        PointerEventData pEventData = (PointerEventData)bEventData;
+        if (pEventData.button == PointerEventData.InputButton.Right) //React on right-click only
+        {
+            float xDiff = Mathf.Abs(player.transform.position.x - transform.position.x);
+            float yDiff = Mathf.Abs(player.transform.position.y - transform.position.y);
+            //Debug.Log("xDiff: " + xDiff + " yDiff: " + yDiff);
+            if (xDiff < 150 && yDiff < 150)
+            {
+                if (GameHandler.inChest == false)
+                {
+                    GameHandler.ChestClicked();
+                    invScript.ShowItemsInChest(this.gameObject);
+                    RSS.lootedChests.Add(myIdString);
+                }
+            }
+        }
+        else
+        {
+            this.GetComponentInParent<TileScript>().GotClicked();
+        }
+    }
 
 	public void PopulateChest(List<GameObject> slots)
 	{
@@ -68,7 +74,8 @@ public class ChestScript : MonoBehaviour
 				itm.GetComponent<RectTransform>().localPosition = Vector2.zero;
 				itm.GetComponent<ItemDataScript>().item.belongsToChest = this.gameObject;
 				itm.GetComponent<ItemDataScript>().item.myInti = i;
-			}
+                
+            }
 		}
 	}
 }

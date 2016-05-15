@@ -41,7 +41,8 @@ public class ReadSpriteScript : MonoBehaviour
 	public List<string> mapNamesList = new List<string>();
 	public List<string> mapNamesStartRoomList = new List<string>();
 	public List<string> lootedChests = new List<string>();
-	private bool permadeathMode = true;
+	private bool permadeathMode = false;
+    private bool justdied = false;
     public bool teleported = true;
 
     public List<string> prefixList = new List<string>{
@@ -83,6 +84,15 @@ public class ReadSpriteScript : MonoBehaviour
             PlayerPrefs.SetInt("pSkillPoints", 5);
             PlayerPrefs.SetInt("currentLevel", 1);
 
+            //Reset to level 1
+            PlayerPrefs.SetInt("cycleLevel", 1);
+
+            if (PlayerPrefs.GetInt("justDied") == 1)
+            {
+                justdied = true;
+            }
+            Debug.Log("Justdied: " + justdied);
+
             if (permadeathMode)
             {
                 PlayerPrefs.SetInt("PD", 1);
@@ -96,7 +106,7 @@ public class ReadSpriteScript : MonoBehaviour
         PlayerPrefs.SetInt("gameStarted", 1);
 
         mapNamesList.Add("bigmap3_");
-        mapNamesStartRoomList.Add("06");
+        mapNamesStartRoomList.Add("00");
         mapNamesList.Add("bigmap1_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap2_");
@@ -120,7 +130,7 @@ public class ReadSpriteScript : MonoBehaviour
 
         int foundFloor = PlayerPrefs.GetInt("currentLevel");
         Debug.Log("foundFloor: " + foundFloor);
-        if (foundFloor != 0)
+        //if (foundFloor != 0)
             currentLevel = foundFloor;
 
         int foundCycle = PlayerPrefs.GetInt("cycleLevel");
@@ -128,10 +138,13 @@ public class ReadSpriteScript : MonoBehaviour
             cycleLevel = foundCycle;
 
         if (permadeathMode == false)
+        {
+            Debug.Log("PD off");
             GoToLevel(currentLevel);
+        }
         else
         {
-            Debug.Log("Perma on");
+            Debug.Log("PD on");
             GoToLevel(cycleLevel);
         }
         //RoomNodeAlignment(currentLevel);
@@ -147,7 +160,15 @@ public class ReadSpriteScript : MonoBehaviour
 	{
 		//myTileArray = new GameObject[gridSizeX, gridSizeY];
 		Array.Clear(myTileArray, 0, myTileArray.Length);
-		//currentLevel = id;
+        if (teleported == true && justdied == false)
+        {
+            currentLevel = id;
+        }
+        else
+        {
+            PlayerPrefs.GetInt("justDied", 0);
+            justdied = false;
+        }
         RoomNodeAlignment(id);
 		MakeRoom(0, 0, mapNamesList[id-1] + mapNamesStartRoomList[id-1]);
 		GeneratePathfindingGraph();
@@ -936,6 +957,8 @@ public class ReadSpriteScript : MonoBehaviour
                 cycleLevel = 1;
             PlayerPrefs.SetInt("cycleLevel", cycleLevel);
             Debug.Log("cycleLevel: " + cycleLevel);
+            PlayerPrefs.SetInt("justDied", 1);
+
             Application.LoadLevel("GameOver");
 		}
 		else

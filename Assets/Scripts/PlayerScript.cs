@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour
 	private int maxHealth = 100;
 	public int attackPower = 0;
 	public int currActPts = 0;
-	private int maxActPts = 20;
+	private int maxActPts = 2000;
 	public int skillPointsRemaining = 0;
 	public int skillPointsPerLevel = 5;
 	private int base_vitality = 5;
@@ -766,6 +766,14 @@ public class PlayerScript : MonoBehaviour
         PlayerPrefs.SetInt("pDefence", defence);
         PlayerPrefs.SetInt("pSkillPoints", skillPointsRemaining);
 
+        for (int i = 0; i < inventory.slots.Count; i++)
+        {
+            //if (inventory.slots[i].GetComponentInChildren<Item>() != null)
+            //{
+                PlayerPrefs.SetInt("Slot" + i, inventory.slots[i].GetComponentInChildren<Item>().id);
+                Debug.Log("Item id in Slot" + i + ": " + PlayerPrefs.GetInt("Slot" + i));
+            //}
+        }
     }
 	public void PermaDeathSpawn()
 	{

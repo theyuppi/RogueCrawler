@@ -44,7 +44,9 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 		{
 			if (transform.parent.parent.parent.tag == "LootPanel")
 			{
-				item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
+                //Debug.Log("item.myInti: " + item.myInti);
+                if (item.belongsToChest.GetComponent<ChestScript>().itemList[item.myInti] != null)
+				    item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
 			}
 			this.transform.SetParent(this.transform.parent.parent);
 			GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -68,5 +70,6 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 		this.transform.position = inv.slots[slot].transform.position;
 		GetComponent<CanvasGroup>().blocksRaycasts = true;
 		Cursor.visible = true;
-	}
+        
+    }
 }

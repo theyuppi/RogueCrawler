@@ -64,7 +64,8 @@ public class InventoryScript : MonoBehaviour
 				itemObj.transform.position = Vector2.zero;
 				itemObj.name = itemToAdd.title;
 				slots[i].name = "Slot: " + itemToAdd.title;
-				break;
+                
+                break;
 			}
 		}
 	}

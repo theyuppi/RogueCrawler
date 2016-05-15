@@ -96,7 +96,7 @@ public class ReadSpriteScript : MonoBehaviour
         PlayerPrefs.SetInt("gameStarted", 1);
 
         mapNamesList.Add("bigmap3_");
-        mapNamesStartRoomList.Add("00");
+        mapNamesStartRoomList.Add("06");
         mapNamesList.Add("bigmap1_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap2_");
@@ -131,7 +131,7 @@ public class ReadSpriteScript : MonoBehaviour
             GoToLevel(currentLevel);
         else
         {
-            Debug.Log("Perma off");
+            Debug.Log("Perma on");
             GoToLevel(cycleLevel);
         }
         //RoomNodeAlignment(currentLevel);

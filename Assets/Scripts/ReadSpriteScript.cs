@@ -595,7 +595,7 @@ public class ReadSpriteScript : MonoBehaviour
 			}
 		}
 		cScript.MergeList();
-		Application.Quit();
+		//Application.Quit();
 	}
 
 	string ColorToHex(Color32 color)

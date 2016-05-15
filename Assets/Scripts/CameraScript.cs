@@ -83,6 +83,12 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 				lootPanel.localScale = new Vector3(0, 0, 0);
 			}
 		}
+
+		//Escape to exit
+		if (Input.GetKeyUp(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 	}
 
 	public void SetTarget(int following)

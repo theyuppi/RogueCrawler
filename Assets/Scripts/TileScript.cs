@@ -95,7 +95,7 @@ public class TileScript : MonoBehaviour
             var locPos = tileAddon.transform.localPosition;
             locPos.y = 60f;
             tileAddon.transform.localPosition = locPos;
-            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 9;
+            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 10;
         }
 		else if (myTileType == TileTypes.Hole)
 		{

@@ -22,7 +22,7 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		if (item.slug == "potion_healing")
+		if (item.slug == "potion_healing" && Input.GetMouseButtonDown(1))
 		{
 			Debug.Log("Healed " + item.stats.power.ToString() + " hp");
 			GameObject.Find("PlayerHandler").GetComponent<PlayerHandler>().player.GetComponent<PlayerScript>().Heal(item.stats.power);

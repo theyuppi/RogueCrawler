@@ -1,0 +1,100 @@
+[
+    {
+        "id": 0,
+        "title": "Weapon #1",
+        "value": 15,
+        "stats": {
+            "power": 1,
+            "defence": 4,
+            "vitality": 0
+        },
+        "description": "Weapon 1 description",
+        "stackable": false,
+        "rarity": 2,
+        "slug":  "axe"
+    },
+    { 
+        "id": 1,
+        "title": "Weapon #2",
+        "value": 25,
+        "stats": {
+            "power": 170,
+            "defence": -5,
+            "vitality": 15
+        },
+        "description": "Weapon 2 description",
+        "stackable": false,
+        "rarity": 8,
+        "slug":  "axe"
+    },
+    { 
+        "id": 2,
+        "title": "Weapon #3",
+        "value": 6,
+        "stats": {
+            "power": 2,
+            "defence": 0,
+            "vitality": 0
+        },
+        "description": "Weapon 3 description",
+        "stackable": false,
+        "rarity": 150,
+        "slug":  "dagger"
+    },
+    { 
+        "id": 3,
+        "title": "Weapon #4",
+        "value": 2500,
+        "stats": {
+            "power": 30,
+            "defence": 1700,
+            "vitality": 100
+        },
+        "description": "Weapon 4 description",
+        "stackable": false,
+        "rarity": 190,
+        "slug":  "dagger"
+    },
+    { 
+        "id": 4,
+        "title": "Weapon #5",
+        "value": 8,
+        "stats": {
+            "power": 10,
+            "defence": 15,
+            "vitality": 15
+        },
+        "description": "Weapon 5 description",
+        "stackable": false,
+        "rarity": 12,
+        "slug":  "dagger"
+    },
+    {
+        "id": 4,
+        "title": "Weapon #6",
+        "value": 1,
+        "stats": {
+            "power": 10,
+            "defence": 45,
+            "vitality": 25
+        },
+        "description": "Weapon 6 description",
+        "stackable": false,
+        "rarity": 22,
+        "slug": "dagger"
+    },
+    { 
+        "id": 4,
+        "title": "Weapon #7",
+        "value": 88,
+        "stats": {
+            "power": 55,
+            "defence": 5,
+            "vitality": 5
+        },
+        "description": "Weapon 7 description",
+        "stackable": false,
+        "rarity": 11,
+        "slug":  "sword"
+    }
+]

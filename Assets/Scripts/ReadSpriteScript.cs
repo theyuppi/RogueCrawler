@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Text;
+
+
 
 [System.Serializable]
 public class ReadSpriteScript : MonoBehaviour
@@ -31,66 +34,122 @@ public class ReadSpriteScript : MonoBehaviour
 	public bool unReachable = false;
 	public List<GameObject> roomList = new List<GameObject>();
 
-	public int currentLevel = 0;
+	public int currentLevel = 1;
+    public int cycleLevel = 1;
 	public string currentRoom = "";
 	public string[,] roomNode = new string[22, 5];
 	public List<string> mapNamesList = new List<string>();
 	public List<string> mapNamesStartRoomList = new List<string>();
 	public List<string> lootedChests = new List<string>();
-	public bool permadeathMode = true;
+	private bool permadeathMode = true;
     public bool teleported = true;
 
-	void Start()
+    public List<string> prefixList = new List<string>{
+        "Sir", "Lord", "Knight", "King", "Baron", "Brute", "Sage", "Count", "Prince"
+    };
+
+    public List<string> nameList = new List<string>{
+        "Bertil", "Yngvar", "Gaillard", "Uwen", "Arnoldus", "Quesadilla", "Alfonso", "Börje", "Max", "Nal", "Ruben", "Steven", "Erikk", "Jerome", "Urban", "Rowley", "Marsh", "Gorman"
+    };
+
+    public List<string> suffixList = new List<string>{
+        "Bold", "Daring", "Humble", "Strong", "Brave", "Weak", "Grand", "Insane", "Undefeated", "Crazy", "Mediocre", "Wild", "Glittering", "Fancy", "Drunk", "Heroic", "Faithful", "Chaotic", "Quick", "Keen", "Hungry", "Insane", "Smiling", "Cute", "Mellow", "Prime"
+    };
+
+    void Start()
 	{
-		#region Set global stats
-		PlayerPrefs.SetString("pName", "Urban");
-		PlayerPrefs.SetInt("pLevel", 0);
-		PlayerPrefs.SetInt("pCurrXp", 0);
-		PlayerPrefs.SetInt("pMaxAP", 20);
-		PlayerPrefs.SetInt("pMaxHealth", 100);
-		PlayerPrefs.SetInt("pVitality", 5);
-		PlayerPrefs.SetInt("pStrength", 5);
-		PlayerPrefs.SetInt("pAgility", 5);
-		PlayerPrefs.SetInt("pSpeed", 5);
-		PlayerPrefs.SetInt("pDefence", 5);
-        #endregion
+        
+        int gameStarted = PlayerPrefs.GetInt("gameStarted");
+        if (gameStarted == 0)
+        {
+
+            //do nuttin
+        }
+        else
+        {
+            #region Set global stats
+            Debug.Log("Reseting");
+            string newName = GetName();
+            PlayerPrefs.SetString("pName", newName);
+            PlayerPrefs.SetInt("pLevel", 0);
+            PlayerPrefs.SetInt("pCurrXp", 0);
+            PlayerPrefs.SetInt("pMaxAP", 20);
+            PlayerPrefs.SetInt("pMaxHealth", 100);
+            PlayerPrefs.SetInt("pVitality", 5);
+            PlayerPrefs.SetInt("pStrength", 5);
+            PlayerPrefs.SetInt("pAgility", 5);
+            PlayerPrefs.SetInt("pSpeed", 5);
+            PlayerPrefs.SetInt("pDefence", 5);
+            PlayerPrefs.SetInt("pSkillPoints", 5);
+            PlayerPrefs.SetInt("currentLevel", 1);
+
+            if (permadeathMode)
+            {
+                PlayerPrefs.SetInt("PD", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("PD", 0);
+            }
+            #endregion
+        }
+        PlayerPrefs.SetInt("gameStarted", 1);
 
         mapNamesList.Add("bigmap3_");
-        mapNamesStartRoomList.Add("06");
+        mapNamesStartRoomList.Add("00");
         mapNamesList.Add("bigmap1_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap2_");
 		mapNamesStartRoomList.Add("07");
-		mapNamesList.Add("bigmap4_");
-		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap5_");
-		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap6_");
-		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap7_");
-		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap8_");
-		mapNamesStartRoomList.Add("00");
-		mapNamesList.Add("bigmap9_");
+		//mapNamesList.Add("bigmap4_");
+		//mapNamesStartRoomList.Add("00");
+		//mapNamesList.Add("bigmap5_");
+		//mapNamesStartRoomList.Add("00");
+		//mapNamesList.Add("bigmap6_");
+		//mapNamesStartRoomList.Add("00");
+		//mapNamesList.Add("bigmap7_");
+		//mapNamesStartRoomList.Add("00");
+		//mapNamesList.Add("bigmap8_");
+		//mapNamesStartRoomList.Add("00");
+		//mapNamesList.Add("bigmap9_");
 
 		mplX = (float)tileSizeX;
 		mplY = (float)tileSizeY;
 		selectedUnit.GetComponent<PlayerScript>().map = this;
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
 
-        RoomNodeAlignment(1);
+        int foundFloor = PlayerPrefs.GetInt("currentLevel");
+        Debug.Log("foundFloor: " + foundFloor);
+        if (foundFloor != 0)
+            currentLevel = foundFloor;
 
-        MakeRoom(0, 0, mapNamesList[0] + mapNamesStartRoomList[0]);
-		GeneratePathfindingGraph();
-	}
-	public void GoToLevel(int id)
+        int foundCycle = PlayerPrefs.GetInt("cycleLevel");
+        if (foundCycle != 0)
+            cycleLevel = foundCycle;
+
+        if (permadeathMode == false)
+            GoToLevel(currentLevel);
+        else
+        {
+            Debug.Log("Perma off");
+            GoToLevel(cycleLevel);
+        }
+        //RoomNodeAlignment(currentLevel);
+
+        //Debug.Log("currentLevel: " + currentLevel);
+        ////currentLevel = PlayerPrefs.GetInt("Floor");
+        //Debug.Log("currentLevel: " + currentLevel);
+
+        //MakeRoom(0, 0, mapNamesList[currentLevel] + mapNamesStartRoomList[currentLevel]);
+        //GeneratePathfindingGraph();
+    }
+    public void GoToLevel(int id)
 	{
 		//myTileArray = new GameObject[gridSizeX, gridSizeY];
 		Array.Clear(myTileArray, 0, myTileArray.Length);
-		currentLevel = id+1;
-        Debug.Log("currentLevel:" + currentLevel);
-        RoomNodeAlignment(id+1);
-		MakeRoom(0, 0, mapNamesList[id] + mapNamesStartRoomList[id]);
+		//currentLevel = id;
+        RoomNodeAlignment(id);
+		MakeRoom(0, 0, mapNamesList[id-1] + mapNamesStartRoomList[id-1]);
 		GeneratePathfindingGraph();
 	}
 
@@ -856,28 +915,51 @@ public class ReadSpriteScript : MonoBehaviour
 
 	public void PlayerDied()
 	{
+        PlayerPrefs.SetInt("currentLevel", currentLevel);
 		if (permadeathMode)
 		{
-			string newName = Path.GetRandomFileName();
-			newName = newName.Replace(".", "");
-			PlayerPrefs.SetString("pName", newName);
-			PlayerPrefs.SetInt("pLevel", 0);
-			PlayerPrefs.SetInt("pCurrXp", 0);
-			PlayerPrefs.SetInt("pMaxAP", 20);
-			PlayerPrefs.SetInt("pMaxHealth", 100);
-			PlayerPrefs.SetInt("pVitality", 5);
-			PlayerPrefs.SetInt("pStrength", 5);
-			PlayerPrefs.SetInt("pAgility", 5);
-			PlayerPrefs.SetInt("pSpeed", 5);
-			PlayerPrefs.SetInt("pDefence", 5);
-
-			Application.LoadLevel("GameOver");
+            //string newName = Path.GetRandomFileName();
+            //newName = newName.Replace(".", "");
+            //PlayerPrefs.SetString("pName", newName);
+            PlayerPrefs.SetInt("pLevel", 0);
+            PlayerPrefs.SetInt("pCurrXp", 0);
+            PlayerPrefs.SetInt("pMaxAP", 20);
+            PlayerPrefs.SetInt("pMaxHealth", 100);
+            PlayerPrefs.SetInt("pVitality", 5);
+            PlayerPrefs.SetInt("pStrength", 5);
+            PlayerPrefs.SetInt("pAgility", 5);
+            PlayerPrefs.SetInt("pSpeed", 5);
+            PlayerPrefs.SetInt("pDefence", 5);
+            PlayerPrefs.SetInt("pSkillPoints", 5);
+            cycleLevel++;
+            if (cycleLevel > 3)
+                cycleLevel = 1;
+            PlayerPrefs.SetInt("cycleLevel", cycleLevel);
+            Debug.Log("cycleLevel: " + cycleLevel);
+            Application.LoadLevel("GameOver");
 		}
 		else
 		{
-			Application.LoadLevel("MainScene");
+            Application.LoadLevel("GameOver");
+            
+            //GoToLevel(currentLevel);
+            //cScript.target = pHandler.GetComponent<PlayerHandler>().player.transform;
 		}
 	}
+
+    public String GetName()
+    {
+        int prefixInt = UnityEngine.Random.Range(0, prefixList.Count);
+        int nameInt = UnityEngine.Random.Range(0, nameList.Count);
+        int suffixInt = UnityEngine.Random.Range(0, suffixList.Count);
+        StringBuilder sb = new StringBuilder();
+        sb.Append(prefixList[prefixInt] + " ");
+        sb.Append(nameList[nameInt] + ", ");
+        sb.Append("The " + suffixList[suffixInt]);
+        String madeNameStr = sb.ToString();
+        Debug.Log(madeNameStr);
+        return madeNameStr;
+    }
 
 
 	//public void ClearCertainPath(List<Node> currentPath)

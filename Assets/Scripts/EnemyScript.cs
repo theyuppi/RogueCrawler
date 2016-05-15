@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class EnemyScript : MonoBehaviour {
 
-    private int health = 50;
+    private int health = 20;
     public Text healthText;
     public GameObject tile;
     public EnemyHandler eHandler;
@@ -27,7 +27,7 @@ public class EnemyScript : MonoBehaviour {
     private SpriteRenderer sRender;
     private Animator animaThor;
     public bool isPerformingAttack = false;
-    private int attackPower = 10;
+    private int attackPower = 5;
     public int currActPts = 0;
     public int maxActPts = 10;
     int xpReward = 5;
@@ -82,7 +82,7 @@ public class EnemyScript : MonoBehaviour {
                     this.gameObject, false);
 
             if (currentPath != null
-                && currentPath.Count < 15
+                && currentPath.Count < 20
                 && currentPath.Count > 0)
             {
                 StartCoroutine(MakeAMove());
@@ -133,7 +133,7 @@ public class EnemyScript : MonoBehaviour {
             }
         }
 
-        while (currActPts > 1 && isBlocked == false)
+        while (currActPts >= 3 && isBlocked == false)
         {
             if (isPerformingAttack == false)
             {
@@ -143,7 +143,7 @@ public class EnemyScript : MonoBehaviour {
         }
 
         //map.ClearOldPath();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         turnIsOver = true;
         currentPath = null;
     }
@@ -210,7 +210,7 @@ public class EnemyScript : MonoBehaviour {
                 }
                 if (isPerformingAttack == false)
                 {
-                    if (currActPts >= 2)
+                    if (currActPts >= 3)
                     {
                         PerformAttack(myDirection);
                     }
@@ -328,7 +328,7 @@ public class EnemyScript : MonoBehaviour {
             default:
                 break;
         }
-        currActPts -= 2;
+        currActPts -= 3;
         map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
         map.ClearOldPath();
         StartCoroutine(SetAttackFalse());
@@ -365,6 +365,9 @@ public class EnemyScript : MonoBehaviour {
             t += Time.deltaTime / stepAttackDuration;
             yield return new WaitForEndOfFrame();
         }
+        
+
+        yield return new WaitForSeconds(0.6f);
     }
 
     private IEnumerator SetAttackFalse()
@@ -387,5 +390,6 @@ public class EnemyScript : MonoBehaviour {
 	public void LevelBoostEnemy(int level)
 	{
 		health += level * 20;
-	}
+        attackPower += level * 10;
+    }
 }

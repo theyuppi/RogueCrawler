@@ -40,9 +40,9 @@ public class PlayerScript : MonoBehaviour
 	private int maxHealth = 100;
 	public int attackPower = 0;
 	public int currActPts = 0;
-	private int maxActPts = 30;
+	private int maxActPts = 20;
 	public int skillPointsRemaining = 0;
-	public int skillPointsPerLevel = 2;
+	public int skillPointsPerLevel = 5;
 	private int base_vitality = 5;
 	private int base_strength = 5;
 	private int base_defence = 5;
@@ -82,9 +82,7 @@ public class PlayerScript : MonoBehaviour
 	public bool stunned = false;
 
 	public int charLVL = 1;
-	public List<int> xpLevels = new List<int>{
-		10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-	};
+	public List<int> xpLevels = new List<int>{ };
 
 	public float myOffsetX = 0;
 	public float myOffsetY = 20f;
@@ -110,7 +108,7 @@ public class PlayerScript : MonoBehaviour
 
 		StringBuilder str = new StringBuilder();
 		str.Append(health.ToString());
-		str.Append(" / ");
+		str.Append("/");
 		str.Append(maxHealth.ToString());
 		statsLabels[9].text = str.ToString();
 
@@ -126,7 +124,8 @@ public class PlayerScript : MonoBehaviour
 		base_agility = PlayerPrefs.GetInt("pAgility");
 		base_speed = PlayerPrefs.GetInt("pSpeed");
 		base_defence = PlayerPrefs.GetInt("pDefence");
-		if (charLVL == 0)
+        skillPointsRemaining = PlayerPrefs.GetInt("pSkillPoints");
+        if (charLVL == 0)
 		{
 			charLVL = 1;
 		}
@@ -139,12 +138,15 @@ public class PlayerScript : MonoBehaviour
 		{
 			xp = 0;
 			charLVL++;
-			skillPointsRemaining += (skillPointsPerLevel);
+            health = maxHealth;
+            healthText.text = health.ToString();
+            skillPointsRemaining += (skillPointsPerLevel);
 		}
 
 		if (health <= 0)
 		{
-			map.PlayerDied();
+            StartCoroutine(FadeIn());
+            map.PlayerDied();
 		}
 
 		UpdateStats();
@@ -161,7 +163,10 @@ public class PlayerScript : MonoBehaviour
 		armor_Slot = null;
 		leggings_Slot = null;
 
-		foreach (Transform child in inventory.eqSlots[1].transform)
+        maxHealth = 75 + vitality * 5;
+        attackPower = strength * 2;
+
+        foreach (Transform child in inventory.eqSlots[1].transform)
 		{
 			if (child.CompareTag("Item"))
 			{
@@ -203,33 +208,33 @@ public class PlayerScript : MonoBehaviour
 
 		if (mainhand_Slot != null)
 		{
-			bonusStr += mainhand_Slot.stats.power;
+            attackPower += mainhand_Slot.stats.power;
 			bonusDef += mainhand_Slot.stats.defence;
-			bonusVit += mainhand_Slot.stats.vitality;
+            maxHealth += mainhand_Slot.stats.vitality;
 		}
 		if (offhand_Slot != null)
 		{
-			bonusStr += offhand_Slot.stats.power;
+            attackPower += offhand_Slot.stats.power;
 			bonusDef += offhand_Slot.stats.defence;
-			bonusVit += offhand_Slot.stats.vitality;
+            maxHealth += offhand_Slot.stats.vitality;
 		}
 		if (helm_Slot != null)
 		{
-			bonusStr += helm_Slot.stats.power;
+            attackPower += helm_Slot.stats.power;
 			bonusDef += helm_Slot.stats.defence;
-			bonusVit += helm_Slot.stats.vitality;
+            maxHealth += helm_Slot.stats.vitality;
 		}
 		if (armor_Slot != null)
 		{
-			bonusStr += armor_Slot.stats.power;
+            attackPower += armor_Slot.stats.power;
 			bonusDef += armor_Slot.stats.defence;
-			bonusVit += armor_Slot.stats.vitality;
+            maxHealth += armor_Slot.stats.vitality;
 		}
 		if (leggings_Slot != null)
 		{
-			bonusStr += leggings_Slot.stats.power;
+            attackPower += leggings_Slot.stats.power;
 			bonusDef += leggings_Slot.stats.defence;
-			bonusVit += leggings_Slot.stats.vitality;
+			maxHealth += leggings_Slot.stats.vitality;
 		}
 
 		strength = base_strength + bonusStr + skill_strength;
@@ -237,7 +242,8 @@ public class PlayerScript : MonoBehaviour
 		vitality = base_vitality + bonusVit + skill_vitality;
 		agility = base_agility + skill_agility;
 		speed = base_speed + skill_speed;
-		maxHealth = 100 + vitality;
+		
+        maxActPts = 15 + speed; 
 
 		statsLabels[0].text = playerName;
 		statsLabels[1].text = charLVL.ToString();
@@ -253,11 +259,12 @@ public class PlayerScript : MonoBehaviour
 
 		StringBuilder str = new StringBuilder();
 		str.Append(health.ToString());
-		str.Append(" / ");
+		str.Append("/");
 		str.Append(maxHealth.ToString());
 		statsLabels[9].text = str.ToString();
+        
 
-		attackPower = strength + 500;  //Magic formula(TM)
+		  //Magic formula(TM)
 	}
 
 	#region ManualMove
@@ -377,10 +384,10 @@ public class PlayerScript : MonoBehaviour
 				}
 				if (isPerformingAttack == false)
 				{
-					if (currActPts >= 2)
+					if (currActPts >= 3)
 					{
 						PerformAttack(myDirection);
-						currActPts -= 2;
+						currActPts -= 3;
 					}
 				}
 			}
@@ -396,7 +403,7 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 3]);
-							StartCoroutine(FadeInOut(a, 3)); //West
+							StartCoroutine(FadeInOutPortal(a, 3)); //West
 						}
 					}
 				}
@@ -407,7 +414,7 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 4]);
-							StartCoroutine(FadeInOut(a, 4)); //East
+							StartCoroutine(FadeInOutPortal(a, 4)); //East
 						}
 					}
 				}
@@ -418,7 +425,7 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 2]);
-							StartCoroutine(FadeInOut(a, 2)); //South
+							StartCoroutine(FadeInOutPortal(a, 2)); //South
 						}
 					}
 				}
@@ -430,7 +437,7 @@ public class PlayerScript : MonoBehaviour
 						if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
 						{
 							//Debug.Log("Creating room: " + map.roomNode[a, 1]);
-							StartCoroutine(FadeInOut(a, 1)); //Pacifica North
+							StartCoroutine(FadeInOutPortal(a, 1)); //Pacifica North
 						}
 					}
 				}
@@ -608,7 +615,7 @@ public class PlayerScript : MonoBehaviour
 
 	public void ReceiveActPts()
 	{
-		currActPts = maxActPts + (speed / 2);
+		currActPts = maxActPts;
 	}
 
 	public void GainXP(int gainedXP)
@@ -646,7 +653,7 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	private IEnumerator FadeInOut(int a, int b)
+	private IEnumerator FadeInOutPortal(int a, int b)
 	{
 		if (b == 1)
 			StartCoroutine(MoveToDoor(Vector2.up));
@@ -677,7 +684,14 @@ public class PlayerScript : MonoBehaviour
 			StartCoroutine(MoveToDoor(Vector2.right));
 	}
 
-	private IEnumerator MoveToDoor(Vector2 dir)
+    private IEnumerator FadeIn()
+    {
+        yield return new WaitForSeconds(1f);
+        float fadeTime = GetComponent<Fading>().BeginFade(1);
+        yield return new WaitForSeconds(fadeTime);
+    }
+
+    private IEnumerator MoveToDoor(Vector2 dir)
 	{
 		Vector2 startPosition = transform.position;
 		Vector2 destinationPosition = startPosition + (dir * stepDoorDistance);
@@ -717,10 +731,19 @@ public class PlayerScript : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 		float fadeTime = GetComponent<Fading>().BeginFade(1);
 		yield return new WaitForSeconds(fadeTime);
-        Debug.Log("currentLevel: " + map.currentLevel);
+        //Debug.Log("currentLevel: " + map.currentLevel);
         if (map.currentLevel < 3)
 		{
-		    map.GoToLevel(map.currentLevel);
+            if (PlayerPrefs.GetInt("PD") == 1)
+            {
+                map.cycleLevel++;
+            }
+            else
+            {
+                SavePlayer();
+            }
+            
+            map.GoToLevel(map.currentLevel+1);
 			GetComponent<Fading>().BeginFade(-1);
 		}
         else
@@ -730,11 +753,21 @@ public class PlayerScript : MonoBehaviour
         }
 	}
 
-	private void NonPermaDeathSpawn()
+	public void SavePlayer()
 	{
+        PlayerPrefs.SetInt("pLevel", charLVL);
+        PlayerPrefs.SetInt("pCurrXp", xp);
+        PlayerPrefs.SetInt("pMaxAP", maxActPts);
+        PlayerPrefs.SetInt("pMaxHealth", maxHealth);
+        PlayerPrefs.SetInt("pVitality", vitality);
+        PlayerPrefs.SetInt("pStrength", strength);
+        PlayerPrefs.SetInt("pAgility", agility);
+        PlayerPrefs.SetInt("pSpeed", speed);
+        PlayerPrefs.SetInt("pDefence", defence);
+        PlayerPrefs.SetInt("pSkillPoints", skillPointsRemaining);
 
-	}
-	private void PermaDeathSpawn()
+    }
+	public void PermaDeathSpawn()
 	{
 
 	}
@@ -747,5 +780,6 @@ public class PlayerScript : MonoBehaviour
 		{
 			health = maxHealth;
 		}
-	}
+        healthText.text = health.ToString();
+    }
 }

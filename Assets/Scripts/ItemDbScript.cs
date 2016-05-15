@@ -38,7 +38,7 @@ public class ItemDbScript : MonoBehaviour
 		List<Item> itemList = new List<Item>();
 		for (int i = 0; i < slots; i++)
 		{
-			itemList.Add(FetchItemByID(Random.Range(0, 5)));
+			itemList.Add(FetchItemByID(Random.Range(0, 8)));
 		}
 		return itemList;
 	}

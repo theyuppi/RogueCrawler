@@ -32,6 +32,19 @@ public class PlayerHandler : MonoBehaviour {
         player.GetComponent<PlayerScript>().GainXP(gainedXP);
     }
 
+    public void ResetPlayer(bool PD)
+    {
+        if (PD)
+        {
+            player.GetComponent<PlayerScript>().PermaDeathSpawn();
+        }
+        else
+        {
+            player.GetComponent<PlayerScript>().SavePlayer();
+        }
+        
+    }
+
     // Också dumt (ta bort sen)
     //public void BumpPlayer(int x, int y)
     //{

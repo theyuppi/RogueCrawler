@@ -1,0 +1,44 @@
+Initialize engine version: 5.3.4f1 (fdbb5133b820)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 970 (ID=0x13c2)
+    Vendor:   NVIDIA
+    VRAM:     4008 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\LitJson.dll (this message is harmless)
+Loading D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\LitJson.dll into Unity Child Domain
+- Completed reload, in  0.046 seconds
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\GitHub stuff\RogueCrawler\DungeonCrawler_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1200 59Hz; virtual: 3840x1200 at -1920,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.666439 ms
+Reseting
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Baron Gaillard, The Mellow
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+foundFloor: 1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Perma off
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 2f0 -> priority: 1 

@@ -29,8 +29,8 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		UItext = GetComponentsInChildren<Text>();
 		UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
 		UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[3].text = "Dungeon Floor: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
+		UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
+		UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
 	}
 
 	void Update()
@@ -45,15 +45,19 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 
 		if (currentTarget == 0)
 		{
-			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + " / " + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
-			UItext[2].text = "LVL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
-			UItext[3].text = "Dungeon Floor: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
+			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + "/" + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
+			UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
+			UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
 		}
 
 
 		if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0 && !characterList[0].GetComponent<PlayerScript>().isMoving)
 		{
-			NextTurn(true);
+            inInv = false;
+            invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+            invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+            lootPanel.localScale = new Vector3(0, 0, 0);
+            NextTurn(true);
 		}
 
 		if (Input.GetKeyUp(KeyCode.Backspace) && currentTarget == 0)
@@ -62,7 +66,7 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		}
 
 		//Toggle inventory
-		if (Input.GetKeyUp(KeyCode.I))
+		if (Input.GetKeyUp(KeyCode.I) && currentTarget == 0)
 		{
 			if (inInv == true)
 			{

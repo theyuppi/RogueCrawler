@@ -24,7 +24,7 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 	{
 		if (item.slug == "potion_healing" && Input.GetMouseButtonDown(1))
 		{
-			Debug.Log("Healed " + item.stats.power.ToString() + " hp");
+			//Debug.Log("Healed " + item.stats.power.ToString() + " hp");
 			GameObject.Find("PlayerHandler").GetComponent<PlayerHandler>().player.GetComponent<PlayerScript>().Heal(item.stats.power);
 			inv.items[slot] = new Item();
 			this.transform.SetParent(this.transform.parent.parent);  //Onödig men flyttar object från slot iaf
@@ -42,11 +42,12 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 	{
 		if (item != null)
 		{
-			if (transform.parent.parent.parent.tag == "LootPanel")
+			if (slot >= 100)
 			{
-                //Debug.Log("item.myInti: " + item.myInti);
-                if (item.belongsToChest.GetComponent<ChestScript>().itemList[item.myInti] != null)
-				    item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
+				//Debug.Log("item.myInti: " + item.myInti);
+				//if (item.belongsToChest.GetComponent<ChestScript>().itemList[item.myInti] != null)
+				//	item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
+				//Debug.Log(item.belongsToChest.transform.position);
 			}
 			this.transform.SetParent(this.transform.parent.parent);
 			GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -58,18 +59,38 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 		if (item != null)
 		{
 			this.transform.position = eventData.position - offset;
-			inv.items[slot] = new Item();
 			this.transform.SetParent(invCanvasTransform);
 			Cursor.visible = false;
+
+			if (slot < 100)
+			{
+				inv.items[slot] = new Item();
+			}
+			else
+			{
+				GameObject go = GameObject.Find("Slot Panel Chest").transform.GetChild(slot - 100).gameObject;
+				item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(item);
+			}
 		}
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		this.transform.SetParent(inv.slots[slot].transform);
-		this.transform.position = inv.slots[slot].transform.position;
-		GetComponent<CanvasGroup>().blocksRaycasts = true;
-		Cursor.visible = true;
-        
-    }
+		if (slot < 100)
+		{
+			this.transform.SetParent(inv.slots[slot].transform);
+			this.transform.position = inv.slots[slot].transform.position;
+			GetComponent<CanvasGroup>().blocksRaycasts = true;
+			Cursor.visible = true;
+		}
+		else
+		{
+			GameObject go = GameObject.Find("Slot Panel Chest").transform.GetChild(slot - 100).gameObject;
+			this.transform.SetParent(go.transform);
+			this.transform.position = go.transform.position;
+			GetComponent<CanvasGroup>().blocksRaycasts = true;
+			Cursor.visible = true;
+			item.belongsToChest = go.GetComponent<SlotScript>().owner;
+		}
+	}
 }

@@ -33,10 +33,12 @@ public class InventoryScript : MonoBehaviour
 			slots[i].GetComponent<SlotScript>().id = i;
 			slots[i].transform.SetParent(slotPanel.transform);
 		}
-
-		AddItem(2);
-		AddItem(7);
-
+		/*
+		AddItem(2); //Kniv
+		items[0] = slots[0].transform.GetChild(0).GetComponent<ItemDataScript>().item;  //lägg till items manuellt i itemlist också
+		AddItem(7); //Hp pot
+		items[1] = slots[1].transform.GetChild(0).GetComponent<ItemDataScript>().item;
+		*/
 		//Debug.Log("Items is: " + items.Count);
 		for (int i = 0; i < eqSlots.Count; i++)
 		{
@@ -61,15 +63,30 @@ public class InventoryScript : MonoBehaviour
 				itemObj.GetComponent<ItemDataScript>().slot = i;  //Tell the item which slot it belongs to
 				itemObj.transform.SetParent(slots[i].transform);
 				itemObj.GetComponent<Image>().sprite = itemToAdd.sprite;
-				itemObj.transform.position = Vector2.zero;
+				//itemObj.transform.position = Vector2.zero;
+				itemObj.transform.localPosition = Vector2.zero;
 				itemObj.name = itemToAdd.title;
 				slots[i].name = "Slot: " + itemToAdd.title;
-                
-                break;
+
+				break;
 			}
 		}
 	}
 
+	public void AddItemFromSave(int id, int slot)
+	{
+		Item itemToAdd = database.FetchItemByID(id);
+
+		items[slot] = itemToAdd;
+		GameObject itemObj = Instantiate(inventoryItem);
+		itemObj.GetComponent<ItemDataScript>().item = itemToAdd;
+		itemObj.GetComponent<ItemDataScript>().slot = slot;  //Tell the item which slot it belongs to
+		itemObj.transform.SetParent(slots[slot].transform);
+		itemObj.GetComponent<Image>().sprite = itemToAdd.sprite;
+		itemObj.transform.localPosition = Vector2.zero;
+		itemObj.name = itemToAdd.title;
+		slots[slot].name = "Slot: " + itemToAdd.title;
+	}
 
 	public void clearLootSlots()
 	{
@@ -88,5 +105,13 @@ public class InventoryScript : MonoBehaviour
 		//	Debug.Log(chest.GetComponent<ChestScript>().itemList[i].description);
 		//	lootSlots[i].name = chest.GetComponent<ChestScript>().itemList[i].ToString();
 		//}
+	}
+
+	internal void AddStartItems()
+	{
+		AddItem(2); //Kniv
+		items[0] = slots[0].transform.GetChild(0).GetComponent<ItemDataScript>().item;  //lägg till items manuellt i itemlist också
+		AddItem(7); //Hp pot
+		items[1] = slots[1].transform.GetChild(0).GetComponent<ItemDataScript>().item;
 	}
 }

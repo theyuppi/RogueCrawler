@@ -69,7 +69,7 @@ public class ReadSpriteScript : MonoBehaviour
         else
         {
             #region Set global stats
-            Debug.Log("Reseting");
+			//Debug.Log("Reseting");
             string newName = GetName();
             PlayerPrefs.SetString("pName", newName);
             PlayerPrefs.SetInt("pLevel", 0);
@@ -91,7 +91,7 @@ public class ReadSpriteScript : MonoBehaviour
             {
                 justdied = true;
             }
-            Debug.Log("Justdied: " + justdied);
+			//Debug.Log("Justdied: " + justdied);
 
             if (permadeathMode)
             {
@@ -129,7 +129,7 @@ public class ReadSpriteScript : MonoBehaviour
 		myTileArray = new GameObject[gridSizeX, gridSizeY];
 
         int foundFloor = PlayerPrefs.GetInt("currentLevel");
-        Debug.Log("foundFloor: " + foundFloor);
+		//Debug.Log("foundFloor: " + foundFloor);
         //if (foundFloor != 0)
             currentLevel = foundFloor;
 
@@ -139,12 +139,12 @@ public class ReadSpriteScript : MonoBehaviour
 
         if (permadeathMode == false)
         {
-            Debug.Log("PD off");
+			//Debug.Log("PD off");
             GoToLevel(currentLevel);
         }
         else
         {
-            Debug.Log("PD on");
+			//Debug.Log("PD on");
             GoToLevel(cycleLevel);
         }
         //RoomNodeAlignment(currentLevel);
@@ -980,7 +980,7 @@ public class ReadSpriteScript : MonoBehaviour
         sb.Append(nameList[nameInt] + ", ");
         sb.Append("The " + suffixList[suffixInt]);
         String madeNameStr = sb.ToString();
-        Debug.Log(madeNameStr);
+		//Debug.Log(madeNameStr);
         return madeNameStr;
     }
 

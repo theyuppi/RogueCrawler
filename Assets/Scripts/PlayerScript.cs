@@ -20,8 +20,8 @@ public class PlayerScript : MonoBehaviour
 	public const float stepAttackDuration = 0.15f;
 	public const float stepDoorDuration = 0.5f;
 	public const float stepDoorDistance = 140;
-    public const float stepPortalDistance = 100;
-    public List<Node> currentPath = null;
+	public const float stepPortalDistance = 100;
+	public List<Node> currentPath = null;
 	public ReadSpriteScript map;
 	public int tileX = 0;
 	public int tileY = 0;
@@ -82,7 +82,7 @@ public class PlayerScript : MonoBehaviour
 	public bool stunned = false;
 
 	public int charLVL = 1;
-	public List<int> xpLevels = new List<int>{ };
+	public List<int> xpLevels = new List<int> { };
 
 	public float myOffsetX = 0;
 	public float myOffsetY = 20f;
@@ -124,8 +124,21 @@ public class PlayerScript : MonoBehaviour
 		base_agility = PlayerPrefs.GetInt("pAgility");
 		base_speed = PlayerPrefs.GetInt("pSpeed");
 		base_defence = PlayerPrefs.GetInt("pDefence");
-        skillPointsRemaining = PlayerPrefs.GetInt("pSkillPoints");
-        if (charLVL == 0)
+		skillPointsRemaining = PlayerPrefs.GetInt("pSkillPoints");
+
+		
+
+		if (PlayerPrefs.GetInt("PlayerShouldLoadItems") == 1)
+		{
+			LoadItemsFromSave();
+			PlayerPrefs.SetInt("PlayerShouldLoadItems", 0);
+		}
+		else
+		{
+			inventory.AddStartItems();
+		}
+
+		if (charLVL == 0)
 		{
 			charLVL = 1;
 		}
@@ -138,15 +151,15 @@ public class PlayerScript : MonoBehaviour
 		{
 			xp = 0;
 			charLVL++;
-            health = maxHealth;
-            healthText.text = health.ToString();
-            skillPointsRemaining += (skillPointsPerLevel);
+			health = maxHealth;
+			healthText.text = health.ToString();
+			skillPointsRemaining += (skillPointsPerLevel);
 		}
 
 		if (health <= 0)
 		{
-            StartCoroutine(FadeIn());
-            map.PlayerDied();
+			StartCoroutine(FadeIn());
+			map.PlayerDied();
 		}
 
 		UpdateStats();
@@ -163,10 +176,10 @@ public class PlayerScript : MonoBehaviour
 		armor_Slot = null;
 		leggings_Slot = null;
 
-        maxHealth = 75 + vitality * 5;
-        attackPower = strength * 2;
+		maxHealth = 75 + vitality * 5;
+		attackPower = strength * 2;
 
-        foreach (Transform child in inventory.eqSlots[1].transform)
+		foreach (Transform child in inventory.eqSlots[1].transform)
 		{
 			if (child.CompareTag("Item"))
 			{
@@ -208,31 +221,31 @@ public class PlayerScript : MonoBehaviour
 
 		if (mainhand_Slot != null)
 		{
-            attackPower += mainhand_Slot.stats.power;
+			attackPower += mainhand_Slot.stats.power;
 			bonusDef += mainhand_Slot.stats.defence;
-            maxHealth += mainhand_Slot.stats.vitality;
+			maxHealth += mainhand_Slot.stats.vitality;
 		}
 		if (offhand_Slot != null)
 		{
-            attackPower += offhand_Slot.stats.power;
+			attackPower += offhand_Slot.stats.power;
 			bonusDef += offhand_Slot.stats.defence;
-            maxHealth += offhand_Slot.stats.vitality;
+			maxHealth += offhand_Slot.stats.vitality;
 		}
 		if (helm_Slot != null)
 		{
-            attackPower += helm_Slot.stats.power;
+			attackPower += helm_Slot.stats.power;
 			bonusDef += helm_Slot.stats.defence;
-            maxHealth += helm_Slot.stats.vitality;
+			maxHealth += helm_Slot.stats.vitality;
 		}
 		if (armor_Slot != null)
 		{
-            attackPower += armor_Slot.stats.power;
+			attackPower += armor_Slot.stats.power;
 			bonusDef += armor_Slot.stats.defence;
-            maxHealth += armor_Slot.stats.vitality;
+			maxHealth += armor_Slot.stats.vitality;
 		}
 		if (leggings_Slot != null)
 		{
-            attackPower += leggings_Slot.stats.power;
+			attackPower += leggings_Slot.stats.power;
 			bonusDef += leggings_Slot.stats.defence;
 			maxHealth += leggings_Slot.stats.vitality;
 		}
@@ -242,8 +255,8 @@ public class PlayerScript : MonoBehaviour
 		vitality = base_vitality + bonusVit + skill_vitality;
 		agility = base_agility + skill_agility;
 		speed = base_speed + skill_speed;
-		
-        maxActPts = 15 + speed; 
+
+		maxActPts = 15 + speed;
 
 		statsLabels[0].text = playerName;
 		statsLabels[1].text = charLVL.ToString();
@@ -262,9 +275,9 @@ public class PlayerScript : MonoBehaviour
 		str.Append("/");
 		str.Append(maxHealth.ToString());
 		statsLabels[9].text = str.ToString();
-        
 
-		  //Magic formula(TM)
+
+		//Magic formula(TM)
 	}
 
 	#region ManualMove
@@ -321,8 +334,8 @@ public class PlayerScript : MonoBehaviour
 			}
 			else
 			{
-                isMoving = false;
-                break;
+				isMoving = false;
+				break;
 			}
 		}
 
@@ -443,40 +456,40 @@ public class PlayerScript : MonoBehaviour
 				}
 			}
 
-            // Walking in to portal
-            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
-            {
-                map.teleported = true;
-                Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
-                if (roundDir == Vector2.up)
-                {
-                    myDirection = direction.Up;
-                }
-                else if (roundDir == Vector2.down)
-                {
-                    myDirection = direction.Down;
-                }
-                else if (roundDir == Vector2.left)
-                {
-                    myDirection = direction.Left;
-                }
-                else if (roundDir == Vector2.right)
-                {
-                    myDirection = direction.Right;
-                }
+			// Walking in to portal
+			if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
+			{
+				map.teleported = true;
+				Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
+				if (roundDir == Vector2.up)
+				{
+					myDirection = direction.Up;
+				}
+				else if (roundDir == Vector2.down)
+				{
+					myDirection = direction.Down;
+				}
+				else if (roundDir == Vector2.left)
+				{
+					myDirection = direction.Left;
+				}
+				else if (roundDir == Vector2.right)
+				{
+					myDirection = direction.Right;
+				}
 
-                StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
-            }
+				StartCoroutine(EnterPortal((int)myDirection)); //Enter Next Level
+			}
 
 
-            else if (currentPath != null)
+			else if (currentPath != null)
 			{
 				tileX = currentPath[currNode - 1].x;
 				tileY = currentPath[currNode - 1].y;
 			}
 
 		}
-        else
+		else
 		{
 			// Lerp to new position
 			currActPts--;
@@ -527,55 +540,55 @@ public class PlayerScript : MonoBehaviour
 
 	private void PerformAttack(direction dir)
 	{
-        isPerformingAttack = true;
-        switch (dir)
-        {
-            case direction.Up:
-                StartCoroutine(PerformAttackMove(Vector2.up * 0.5f));
-                animaThor.SetInteger("State", 1);
-                break;
-            case direction.Down:
-                StartCoroutine(PerformAttackMove(Vector2.down * 0.5f));
-                animaThor.SetInteger("State", 2);
-                break;
-            case direction.Left:
-                StartCoroutine(PerformAttackMove(Vector2.left * 0.5f));
-                animaThor.SetInteger("State", 1);
-                break;
-            case direction.Right:
-                StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
-                animaThor.SetInteger("State", 1);
+		isPerformingAttack = true;
+		switch (dir)
+		{
+			case direction.Up:
+				StartCoroutine(PerformAttackMove(Vector2.up * 0.5f));
+				animaThor.SetInteger("State", 1);
+				break;
+			case direction.Down:
+				StartCoroutine(PerformAttackMove(Vector2.down * 0.5f));
+				animaThor.SetInteger("State", 2);
+				break;
+			case direction.Left:
+				StartCoroutine(PerformAttackMove(Vector2.left * 0.5f));
+				animaThor.SetInteger("State", 1);
+				break;
+			case direction.Right:
+				StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
+				animaThor.SetInteger("State", 1);
 
-                break;
-            default:
-                break;
-        }
-        map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
-        map.ClearOldPath();
-        StartCoroutine(SetAttackFalse());
-    }
+				break;
+			default:
+				break;
+		}
+		map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
+		map.ClearOldPath();
+		StartCoroutine(SetAttackFalse());
+	}
 
-    private IEnumerator PerformAttackMove(Vector2 dir)
+	private IEnumerator PerformAttackMove(Vector2 dir)
 	{
-        Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * 60f);
-        float t = 0.0f;
-        while (t < 1.1f)
-        {
-            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-            t += Time.deltaTime / stepAttackDuration;
-            yield return new WaitForEndOfFrame();
-        }
-        yield return new WaitForSeconds(0.6f);
-        animaThor.SetInteger("State", 0);
-        t = 0.0f;
-        while (t < 1.1f)
-        {
-            transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
-            t += Time.deltaTime / stepAttackDuration;
-            yield return new WaitForEndOfFrame();
-        }
-    }
+		Vector2 startPosition = transform.position;
+		Vector2 destinationPosition = startPosition + (dir * 60f);
+		float t = 0.0f;
+		while (t < 1.1f)
+		{
+			transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+			t += Time.deltaTime / stepAttackDuration;
+			yield return new WaitForEndOfFrame();
+		}
+		yield return new WaitForSeconds(0.6f);
+		animaThor.SetInteger("State", 0);
+		t = 0.0f;
+		while (t < 1.1f)
+		{
+			transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
+			t += Time.deltaTime / stepAttackDuration;
+			yield return new WaitForEndOfFrame();
+		}
+	}
 
 	private IEnumerator SetAttackFalse()
 	{
@@ -643,7 +656,7 @@ public class PlayerScript : MonoBehaviour
 		{
 			if (tileX == 0)
 				tileX = 1;
-            tileX = (map.gridSizeX) - tileX - 1;
+			tileX = (map.gridSizeX) - tileX - 1;
 			Vector2 pos = transform.position;
 			if (dir == 3)
 				pos = new Vector2(tileX * 100 + stepDoorDistance, pos.y);
@@ -684,14 +697,14 @@ public class PlayerScript : MonoBehaviour
 			StartCoroutine(MoveToDoor(Vector2.right));
 	}
 
-    private IEnumerator FadeIn()
-    {
-        yield return new WaitForSeconds(1f);
-        float fadeTime = GetComponent<Fading>().BeginFade(1);
-        yield return new WaitForSeconds(fadeTime);
-    }
+	private IEnumerator FadeIn()
+	{
+		yield return new WaitForSeconds(1f);
+		float fadeTime = GetComponent<Fading>().BeginFade(1);
+		yield return new WaitForSeconds(fadeTime);
+	}
 
-    private IEnumerator MoveToDoor(Vector2 dir)
+	private IEnumerator MoveToDoor(Vector2 dir)
 	{
 		Vector2 startPosition = transform.position;
 		Vector2 destinationPosition = startPosition + (dir * stepDoorDistance);
@@ -704,20 +717,20 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-    private IEnumerator MoveToPortal(Vector2 dir)
-    {
-        Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * stepPortalDistance);
-        float t = 0.0f;
-        while (t < 1.1f)
-        {
-            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-            t += Time.deltaTime / stepDoorDuration;
-            yield return new WaitForEndOfFrame();
-        }
-    }
+	private IEnumerator MoveToPortal(Vector2 dir)
+	{
+		Vector2 startPosition = transform.position;
+		Vector2 destinationPosition = startPosition + (dir * stepPortalDistance);
+		float t = 0.0f;
+		while (t < 1.1f)
+		{
+			transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+			t += Time.deltaTime / stepDoorDuration;
+			yield return new WaitForEndOfFrame();
+		}
+	}
 
-    private IEnumerator EnterPortal(int b)
+	private IEnumerator EnterPortal(int b)
 	{
 		if (b == 0)
 			StartCoroutine(MoveToPortal(Vector2.up));
@@ -731,50 +744,74 @@ public class PlayerScript : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 		float fadeTime = GetComponent<Fading>().BeginFade(1);
 		yield return new WaitForSeconds(fadeTime);
-        //Debug.Log("currentLevel: " + map.currentLevel);
-        if (map.currentLevel < 3)
+		//Debug.Log("currentLevel: " + map.currentLevel);
+		if (map.currentLevel < 3)
 		{
-            if (PlayerPrefs.GetInt("PD") == 1)
-            {
-                map.cycleLevel++;
-            }
-            else
-            {
-                SavePlayer();
-            }
-            
-            map.GoToLevel(map.currentLevel+1);
+			if (PlayerPrefs.GetInt("PD") == 1)
+			{
+				map.cycleLevel++;
+			}
+			else
+			{
+				SavePlayer();
+			}
+
+			map.GoToLevel(map.currentLevel + 1);
 			GetComponent<Fading>().BeginFade(-1);
 		}
-        else
-        {
+		else
+		{
 			Application.LoadLevel("YouWin");
-            //Debug.Log("GG, you win!");
-        }
+			//Debug.Log("GG, you win!");
+		}
 	}
 
 	public void SavePlayer()
 	{
-        PlayerPrefs.SetInt("pLevel", charLVL);
-        PlayerPrefs.SetInt("pCurrXp", xp);
-        PlayerPrefs.SetInt("pMaxAP", maxActPts);
-        PlayerPrefs.SetInt("pMaxHealth", maxHealth);
-        PlayerPrefs.SetInt("pVitality", vitality);
-        PlayerPrefs.SetInt("pStrength", strength);
-        PlayerPrefs.SetInt("pAgility", agility);
-        PlayerPrefs.SetInt("pSpeed", speed);
-        PlayerPrefs.SetInt("pDefence", defence);
-        PlayerPrefs.SetInt("pSkillPoints", skillPointsRemaining);
+		PlayerPrefs.SetInt("pLevel", charLVL);
+		PlayerPrefs.SetInt("pCurrXp", xp);
+		PlayerPrefs.SetInt("pMaxAP", maxActPts);
+		PlayerPrefs.SetInt("pMaxHealth", maxHealth);
+		PlayerPrefs.SetInt("pVitality", vitality);
+		PlayerPrefs.SetInt("pStrength", strength);
+		PlayerPrefs.SetInt("pAgility", agility);
+		PlayerPrefs.SetInt("pSpeed", speed);
+		PlayerPrefs.SetInt("pDefence", defence);
+		PlayerPrefs.SetInt("pSkillPoints", skillPointsRemaining);
 
-        for (int i = 0; i < inventory.slots.Count; i++)
-        {
-            //if (inventory.slots[i].GetComponentInChildren<Item>() != null)
-            //{
-                PlayerPrefs.SetInt("Slot" + i, inventory.slots[i].GetComponentInChildren<Item>().id);
-                Debug.Log("Item id in Slot" + i + ": " + PlayerPrefs.GetInt("Slot" + i));
-            //}
-        }
-    }
+		for (int i = 0; i < inventory.slots.Count; i++)
+		{
+			PlayerPrefs.SetInt("Slot" + i, -1);
+			if (inventory.slots[i].transform.childCount > 0)
+			{
+				if (i < 40)
+				{
+					//Debug.Log("item " + i + " is " + inventory.items[i].title);
+					//Debug.Log("Slot " + i + " has item: " + inventory.slots[i].transform.GetChild(0).GetComponent<ItemDataScript>().item.title);
+					PlayerPrefs.SetInt("Slot" + i, inventory.slots[i].transform.GetChild(0).GetComponent<ItemDataScript>().item.id);
+				}
+			}
+			if (i >= 40 && inventory.slots[i].transform.childCount > 1)
+			{
+				//Debug.Log("item " + i + " is " + inventory.items[i].title);
+				//Debug.Log("Slot " + i + " has item: " + inventory.slots[i].transform.GetChild(1).GetComponent<ItemDataScript>().item.title);
+				PlayerPrefs.SetInt("Slot" + i, inventory.slots[i].transform.GetChild(1).GetComponent<ItemDataScript>().item.id);
+			}
+			//Debug.Log("Item id in Slot" + i + ": " + PlayerPrefs.GetInt("Slot" + i));
+		}
+	}
+
+	public void LoadItemsFromSave()
+	{
+		for (int i = 0; i < inventory.slots.Count; i++)
+		{
+			if (PlayerPrefs.GetInt("Slot" + i) != -1)
+			{
+				inventory.AddItemFromSave(PlayerPrefs.GetInt("Slot" + i), i);
+			}
+		}
+	}
+
 	public void PermaDeathSpawn()
 	{
 
@@ -788,6 +825,6 @@ public class PlayerScript : MonoBehaviour
 		{
 			health = maxHealth;
 		}
-        healthText.text = health.ToString();
-    }
+		healthText.text = health.ToString();
+	}
 }

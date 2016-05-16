@@ -66,7 +66,7 @@ public class ChestScript : MonoBehaviour
 			{
 				GameObject itm = Instantiate(item);
 				itm.GetComponent<ItemDataScript>().item = itemList[i];
-				itm.GetComponent<ItemDataScript>().slot = i;
+				itm.GetComponent<ItemDataScript>().slot = i + 100;
 				itm.transform.SetParent(slots[i].transform);
 				itm.GetComponent<Image>().sprite = itemList[i].sprite;
 				itm.transform.position = Vector2.zero;
@@ -74,8 +74,14 @@ public class ChestScript : MonoBehaviour
 				itm.GetComponent<RectTransform>().localPosition = Vector2.zero;
 				itm.GetComponent<ItemDataScript>().item.belongsToChest = this.gameObject;
 				itm.GetComponent<ItemDataScript>().item.myInti = i;
-                
             }
+			
+		}
+		GameObject go = GameObject.Find("Slot Panel Chest");
+		for (int i = 0; i < go.transform.childCount; i++)
+		{
+			go.transform.GetChild(i).GetComponent<SlotScript>().owner = this.gameObject;
+			//slots[i].GetComponent<SlotScript>().owner = this.gameObject;
 		}
 	}
 }

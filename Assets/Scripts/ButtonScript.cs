@@ -14,6 +14,7 @@ public class ButtonScript : MonoBehaviour {
         else
         {
             PlayerPrefs.SetInt("gameStarted", 0);
+			PlayerPrefs.SetInt("PlayerShouldLoadItems", 1);
             Application.LoadLevel("MainScene");
         }
     }

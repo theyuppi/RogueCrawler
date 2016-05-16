@@ -18,7 +18,6 @@
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.4f1</UnityVersion>
     <RootNamespace></RootNamespace>
-    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,7 +71,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\HoleScript.cs" />
     <Compile Include="Assets\Scripts\AlignSkillPointsScript.cs" />
     <Compile Include="Assets\Scripts\ButtonScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
@@ -83,6 +81,7 @@
     <Compile Include="Assets\Scripts\EnemyHandler.cs" />
     <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\Fading.cs" />
+    <Compile Include="Assets\Scripts\HoleScript.cs" />
     <Compile Include="Assets\Scripts\InventoryScript.cs" />
     <Compile Include="Assets\Scripts\ItemDataScript.cs" />
     <Compile Include="Assets\Scripts\ItemDbScript.cs" />
@@ -97,5 +96,5 @@
   <ItemGroup>
     <None Include="Assets\Images\MapRooms\HexTiles.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

@@ -84,6 +84,8 @@ public class ReadSpriteScript : MonoBehaviour
             PlayerPrefs.SetInt("pSkillPoints", 5);
             PlayerPrefs.SetInt("currentLevel", 1);
 
+            
+
             //Reset to level 1
             PlayerPrefs.SetInt("cycleLevel", 1);
 
@@ -106,7 +108,7 @@ public class ReadSpriteScript : MonoBehaviour
         PlayerPrefs.SetInt("gameStarted", 1);
 
         mapNamesList.Add("bigmap3_");
-        mapNamesStartRoomList.Add("00");
+        mapNamesStartRoomList.Add("06");
         mapNamesList.Add("bigmap1_");
 		mapNamesStartRoomList.Add("00");
 		mapNamesList.Add("bigmap2_");

@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour
 	private int maxHealth = 100;
 	public int attackPower = 0;
 	public int currActPts = 0;
-	private int maxActPts = 2000;
+	private int maxActPts = 20;
 	public int skillPointsRemaining = 0;
 	public int skillPointsPerLevel = 5;
 	private int base_vitality = 5;
@@ -130,11 +130,20 @@ public class PlayerScript : MonoBehaviour
 
 		if (PlayerPrefs.GetInt("PlayerShouldLoadItems") == 1)
 		{
-			LoadItemsFromSave();
+            if (map.currentLevel == 1)
+            {
+                inventory.AddStartItems();
+            }
+            else
+            {
+                LoadItemsFromSave();
+            }
+			
 			PlayerPrefs.SetInt("PlayerShouldLoadItems", 0);
 		}
 		else
 		{
+            ResetPlayer();
 			inventory.AddStartItems();
 		}
 
@@ -801,7 +810,15 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	public void LoadItemsFromSave()
+    public void ResetPlayer()
+    {
+        for (int i = 0; i < inventory.slots.Count; i++)
+        {
+            PlayerPrefs.SetInt("Slot" + i, -1);
+        }
+    }
+
+    public void LoadItemsFromSave()
 	{
 		for (int i = 0; i < inventory.slots.Count; i++)
 		{

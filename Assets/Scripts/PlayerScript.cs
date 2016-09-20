@@ -174,6 +174,24 @@ public class PlayerScript : MonoBehaviour
 		UpdateStats();
 	}
 
+    void Update()
+    {
+        CheckKeyDown();
+    }
+
+
+    private void CheckKeyDown()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Time.timeScale = 2;
+        }
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            Time.timeScale = 1;
+        }
+    }
+
 	public void UpdateStats()
 	{
 		bonusStr = 0;

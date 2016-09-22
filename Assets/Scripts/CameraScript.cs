@@ -27,10 +27,10 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		MergeList();
 		characterList[0].GetComponent<PlayerScript>().myTurn = true;
 		UItext = GetComponentsInChildren<Text>();
-		UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
-		UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
+		UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
+		UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp;
+		UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp;
+		UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel;
 	}
 
 	void Update()
@@ -39,15 +39,15 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 		goalPos.z = transform.position.z;
 		transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
 		if (currentTarget > 0)
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
+			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts;
 		else
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
 
 		if (currentTarget == 0)
 		{
-			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + "/" + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
-			UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
-			UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
+			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp + "/" + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1];
+			UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL;
+			UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel;
 		}
 
 
@@ -161,14 +161,14 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 			characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
 			characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
 			characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
+			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts;
 		}
 		else  //Pass turn to a player
 		{
 			characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
 			characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
 			characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
 		}
 	}
 

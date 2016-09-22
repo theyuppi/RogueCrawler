@@ -12,12 +12,6 @@ public class PlayerHandler : MonoBehaviour {
         playerList.Add(player);
     }
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-
-	    
-	}
-
     //public GameObject SpawnPlayer(Vector2 position)
     //{
     //    GameObject player = Instantiate(Player, position, transform.rotation) as GameObject;

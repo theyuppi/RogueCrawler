@@ -158,11 +158,7 @@ public class PlayerScript : MonoBehaviour
 		//Level up
 		if (xp >= xpLevels[charLVL - 1])
 		{
-			xp = 0;
-			charLVL++;
-			health = maxHealth;
-			healthText.text = health.ToString();
-			skillPointsRemaining += (skillPointsPerLevel);
+		    LevelUp();
 		}
 
 		if (health <= 0)
@@ -179,9 +175,25 @@ public class PlayerScript : MonoBehaviour
         CheckKeyDown();
     }
 
+    private void LevelUp()
+    {
+        if (charLVL < xpLevels.Count) {
+            xp = 0;
+            charLVL++;
+            health = maxHealth;
+            healthText.text = health.ToString();
+            skillPointsRemaining += (skillPointsPerLevel);
+        }
+    }
 
     private void CheckKeyDown()
     {
+        if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.U))
+        {
+            LevelUp();
+        }
+
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             Time.timeScale = 2;

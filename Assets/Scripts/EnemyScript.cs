@@ -287,6 +287,10 @@ public class EnemyScript : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.5f);
         health -= damageAmount;
+        if (health < 0)
+        {
+            health = 0;
+        }
         healthText.text = health.ToString();
     }
 

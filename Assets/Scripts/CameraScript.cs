@@ -35,7 +35,11 @@ public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownH
 
 	void Update()
 	{
-		Vector3 goalPos = target.position;
+        if (!target)
+        {
+            NextTurn(true);
+        }
+	    Vector3 goalPos = target.position;
 		goalPos.z = transform.position.z;
 		transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
 		if (currentTarget > 0)

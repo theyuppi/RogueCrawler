@@ -74,7 +74,8 @@ public class TileScript : MonoBehaviour
 		{
 			spr.sprite = mySprite[(int)TileTypes.Floor];
 			GameObject tileAddon = Instantiate(chestPrefab, transform.position, transform.rotation) as GameObject;
-			tileAddon.GetComponent<ChestScript>().myIdString = levelHandler.GetComponent<ReadSpriteScript>().currentLevel.ToString() + levelHandler.GetComponent<ReadSpriteScript>().currentRoom + myID.x.ToString() + myID.y.ToString();
+			tileAddon.GetComponent<ChestScript>().myIdString = levelHandler.GetComponent<ReadSpriteScript>().currentLevel + 
+                levelHandler.GetComponent<ReadSpriteScript>().currentRoom + myID.x + myID.y;
 			tileAddon.transform.parent = transform;
 			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
             moveCost = 30.0f;

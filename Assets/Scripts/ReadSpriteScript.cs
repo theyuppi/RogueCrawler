@@ -460,7 +460,7 @@ public class ReadSpriteScript : MonoBehaviour
 					}
 					else if (tileType.Equals("FF0000")) //Enemy
 					{
-						string eSpawnID = currentLevel.ToString() + currentRoom + ((int)i + y).ToString() + ((int)j + x).ToString();
+						string eSpawnID = currentLevel + currentRoom + ((int)i + y) + ((int)j + x);
 						bool shouldSpawn = true;
 
 						for (int k = 0; k < eHandler.killedEnemies.Count; k++)
@@ -483,7 +483,7 @@ public class ReadSpriteScript : MonoBehaviour
 					}
 					else if (tileType.Equals("FFFF00")) //Treasure
 					{
-						string cSpawnID = currentLevel.ToString() + currentRoom + ((int)i + y).ToString() + ((int)j + x).ToString();
+						string cSpawnID = currentLevel + currentRoom + ((int)i + y) + ((int)j + x);
 						bool shouldSpawn = true;
 
 						for (int k = 0; k < lootedChests.Count; k++)

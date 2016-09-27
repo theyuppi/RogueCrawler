@@ -6,31 +6,31 @@ using UnityEngine.UI;
 
 public class ChestScript : MonoBehaviour
 {
-	public CameraScript GameHandler;
-	public ReadSpriteScript RSS;
-	public List<Item> itemList;
-	public GameObject inv;
-	public InventoryScript invScript;
-	public ItemDbScript invDB;
-	private int slots = 2; //How many slots in this chest?
+	public CameraScript GameHandler { get; set; }
+	public ReadSpriteScript RSS { get; set; }
+    public List<Item> ItemList { get; set; }
+    public GameObject Inventory { get; set; }
+	public InventoryScript InventoryScript { get; set; }
+    public ItemDbScript InventoryDatabase { get; set; }
+    public GameObject player { get; set; }
+
 	public bool playerInRange = false;
-	public string myIdString = "";
-
-    public GameObject player;
-
+	public string myIdString { get; set; }
 	public GameObject item;
+
+    const int Slots = 2; //How many Slots in this chest?
 
 	public void Start()
 	{
 		GameHandler = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 		RSS = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ReadSpriteScript>();
-		inv = GameObject.FindGameObjectWithTag("Inventory");
-		invDB = inv.GetComponent<ItemDbScript>();
-		invScript = inv.GetComponent<InventoryScript>();
+		Inventory = GameObject.FindGameObjectWithTag("Inventory");
+		InventoryDatabase = Inventory.GetComponent<ItemDbScript>();
+		InventoryScript = Inventory.GetComponent<InventoryScript>();
         player = GameObject.FindGameObjectWithTag("Player");
-
+	    myIdString = "";
         //Query itemDatabase for items
-        itemList = invDB.FillChest(slots);
+        ItemList = InventoryDatabase.FillChest(Slots);
 		//PopulateChest();
 	}
 
@@ -47,32 +47,32 @@ public class ChestScript : MonoBehaviour
                 if (GameHandler.inChest == false)
                 {
                     GameHandler.ChestClicked();
-                    invScript.ShowItemsInChest(this.gameObject);
+                    InventoryScript.ShowItemsInChest(gameObject);
                     RSS.lootedChests.Add(myIdString);
                 }
             }
         }
         else
         {
-            this.GetComponentInParent<TileScript>().GotClicked();
+            GetComponentInParent<TileScript>().GotClicked();
         }
     }
 
 	public void PopulateChest(List<GameObject> slots)
 	{
-		for (int i = 0; i < itemList.Count; i++)
+		for (int i = 0; i < ItemList.Count; i++)
 		{
 			if (slots[i].transform.childCount == 0) //Don't add item if slot already has item
 			{
 				GameObject itm = Instantiate(item);
-				itm.GetComponent<ItemDataScript>().item = itemList[i];
+				itm.GetComponent<ItemDataScript>().item = ItemList[i];
 				itm.GetComponent<ItemDataScript>().slot = i + 100;
 				itm.transform.SetParent(slots[i].transform);
-				itm.GetComponent<Image>().sprite = itemList[i].sprite;
+				itm.GetComponent<Image>().sprite = ItemList[i].sprite;
 				itm.transform.position = Vector2.zero;
-				itm.name = itemList[i].title;
+				itm.name = ItemList[i].title;
 				itm.GetComponent<RectTransform>().localPosition = Vector2.zero;
-				itm.GetComponent<ItemDataScript>().item.belongsToChest = this.gameObject;
+				itm.GetComponent<ItemDataScript>().item.belongsToChest = gameObject;
 				itm.GetComponent<ItemDataScript>().item.myInti = i;
             }
 			
@@ -80,8 +80,8 @@ public class ChestScript : MonoBehaviour
 		GameObject go = GameObject.Find("Slot Panel Chest");
 		for (int i = 0; i < go.transform.childCount; i++)
 		{
-			go.transform.GetChild(i).GetComponent<SlotScript>().owner = this.gameObject;
-			//slots[i].GetComponent<SlotScript>().owner = this.gameObject;
+			go.transform.GetChild(i).GetComponent<SlotScript>().owner = gameObject;
+			//Slots[i].GetComponent<SlotScript>().owner = this.gameObject;
 		}
 	}
 }

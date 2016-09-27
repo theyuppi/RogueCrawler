@@ -45,8 +45,8 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 			if (slot >= 100)
 			{
 				//Debug.Log("item.myInti: " + item.myInti);
-				//if (item.belongsToChest.GetComponent<ChestScript>().itemList[item.myInti] != null)
-				//	item.belongsToChest.GetComponent<ChestScript>().itemList.RemoveAt(item.myInti);
+				//if (item.belongsToChest.GetComponent<ChestScript>().ItemList[item.myInti] != null)
+				//	item.belongsToChest.GetComponent<ChestScript>().ItemList.RemoveAt(item.myInti);
 				//Debug.Log(item.belongsToChest.transform.position);
 			}
 			this.transform.SetParent(this.transform.parent.parent);
@@ -69,7 +69,7 @@ public class ItemDataScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 			else
 			{
 				GameObject go = GameObject.Find("Slot Panel Chest").transform.GetChild(slot - 100).gameObject;
-				item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(item);
+				item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(item);
 			}
 		}
 	}

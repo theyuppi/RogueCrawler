@@ -100,10 +100,10 @@ public class InventoryScript : MonoBehaviour
 	{
 		chest.GetComponent<ChestScript>().PopulateChest(lootSlots);
 
-		//for (int i = 0; i < chest.GetComponent<ChestScript>().itemList.Count; i++)
+		//for (int i = 0; i < chest.GetComponent<ChestScript>().ItemList.Count; i++)
 		//{
-		//	Debug.Log(chest.GetComponent<ChestScript>().itemList[i].description);
-		//	lootSlots[i].name = chest.GetComponent<ChestScript>().itemList[i].ToString();
+		//	Debug.Log(chest.GetComponent<ChestScript>().ItemList[i].description);
+		//	lootSlots[i].name = chest.GetComponent<ChestScript>().ItemList[i].ToString();
 		//}
 	}
 

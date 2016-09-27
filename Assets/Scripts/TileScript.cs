@@ -12,7 +12,6 @@ public class TileScript : MonoBehaviour
 	{
         Wall,
 		Floor,
-
         Innan,
 		Hole,
 		Spike,
@@ -61,116 +60,109 @@ public class TileScript : MonoBehaviour
         myTileType = TileTypes.Floor;
     }
 
-	void Start()
-	{
-		spr = GetComponent<SpriteRenderer>();
-		//spr.sprite = mySprite[(int)myTileType];
+    private void Start()
+    {
+        spr = GetComponent<SpriteRenderer>();
+        //spr.sprite = mySprite[(int)myTileType];
 
-		if (myTileType == TileTypes.Floor)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-		}
-		if (myTileType == TileTypes.Chest)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(chestPrefab, transform.position, transform.rotation) as GameObject;
-			tileAddon.GetComponent<ChestScript>().myIdString = levelHandler.GetComponent<ReadSpriteScript>().currentLevel + 
-                levelHandler.GetComponent<ReadSpriteScript>().currentRoom + myID.x + myID.y;
-			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-            moveCost = 30.0f;
-        }
-		else if (myTileType == TileTypes.Spike)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(spikePrefab, transform.position, transform.rotation) as GameObject;
-			tileAddon.transform.parent = transform;
-			//tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-			moveCost = 5.0f;
-		}
-		else if (myTileType == TileTypes.Wall)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Wall];
-			walkable = false;
-            GameObject tileAddon = Instantiate(roofPrefab, transform.position, transform.rotation) as GameObject;
-            tileAddon.transform.parent = transform;
-            var locPos = tileAddon.transform.localPosition;
-            locPos.y = 60f;
-            tileAddon.transform.localPosition = locPos;
-            tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 10;
-        }
-		else if (myTileType == TileTypes.Hole)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			GameObject tileAddon = Instantiate(holePrefab, transform.position, transform.rotation) as GameObject;
-			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-			moveCost = 30.0f;
-		}
-        else if (myTileType == TileTypes.LDoor)
+        GameObject tileAddon;
+        Vector3 pos;
+        switch (myTileType)
         {
-            spr.sprite = mySprite[(int)TileTypes.Floor];
-			var pos = transform.position;
-			pos.x -= 49;
-			pos.y += 33;
-            GameObject tileAddon = Instantiate(doorLprefab, pos, transform.rotation) as GameObject;
-            tileAddon.transform.parent = transform;
-            walkable = false;
-            isDoor = true;
+            case TileTypes.Floor:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                break;
+            case TileTypes.Chest:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                tileAddon = Instantiate(chestPrefab, transform.position, transform.rotation) as GameObject;
+                tileAddon.GetComponent<ChestScript>().myIdString =
+                    levelHandler.GetComponent<ReadSpriteScript>().currentLevel +
+                    levelHandler.GetComponent<ReadSpriteScript>().currentRoom + myID.x + myID.y;
+                tileAddon.transform.parent = transform;
+                tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                moveCost = 30.0f;
+                break;
+            case TileTypes.Spike:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                tileAddon = Instantiate(spikePrefab, transform.position, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                //tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                moveCost = 5.0f;
+                break;
+            case TileTypes.Wall:
+                spr.sprite = mySprite[(int) TileTypes.Wall];
+                walkable = false;
+                tileAddon = Instantiate(roofPrefab, transform.position, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                var locPos = tileAddon.transform.localPosition;
+                locPos.y = 60f;
+                tileAddon.transform.localPosition = locPos;
+                tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 10;
+                break;
+            case TileTypes.Hole:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                tileAddon = Instantiate(holePrefab, transform.position, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                moveCost = 30.0f;
+                break;
+            case TileTypes.LDoor:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                pos = transform.position;
+                pos.x -= 49;
+                pos.y += 33;
+                tileAddon = Instantiate(doorLprefab, pos, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                walkable = false;
+                isDoor = true;
+                break;
+            case TileTypes.RDoor:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                pos = transform.position;
+                pos.x += 49;
+                pos.y += 33;
+                tileAddon = Instantiate(doorRprefab, pos, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                walkable = false;
+                isDoor = true;
+                break;
+            case TileTypes.UDoor:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                pos = transform.position;
+                pos.y += 22;
+                tileAddon = Instantiate(doorUprefab, pos, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                walkable = false;
+                isDoor = true;
+                break;
+            case TileTypes.DDoor:
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                pos = transform.position;
+                pos.y += 24;
+                tileAddon = Instantiate(doorDprefab, pos, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                walkable = false;
+                isDoor = true;
+                break;
+            case TileTypes.FloorEnd: //EndTile
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                pos = transform.position;
+                pos.x -= 12;
+                tileAddon = Instantiate(endPortalPrefab, pos, transform.rotation) as GameObject;
+                tileAddon.transform.parent = transform;
+                tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                walkable = false;
+                isEndPortal = true;
+                break;
+            case TileTypes.SideDoor: //Tile beside door
+                spr.sprite = mySprite[(int) TileTypes.Floor];
+                walkable = false;
+                break;
         }
-        else if (myTileType == TileTypes.RDoor)
-        {
-            spr.sprite = mySprite[(int)TileTypes.Floor];
-			var pos = transform.position;
-			pos.x += 49;
-			pos.y += 33;
-			GameObject tileAddon = Instantiate(doorRprefab, pos, transform.rotation) as GameObject;
-            tileAddon.transform.parent = transform;
-            walkable = false;
-            isDoor = true;
-        }
-		else if (myTileType == TileTypes.UDoor)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			var pos = transform.position;
-			pos.y += 22;
-			GameObject tileAddon = Instantiate(doorUprefab, pos, transform.rotation) as GameObject;
-			tileAddon.transform.parent = transform;
-			walkable = false;
-			isDoor = true;
-		}
-		else if (myTileType == TileTypes.DDoor)
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			var pos = transform.position;
-			pos.y += 24;
-			GameObject tileAddon = Instantiate(doorDprefab, pos, transform.rotation) as GameObject;
-			tileAddon.transform.parent = transform;
-			walkable = false;
-			isDoor = true;
-		}
         //OccupyTile();
-
-		else if (myTileType == TileTypes.FloorEnd)  //EndTile
-		{
-			spr.sprite = mySprite[(int)TileTypes.Floor];
-			var pos = transform.position;
-			pos.x -= 12;
-			GameObject tileAddon = Instantiate(endPortalPrefab, pos, transform.rotation) as GameObject;
-			tileAddon.transform.parent = transform;
-			tileAddon.GetComponent<SpriteRenderer>().sortingOrder = 1;
-            walkable = false;
-            isEndPortal = true;
-		}
-        
-        else if (myTileType == TileTypes.SideDoor) //Tile beside door
-        {
-            spr.sprite = mySprite[(int)TileTypes.Floor];
-            walkable = false;
-        }
     }
-	
-	void FixedUpdate()
+
+    void FixedUpdate()
 	{
         if (unReachable)
         {

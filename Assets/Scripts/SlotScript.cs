@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.EventSystems;
 using System;
 
-[System.Serializable]
+[Serializable]
 public class SlotScript : MonoBehaviour, IDropHandler
 {
 	public int id;
@@ -49,7 +48,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 						sPanelChest.transform.GetChild(droppedItem.slot - 100).gameObject.name = "Slot(Clone)";
 
 						//Empty old slot
-						droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(droppedItem.item);
+						droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(droppedItem.item);
 					}
 					else
 					{
@@ -133,7 +132,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 							sPanelChest.transform.GetChild(droppedItem.slot - 100).gameObject.name = "Slot(Clone)";
 
 							//Empty old slot
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(droppedItem.item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(droppedItem.item);
 						}
 						else
 						{
@@ -156,7 +155,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 						if (droppedItem.slot >= 100)
 						{
 							sPanelChest.transform.GetChild(droppedItem.slot - 100).gameObject.name = "Slot: " + droppedItem.item.title;
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Add(droppedItem.item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Add(droppedItem.item);
 						}
 						else
 						{
@@ -172,7 +171,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 						sPanelChest.transform.GetChild(droppedItem.slot - 100).gameObject.name = "Slot(Clone)";
 
 						//Empty old slot
-						droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(droppedItem.item);
+						droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(droppedItem.item);
 					}
 					else
 					{
@@ -217,8 +216,8 @@ public class SlotScript : MonoBehaviour, IDropHandler
 							//Name new slot
 							inv.slots[id].name = "Slot: " + droppedItem.item.title;
 
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Add(item.GetComponent<ItemDataScript>().item);
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(droppedItem.item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Add(item.GetComponent<ItemDataScript>().item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(droppedItem.item);
 						}
 						else
 						{
@@ -245,7 +244,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 						if (droppedItem.slot >= 100)
 						{
 							sPanelChest.transform.GetChild(droppedItem.slot - 100).gameObject.name = "Slot: " + droppedItem.item.title;
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Add(droppedItem.item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Add(droppedItem.item);
 						}
 						else
 						{
@@ -256,7 +255,7 @@ public class SlotScript : MonoBehaviour, IDropHandler
 				else
 				{
 					Transform item = this.transform.GetChild(0);
-					//Player dragged item from EQ and dropped in inv.
+					//Player dragged item from EQ and dropped in Inventory.
 
 						//Swap chest to inventory
 						if (id < 100 && droppedItem.slot >= 100)
@@ -274,8 +273,8 @@ public class SlotScript : MonoBehaviour, IDropHandler
 							//Name new slot
 							inv.slots[id].name = "Slot: " + droppedItem.item.title;
 
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Remove(droppedItem.item);
-							droppedItem.item.belongsToChest.GetComponent<ChestScript>().itemList.Add(item.GetComponent<ItemDataScript>().item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(droppedItem.item);
+							droppedItem.item.belongsToChest.GetComponent<ChestScript>().ItemList.Add(item.GetComponent<ItemDataScript>().item);
 
 							droppedItem.slot = id;
 							droppedItem.item.belongsToChest = item.GetComponent<ItemDataScript>().item.belongsToChest;

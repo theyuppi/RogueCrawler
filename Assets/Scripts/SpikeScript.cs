@@ -1,60 +1,61 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
-public class SpikeScript : MonoBehaviour
+namespace Assets.Scripts
 {
-    private Animator[] childAnimators;
-    private SpriteRenderer[] childSR;
-    private int myDmg = 10;
-
-    void Start()
+    public class SpikeScript : MonoBehaviour
     {
-        childAnimators = GetComponentsInChildren<Animator>();
-        childSR = GetComponentsInChildren<SpriteRenderer>();
-    }
+        private Animator[] childAnimators;
+        private SpriteRenderer[] childSR;
+        private int myDmg = 10;
 
-    void Update()
-    {
-    }
-
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Player")
+        void Start()
         {
-            other.GetComponent<PlayerScript>().stunned = true;
-            StartCoroutine(other.GetComponent<PlayerScript>().GetHit(myDmg));
-            childSR[1].sortingOrder = 4;
+            childAnimators = GetComponentsInChildren<Animator>();
+            childSR = GetComponentsInChildren<SpriteRenderer>();
         }
-        if (other.tag == "Enemy")
-        {
-            other.GetComponent<EnemyScript>().stunned = true;
-            StartCoroutine(other.GetComponent<EnemyScript>().GetHit(myDmg));
-            childSR[1].sortingOrder = 4;
-        }
-    }
 
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.tag == "Player" || other.tag == "Enemy")
+        void Update()
         {
-            foreach (Animator a in childAnimators)
+        }
+
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.tag == "Player")
             {
-                a.SetBool("isActive", true);
+                other.GetComponent<PlayerScript>().stunned = true;
+                StartCoroutine(other.GetComponent<PlayerScript>().GetHit(myDmg));
+                childSR[1].sortingOrder = 4;
+            }
+            if (other.tag == "Enemy")
+            {
+                other.GetComponent<EnemyScript>().stunned = true;
+                StartCoroutine(other.GetComponent<EnemyScript>().GetHit(myDmg));
+                childSR[1].sortingOrder = 4;
             }
         }
-    }
 
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == "Player" || other.tag == "Enemy")
+        void OnTriggerStay2D(Collider2D other)
         {
-            foreach (Animator a in childAnimators)
+            if (other.tag == "Player" || other.tag == "Enemy")
             {
-                a.SetBool("isActive", false);
+                foreach (Animator a in childAnimators)
+                {
+                    a.SetBool("isActive", true);
+                }
             }
-            childSR[1].sortingOrder = 1;
+        }
+
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.tag == "Player" || other.tag == "Enemy")
+            {
+                foreach (Animator a in childAnimators)
+                {
+                    a.SetBool("isActive", false);
+                }
+                childSR[1].sortingOrder = 1;
+            }
         }
     }
 }

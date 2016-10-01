@@ -1,399 +1,412 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class EnemyScript : MonoBehaviour {
-
-    private int health = 20;
-    public Text healthText;
-    public GameObject tile;
-    public EnemyHandler eHandler;
-    public CameraScript cScript;
-    //public PlayerHandler pHandler;
-    public bool isDead = false;
-    public bool isMoving = false;
-    public bool myTurn = false;
-    public bool isBlocked = false;
-    public bool turnIsOver = false;
-    public List<Node> currentPath = null;
-    public ReadSpriteScript map;
-    public const float stepDuration = 0.2f;
-    public const float stepAttackDuration = 0.15f;
-    public int tileX = 0;
-    public int tileY = 0;
-    public int tileXmoved = 0;
-    public int tileYmoved = 0;
-    private SpriteRenderer sRender;
-    private Animator animaThor;
-    public bool isPerformingAttack = false;
-    private int attackPower = 5;
-    public int currActPts = 0;
-    public int maxActPts = 10;
-    int xpReward = 5;
-    Vector2 roundDir;
-    public bool active = false;
-
-	public string myIdString = "";
-
-    public float myOffsetX = 0;
-    public float myOffsetY = 20f;
-
-    //States
-    public bool stunned = false;
-
-    private enum direction
+namespace Assets.Scripts
+{
+    public class EnemyScript : MonoBehaviour, ICharacter
     {
-        Up,
-        Down,
-        Left,
-        Right
-    }
-    private direction myDirection = direction.Right;
 
-    // Use this for initialization
-    void Start () {
-        healthText = GetComponentInChildren<Text>();
-        healthText.text = health.ToString();
-        sRender = GetComponent<SpriteRenderer>();
-        animaThor = GetComponent<Animator>();
-        //pHandler = GetComponent<PlayerHandler>();
-        animaThor.SetInteger("State", 0);
-        ReceiveActPts();
-        //cScript = GetComponent<CameraScript>();
-        transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
+        private int health = 20;
+        public Text healthText;
+        public GameObject tile;
+        public EnemyHandler eHandler;
+        public CameraScript cScript;
+        //public PlayerHandler pHandler;
+        public bool isDead = false;
+        public bool isMoving = false;
+        public bool myTurn = false;
+        public bool isBlocked = false;
+        public bool turnIsOver = false;
+        public List<Node> currentPath = null;
+        public ReadSpriteScript map;
+        public const float stepDuration = 0.2f;
+        public const float stepAttackDuration = 0.15f;
+        public int tileX = 0;
+        public int tileY = 0;
+        public int tileXmoved = 0;
+        public int tileYmoved = 0;
+        private SpriteRenderer sRender;
+        private Animator animaThor;
+        public bool isPerformingAttack = false;
 
-    }
+        private int attackPower = 5;
+        public int currActPts = 0;
+        public int maxActPts = 10;
+        private int _initiative = 0;
+
+        int xpReward = 5;
+        Vector2 roundDir;
+        public bool active = false;
+
+        public string myIdString = "";
+
+        public float myOffsetX = 0;
+        public float myOffsetY = 20f;
+
+        //States
+        public bool stunned = false;
+
+        private enum direction
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+        private direction myDirection = direction.Right;
+
+        // Use this for initialization
+        void Start () {
+            healthText = GetComponentInChildren<Text>();
+            healthText.text = health.ToString();
+            sRender = GetComponent<SpriteRenderer>();
+            animaThor = GetComponent<Animator>();
+            //pHandler = GetComponent<PlayerHandler>();
+            animaThor.SetInteger("State", 0);
+            ReceiveActPts();
+            //cScript = GetComponent<CameraScript>();
+            transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
+
+        }
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-		//if (active)
-		//{
+        // Update is called once per frame
+        void FixedUpdate () {
+            //if (active)
+            //{
             if (health <= 0)
             {
                 Destroy();
             }
 
-        if (myTurn == true)
-        {
-            eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
+            if (myTurn == true)
+            {
+                // TODO: Hard coded which player to focus, need some kind of AI here
+                eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
                     cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
                     cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
                     this.gameObject, false);
 
-            if (currentPath != null
-                && currentPath.Count < 20
-                && currentPath.Count > 0)
-            {
-                StartCoroutine(MakeAMove());
+                if (currentPath != null
+                    && currentPath.Count < 20
+                    && currentPath.Count > 0)
+                {
+                    StartCoroutine(MakeAMove());
+                }
+                else
+                {
+                    turnIsOver = true;
+                }
+                myTurn = false;
             }
-            else
+            if (turnIsOver == true)
             {
-                turnIsOver = true;
+                eHandler.GetComponent<EnemyHandler>().PassTurn();
             }
-            myTurn = false;
+            turnIsOver = false;
+            //}
         }
-        if (turnIsOver == true)
+
+        public IEnumerator MakeAMove()
         {
-            eHandler.GetComponent<EnemyHandler>().PassTurn();
-        }
-        turnIsOver = false;
-        //}
-    }
 
-    public IEnumerator MakeAMove()
-    {
-
-        int currNode = 0;
-        yield return new WaitForSeconds(0.8f);
-        while (currentPath != null && currNode < currentPath.Count - 1)
-        {
-            if (stunned)
+            int currNode = 0;
+            yield return new WaitForSeconds(0.8f);
+            while (currentPath != null && currNode < currentPath.Count - 1)
             {
-                yield return new WaitForSeconds(0.5f);
-                stunned = false;
-            }
+                if (stunned)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    stunned = false;
+                }
 
-            if (currActPts > 0)
-            {
-                currNode++;
+                if (currActPts > 0)
+                {
+                    currNode++;
                 
-                StartCoroutine(MoveNextTile(currNode));
+                    StartCoroutine(MoveNextTile(currNode));
 
-                if (currNode == currentPath.Count - 1)
+                    if (currNode == currentPath.Count - 1)
+                    {
+                        isMoving = false;
+                    }
+                    yield return new WaitForSeconds(stepDuration);
+                }
+                else
                 {
                     isMoving = false;
+                    break;
                 }
-                yield return new WaitForSeconds(stepDuration);
-            }
-            else
-            {
-                isMoving = false;
-                break;
-            }
-        }
-
-        while (currActPts >= 3 && isBlocked == false)
-        {
-            if (isPerformingAttack == false)
-            {
-                PerformAttack(myDirection);
-            }
-            yield return new WaitForSeconds(1.2f);
-        }
-
-        //map.ClearOldPath();
-        yield return new WaitForSeconds(1f);
-        turnIsOver = true;
-        currentPath = null;
-    }
-
-    public IEnumerator MoveNextTile(int currNode)
-    {
-        if (currentPath == null)
-            yield return new WaitForEndOfFrame();
-
-        // Move us to the next tile in the sequence
-
-        tileX = currentPath[currNode].x;
-        tileY = currentPath[currNode].y;
-
-        Vector2 startPosition = transform.position;
-
-        Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
-        destinationPosition.y += myOffsetY;
-        Vector2 dir = destinationPosition - startPosition;
-        dir.Normalize();
-        roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
-        switch ((int)dir.x)
-        {
-            case 1:
-                sRender.flipX = true;
-                break;
-
-            case -1:
-                sRender.flipX = false;
-                break;
-
-            default:
-                break;
-        }
-
-        // Check if tile in path is walkable
-        if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
-        {
-            // Make current stepTile the last stepTile
-            if (currentPath != null)
-            {
-                tileX = currentPath[currNode - 1].x;
-                tileY = currentPath[currNode - 1].y;
             }
 
-            // Check if tile has a player, if so check direction and perform attack
-            if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasPlayer == true)
+            while (currActPts >= 3 && isBlocked == false)
             {
-                if (roundDir == Vector2.up)
-                {
-                    myDirection = direction.Up;
-                }
-                else if (roundDir == Vector2.down)
-                {
-                    myDirection = direction.Down;
-                }
-                else if (roundDir == Vector2.left)
-                {
-                    myDirection = direction.Left;
-                }
-                else if (roundDir == Vector2.right)
-                {
-                    myDirection = direction.Right;
-                }
                 if (isPerformingAttack == false)
                 {
-                    if (currActPts >= 3)
-                    {
-                        PerformAttack(myDirection);
-                    }
+                    PerformAttack(myDirection);
                 }
-            }
-            else if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasEnemy == true  ||
-                map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().walkable == false)
-            {
-                isBlocked = true;
-            }
-        }
-
-        else
-        {
-            // Lerp to new position
-            currActPts--;
-            float t = 0.0f;
-            while (t <= 1.1f)
-            {
-                transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-                t += Time.deltaTime / stepDuration;
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForSeconds(1.2f);
             }
 
-            if (currentPath != null)
-            {
-                tileXmoved = currentPath[currNode].x;
-                tileYmoved = currentPath[currNode].y;
-            }
-
-            map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
-        }
-
-        if (currentPath != null && currNode == currentPath.Count)
-        {
+            //map.ClearOldPath();
+            yield return new WaitForSeconds(1f);
+            turnIsOver = true;
             currentPath = null;
         }
-    }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole" || other.tag == "Chest")
+        public IEnumerator MoveNextTile(int currNode)
         {
-            other.GetComponent<TileScript>().walkable = false;
-            other.GetComponent<TileScript>().hasEnemy = true;
-            if (other.GetComponent<TileScript>().occupant == null)
+            if (currentPath == null)
+                yield return new WaitForEndOfFrame();
+
+            // Move us to the next tile in the sequence
+
+            tileX = currentPath[currNode].x;
+            tileY = currentPath[currNode].y;
+
+            Vector2 startPosition = transform.position;
+
+            Vector2 destinationPosition = map.TileCoordToWorldCoord(tileX, tileY);
+            destinationPosition.y += myOffsetY;
+            Vector2 dir = destinationPosition - startPosition;
+            dir.Normalize();
+            roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
+            switch ((int)dir.x)
             {
-                other.GetComponent<TileScript>().occupant = this.gameObject;
+                case 1:
+                    sRender.flipX = true;
+                    break;
+
+                case -1:
+                    sRender.flipX = false;
+                    break;
+
+                default:
+                    break;
             }
-            tile = other.gameObject;
-        }
-    }
 
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole" || other.tag == "Chest")
+            // Check if tile in path is walkable
+            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
+            {
+                // Make current stepTile the last stepTile
+                if (currentPath != null)
+                {
+                    tileX = currentPath[currNode - 1].x;
+                    tileY = currentPath[currNode - 1].y;
+                }
+
+                // Check if tile has a player, if so check direction and perform attack
+                if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasPlayer == true)
+                {
+                    if (roundDir == Vector2.up)
+                    {
+                        myDirection = direction.Up;
+                    }
+                    else if (roundDir == Vector2.down)
+                    {
+                        myDirection = direction.Down;
+                    }
+                    else if (roundDir == Vector2.left)
+                    {
+                        myDirection = direction.Left;
+                    }
+                    else if (roundDir == Vector2.right)
+                    {
+                        myDirection = direction.Right;
+                    }
+                    if (isPerformingAttack == false)
+                    {
+                        if (currActPts >= 3)
+                        {
+                            PerformAttack(myDirection);
+                        }
+                    }
+                }
+                else if (map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().hasEnemy == true  ||
+                         map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().walkable == false)
+                {
+                    isBlocked = true;
+                }
+            }
+
+            else
+            {
+                // Lerp to new position
+                currActPts--;
+                float t = 0.0f;
+                while (t <= 1.1f)
+                {
+                    transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+                    t += Time.deltaTime / stepDuration;
+                    yield return new WaitForEndOfFrame();
+                }
+
+                if (currentPath != null)
+                {
+                    tileXmoved = currentPath[currNode].x;
+                    tileYmoved = currentPath[currNode].y;
+                }
+
+                map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();
+            }
+
+            if (currentPath != null && currNode == currentPath.Count)
+            {
+                currentPath = null;
+            }
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
         {
-            other.GetComponent<TileScript>().walkable = true;
-            other.GetComponent<TileScript>().hasEnemy = false;
-            other.GetComponent<TileScript>().occupant = null;
-            isBlocked = false;
+            if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole" || other.tag == "Chest")
+            {
+                other.GetComponent<TileScript>().walkable = false;
+                other.GetComponent<TileScript>().hasEnemy = true;
+                if (other.GetComponent<TileScript>().occupant == null)
+                {
+                    other.GetComponent<TileScript>().occupant = this.gameObject;
+                }
+                tile = other.gameObject;
+            }
         }
-    }
 
-    //void OnTriggerStay2D(Collider2D other)
-    //{
-    //    if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
-    //    {
-    //        other.GetComponent<TileScript>().occupant = null;
-    //    }
-    //}
-
-    public IEnumerator GetHit(int damageAmount)
-    {
-        yield return new WaitForSeconds(0.5f);
-        health -= damageAmount;
-        if (health < 0)
+        void OnTriggerExit2D(Collider2D other)
         {
-            health = 0;
+            if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole" || other.tag == "Chest")
+            {
+                other.GetComponent<TileScript>().walkable = true;
+                other.GetComponent<TileScript>().hasEnemy = false;
+                other.GetComponent<TileScript>().occupant = null;
+                isBlocked = false;
+            }
         }
-        healthText.text = health.ToString();
-    }
 
-    public void Destroy()
-    {
-		eHandler.killedEnemies.Add(myIdString);
-        tile.GetComponent<TileScript>().hasEnemy = false;
-        tile.GetComponent<TileScript>().walkable = true;
-        tile.GetComponent<TileScript>().occupant = null;
-        isDead = true;
-        eHandler.RemoveFromList();
-        eHandler.SendXPtoPlayer(xpReward);
-        Destroy(this.gameObject);
-        
-    }
-
-    private void PerformAttack(direction dir)
-    {
-        isPerformingAttack = true;
-        switch (dir)
-        {
-            case direction.Up:
-                StartCoroutine(PerformAttackMove(Vector2.up));
-                animaThor.SetInteger("State", 1);
-                break;
-            case direction.Down:
-                StartCoroutine(PerformAttackMove(Vector2.down));
-                animaThor.SetInteger("State", 2);
-                break;
-            case direction.Left:
-                StartCoroutine(PerformAttackMove(Vector2.left));
-                animaThor.SetInteger("State", 1);
-                break;
-            case direction.Right:
-                StartCoroutine(PerformAttackMove(Vector2.right));
-                animaThor.SetInteger("State", 1);
-
-                break;
-            default:
-                break;
-        }
-        currActPts -= 3;
-        map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
-        map.ClearOldPath();
-        StartCoroutine(SetAttackFalse());
-
-        //if (currActPts >= 2)
+        //void OnTriggerStay2D(Collider2D other)
         //{
-        //    StartCoroutine(AttackAgain(dir));
+        //    if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
+        //    {
+        //        other.GetComponent<TileScript>().occupant = null;
+        //    }
         //}
-    }
 
-    private IEnumerator PerformAttackMove(Vector2 dir)
-    {
-        Vector2 startPosition = transform.position;
-        Vector2 destinationPosition = startPosition + (dir * 40f);
-        float t = 0.0f;
-        // Moves toward target
-        while (t < 1.1f)
+        public IEnumerator GetHit(int damageAmount)
         {
-            transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
-            t += Time.deltaTime / stepAttackDuration;
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.5f);
+            health -= damageAmount;
+            if (health < 0)
+            {
+                health = 0;
+            }
+            healthText.text = health.ToString();
         }
-        // Stay for 0.6 seconds
-        yield return new WaitForSeconds(0.6f);
 
-        // Back to idle anim
-        animaThor.SetInteger("State", 0);
-        t = 0.0f;
-
-        // Moves backwards to start tile
-        while (t < 1.1f)
+        public void Destroy()
         {
-            transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
-            t += Time.deltaTime / stepAttackDuration;
-            yield return new WaitForEndOfFrame();
+            eHandler.killedEnemies.Add(myIdString);
+            tile.GetComponent<TileScript>().hasEnemy = false;
+            tile.GetComponent<TileScript>().walkable = true;
+            tile.GetComponent<TileScript>().occupant = null;
+            isDead = true;
+            eHandler.RemoveFromList();
+            eHandler.SendXPtoPlayer(xpReward);
+            Destroy(this.gameObject);
+        
         }
+
+        private void PerformAttack(direction dir)
+        {
+            isPerformingAttack = true;
+            switch (dir)
+            {
+                case direction.Up:
+                    StartCoroutine(PerformAttackMove(Vector2.up));
+                    animaThor.SetInteger("State", 1);
+                    break;
+                case direction.Down:
+                    StartCoroutine(PerformAttackMove(Vector2.down));
+                    animaThor.SetInteger("State", 2);
+                    break;
+                case direction.Left:
+                    StartCoroutine(PerformAttackMove(Vector2.left));
+                    animaThor.SetInteger("State", 1);
+                    break;
+                case direction.Right:
+                    StartCoroutine(PerformAttackMove(Vector2.right));
+                    animaThor.SetInteger("State", 1);
+
+                    break;
+                default:
+                    break;
+            }
+            currActPts -= 3;
+            map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
+            map.ClearOldPath();
+            StartCoroutine(SetAttackFalse());
+
+            //if (currActPts >= 2)
+            //{
+            //    StartCoroutine(AttackAgain(dir));
+            //}
+        }
+
+        private IEnumerator PerformAttackMove(Vector2 dir)
+        {
+            Vector2 startPosition = transform.position;
+            Vector2 destinationPosition = startPosition + (dir * 40f);
+            float t = 0.0f;
+            // Moves toward target
+            while (t < 1.1f)
+            {
+                transform.position = Vector2.Lerp(startPosition, destinationPosition, t);
+                t += Time.deltaTime / stepAttackDuration;
+                yield return new WaitForEndOfFrame();
+            }
+            // Stay for 0.6 seconds
+            yield return new WaitForSeconds(0.6f);
+
+            // Back to idle anim
+            animaThor.SetInteger("State", 0);
+            t = 0.0f;
+
+            // Moves backwards to start tile
+            while (t < 1.1f)
+            {
+                transform.position = Vector2.Lerp(destinationPosition, startPosition, t);
+                t += Time.deltaTime / stepAttackDuration;
+                yield return new WaitForEndOfFrame();
+            }
         
 
-        yield return new WaitForSeconds(0.6f);
-    }
+            yield return new WaitForSeconds(0.6f);
+        }
 
-    private IEnumerator SetAttackFalse()
-    {
-        yield return new WaitForSeconds(1.0f);
-        isPerformingAttack = false;
-    }
+        private IEnumerator SetAttackFalse()
+        {
+            yield return new WaitForSeconds(1.0f);
+            isPerformingAttack = false;
+        }
 
-    //private IEnumerator AttackAgain(direction dir)
-    //{
-    //    yield return new WaitForSeconds(1.0f);
-    //    PerformAttack(dir);
-    //}
+        //private IEnumerator AttackAgain(direction dir)
+        //{
+        //    yield return new WaitForSeconds(1.0f);
+        //    PerformAttack(dir);
+        //}
 
-    public void ReceiveActPts()
-    {
-        currActPts = maxActPts;
-    }
+        public void ReceiveActPts()
+        {
+            currActPts = maxActPts;
+        }
 
-	public void LevelBoostEnemy(int level)
-	{
-		health += level * 20;
-        attackPower += level * 10;
+        public void LevelBoostEnemy(int level)
+        {
+            health += level * 20;
+            attackPower += level * 10;
+        }
+
+        public int GetInitiative()
+        {
+            return _initiative;
+        }
     }
 }

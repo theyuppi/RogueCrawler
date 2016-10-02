@@ -44,15 +44,15 @@ namespace Assets.Scripts
         public bool teleported = true;
 
         public List<string> prefixList = new List<string>{
-            "Sir", "Lord", "Knight", "King", "Baron", "Brute", "Sage", "Count", "Prince"
+            "Sir", "Lord", "Knight", "King", "Baron", "Brute", "Sage", "Count", "Prince", "Little"
         };
 
         public List<string> nameList = new List<string>{
-            "Bertil", "Yngvar", "Gaillard", "Uwen", "Arnoldus", "Quesadilla", "Alfonso", "Börje", "Max", "Nal", "Ruben", "Steven", "Erikk", "Jerome", "Urban", "Rowley", "Marsh", "Gorman"
+            "Bertil", "Yngvar", "Gaillard", "Uwen", "Arnoldus", "Quesadilla", "Alfonso", "Börje", "Max", "Nal", "Ruben", "Steven", "Erikk", "Jerome", "Urban", "Rowley", "Marsh", "Gorman", "Dan"
         };
 
         public List<string> suffixList = new List<string>{
-            "Bold", "Daring", "Humble", "Strong", "Brave", "Weak", "Grand", "Insane", "Undefeated", "Crazy", "Mediocre", "Wild", "Glittering", "Fancy", "Drunk", "Heroic", "Faithful", "Chaotic", "Quick", "Keen", "Hungry", "Insane", "Smiling", "Cute", "Mellow", "Prime"
+            "Bold", "Daring", "Humble", "Strong", "Brave", "Weak", "Grand", "Insane", "Undefeated", "Crazy", "Mediocre", "Wild", "Glittering", "Fancy", "Drunk", "Heroic", "Faithful", "Chaotic", "Quick", "Keen", "Hungry", "Insane", "Smiling", "Cute", "Mellow", "Prime", "Combo breaker"
         };
 
         void Start()
@@ -444,15 +444,17 @@ namespace Assets.Scripts
                     {
                         //GameObject tile = Instantiate(tilePrefab, new Vector2((i + y) * mplX, (j + x) * mplY), transform.rotation) as GameObject;
                         GameObject tile = Instantiate(tilePrefab, new Vector2((i) * mplX, (j) * mplY), transform.rotation) as GameObject;
+                        TileScript tileScript = tile.GetComponent<TileScript>();
+
                         if (tileType.Equals("C4AA6C")) //Floor
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
+                            tileScript.myTileType = TileScript.TileTypes.Floor;
                             tile.tag = "Floor";
                             //Debug.Log("Floor");
                         }
                         else if (tileType.Equals("584A33")) //Wall
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Wall;
+                            tileScript.myTileType = TileScript.TileTypes.Wall;
                             tile.tag = "Wall";
                             //Debug.Log("Wall");
                         }
@@ -471,9 +473,9 @@ namespace Assets.Scripts
 
                             if (shouldSpawn)
                             {
-                                tile.GetComponent<TileScript>().occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x, currentLevel, currentRoom);
-                                tile.GetComponent<TileScript>().walkable = false;
-                                tile.GetComponent<TileScript>().hasEnemy = true;
+                                tileScript.occupant = eHandler.SpawnEnemy(EnemyHandler.enemies.axeSkeleton, new Vector2((i + y) * mplX, (j + x) * mplY), (int)i + y, (int)j + x, currentLevel, currentRoom);
+                                tileScript.walkable = false;
+                                tileScript.hasEnemy = true;
                             }
 
                             tile.tag = "Floor";
@@ -493,8 +495,8 @@ namespace Assets.Scripts
                             }
                             if (shouldSpawn)
                             {
-                                tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Chest;
-                                tile.GetComponent<TileScript>().walkable = false;
+                                tileScript.myTileType = TileScript.TileTypes.Chest;
+                                tileScript.walkable = false;
                                 tile.tag = "Chest";
                             }
                             else
@@ -506,96 +508,96 @@ namespace Assets.Scripts
                         }
                         else if (tileType.Equals("505050")) //Spikes
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Spike;
+                            tileScript.myTileType = TileScript.TileTypes.Spike;
                             tile.tag = "Spike";
                             //Debug.Log("Spikes");
                         }
                         else if (tileType.Equals("000000")) //Hole
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Hole;
+                            tileScript.myTileType = TileScript.TileTypes.Hole;
                             tile.tag = "Hole";
                             //Debug.Log("Hole");
                         }
                         else if (tileType.Equals("F58003")) //TopDoor
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.UDoor;
+                            tileScript.myTileType = TileScript.TileTypes.UDoor;
                             tile.tag = "HDoor";
 
                             for (int a = 0; a < roomNode.GetLength(0); a++)
                             {
                                 if (roomNode[a, 0] == levelName)
                                 {
-                                    tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+                                    tileScript.owner = roomNode[a, 0];
                                 }
                             }
                             //Debug.Log("TopDoor");
                         }
                         else if (tileType.Equals("C46702")) //BotBoor
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.DDoor;
+                            tileScript.myTileType = TileScript.TileTypes.DDoor;
                             tile.tag = "HDoor";
 
                             for (int a = 0; a < roomNode.GetLength(0); a++)
                             {
                                 if (roomNode[a, 0] == levelName)
                                 {
-                                    tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+                                    tileScript.owner = roomNode[a, 0];
                                 }
                             }
                             //Debug.Log("BotDoor");
                         }
                         else if (tileType.Equals("492601")) //LeftDoor
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.LDoor;
+                            tileScript.myTileType = TileScript.TileTypes.LDoor;
                             tile.tag = "VDoor";
 
                             for (int a = 0; a < roomNode.GetLength(0); a++)
                             {
                                 if (roomNode[a, 0] == levelName)
                                 {
-                                    tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+                                    tileScript.owner = roomNode[a, 0];
                                 }
                             }
                             //Debug.Log("LeftDoor");
                         }
                         else if (tileType.Equals("2C1701")) //RightDoor
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.RDoor;
+                            tileScript.myTileType = TileScript.TileTypes.RDoor;
                             tile.tag = "VDoor";
 
                             for (int a = 0; a < roomNode.GetLength(0); a++)
                             {
                                 if (roomNode[a, 0] == levelName)
                                 {
-                                    tile.GetComponent<TileScript>().owner = roomNode[a, 0];
+                                    tileScript.owner = roomNode[a, 0];
                                 }
                             }
                             //Debug.Log("RightDoor");
                         }
                         else if (tileType.Equals("0000FF")) //EndTile
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.FloorEnd;
+                            tileScript.myTileType = TileScript.TileTypes.FloorEnd;
                             //Debug.Log("EndTile");
                         }
                         else if (tileType.Equals("00FF00")) //StartTile
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.Floor;
+                            tileScript.myTileType = TileScript.TileTypes.Floor;
 
                             //Debug.Log("StartTile");
                         }
 
                         else if (tileType.Equals("00FFFF")) //Tiles beside door
                         {
-                            tile.GetComponent<TileScript>().myTileType = TileScript.TileTypes.SideDoor;
+                            tileScript.myTileType = TileScript.TileTypes.SideDoor;
 
                             //Debug.Log("StartTile");
                         }
 
                         myTileArray[(int)i + y, (int)j + x] = tile;
-                        tile.GetComponent<TileScript>().myID = new Vector2(i + y, j + x);
-                        tile.GetComponent<TileScript>().levelHandler = this.gameObject;
+                        tileScript.myID = new Vector2(i + y, j + x);
+                        tileScript.levelHandler = this.gameObject;
                         eHandler.GetComponent<EnemyHandler>().levelHandler = this.gameObject;
-                        tile.GetComponent<TileScript>().player = selectedUnit;
+                        tileScript.player = selectedUnit;
                         tile.transform.SetParent(Room.transform);
                         //tile.transform.parent = Room.transform;
 
@@ -605,10 +607,10 @@ namespace Assets.Scripts
                             {
                                 pHandler.player.transform.position = tile.transform.position;
                                 pHandler.player.transform.position = new Vector2(pHandler.player.transform.position.x, pHandler.player.transform.position.y + 25f);
-                                pHandler.player.GetComponent<PlayerScript>().tileX = (int)tile.GetComponent<TileScript>().myID.x;
-                                pHandler.player.GetComponent<PlayerScript>().tileY = (int)tile.GetComponent<TileScript>().myID.y;
-                                pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tile.GetComponent<TileScript>().myID.x;
-                                pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tile.GetComponent<TileScript>().myID.y;
+                                pHandler.player.GetComponent<PlayerScript>().tileX = (int)tileScript.myID.x;
+                                pHandler.player.GetComponent<PlayerScript>().tileY = (int)tileScript.myID.y;
+                                pHandler.player.GetComponent<PlayerScript>().tileXmoved = (int)tileScript.myID.x;
+                                pHandler.player.GetComponent<PlayerScript>().tileYmoved = (int)tileScript.myID.y;
                                 teleported = false;
                             }
                         }

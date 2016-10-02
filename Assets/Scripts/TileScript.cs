@@ -249,10 +249,10 @@ namespace Assets.Scripts
         public void GotClicked()
         {
             //Debug.Log("TileX: " + (int)myID.x + ", TileY: " + (int)myID.y);
-            if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().myTurn == true)
+            if (player.GetComponent<PlayerScript>().isPerformingAttack == false && player.GetComponent<PlayerScript>().IsMyTurn())
             {
                 // Clicked while moving to cancel movement
-                if (player.GetComponent<PlayerScript>().isMoving == true)
+                if (player.GetComponent<PlayerScript>().isMoving)
                 {
                     doubleclicked = 0;
                     player.GetComponent<PlayerScript>().isMoving = false;

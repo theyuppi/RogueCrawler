@@ -8,7 +8,7 @@ namespace Assets.Scripts
     [System.Serializable]
     public class ItemDbScript : MonoBehaviour
     {
-        private List<Item> database = new List<Item>();
+        //private List<Item> database = new List<Item>();
         private List<Item> itemData;
 
         void Start()

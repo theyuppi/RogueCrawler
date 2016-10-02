@@ -12,7 +12,7 @@ namespace Assets.Scripts
         }
 	
         void FixedUpdate () {
-            if (GetComponent<SpriteRenderer>().isVisible || GetComponent<EnemyScript>().myTurn)
+            if (GetComponent<SpriteRenderer>().isVisible || GetComponent<EnemyScript>().IsMyTurn())
             {
                 //GetComponentInChildren<Canvas>().gameObject.SetActive(true);
                 //GetComponentInChildren<CanvasRenderer>().gameObject.SetActive(true);

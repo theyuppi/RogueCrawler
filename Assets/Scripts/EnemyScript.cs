@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace Assets.Scripts
         //public PlayerHandler pHandler;
         public bool isDead = false;
         public bool isMoving = false;
-        public bool myTurn = false;
+        private bool _myTurn = false;
         public bool isBlocked = false;
         public bool turnIsOver = false;
         public List<Node> currentPath = null;
@@ -35,6 +36,7 @@ namespace Assets.Scripts
         public int currActPts = 0;
         public int maxActPts = 10;
         private int _initiative = 0;
+        private EnemyHandler _enemyHandler;
 
         int xpReward = 5;
         Vector2 roundDir;
@@ -44,6 +46,8 @@ namespace Assets.Scripts
 
         public float myOffsetX = 0;
         public float myOffsetY = 20f;
+
+        public int RangeOfAggro { get; set; }
 
         //States
         public bool stunned = false;
@@ -65,10 +69,13 @@ namespace Assets.Scripts
             animaThor = GetComponent<Animator>();
             //pHandler = GetComponent<PlayerHandler>();
             animaThor.SetInteger("State", 0);
-            ReceiveActPts();
             //cScript = GetComponent<CameraScript>();
             transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
 
+            ReceiveActPts();
+            //hard coded aggro range, subject to change or be dynamic
+            RangeOfAggro = 20;
+            _enemyHandler = eHandler.GetComponent<EnemyHandler>();
         }
 	
         // Update is called once per frame
@@ -80,16 +87,32 @@ namespace Assets.Scripts
                 Destroy();
             }
 
-            if (myTurn == true)
+            if (IsMyTurn())
             {
-                // TODO: Hard coded which player to focus, need some kind of AI here
+                // Not sure if this works.. Get closest player
+                GameObject playerFocus = cScript.pHandler.playerList[0];
+                var closest = Int32.MaxValue;
+                foreach (var player in cScript.pHandler.playerList)
+                {
+                    var sc = player.GetComponent<PlayerScript>();
+                    var playerLengthValue = sc.tileX + sc.tileY;
+                    var myLengthValue = tileX + tileY;
+                    var lengthValue = Mathf.Abs(myLengthValue - playerLengthValue);
+                    Debug.Log(lengthValue);
+                    if (lengthValue < closest)
+                    {
+                        playerFocus = player;
+                    }
+
+                }
+
                 eHandler.levelHandler.GetComponent<ReadSpriteScript>().GeneratePathTo(
-                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileX,
-                    cScript.pHandler.playerList[0].GetComponent<PlayerScript>().tileY,
+                    playerFocus.GetComponent<PlayerScript>().tileX,
+                    playerFocus.GetComponent<PlayerScript>().tileY,
                     this.gameObject, false);
 
                 if (currentPath != null
-                    && currentPath.Count < 20
+                    && currentPath.Count < RangeOfAggro
                     && currentPath.Count > 0)
                 {
                     StartCoroutine(MakeAMove());
@@ -98,11 +121,11 @@ namespace Assets.Scripts
                 {
                     turnIsOver = true;
                 }
-                myTurn = false;
+                IsMyTurn(false);
             }
-            if (turnIsOver == true)
+            if (turnIsOver)
             {
-                eHandler.GetComponent<EnemyHandler>().PassTurn();
+                _enemyHandler.PassTurn();
             }
             turnIsOver = false;
             //}
@@ -407,6 +430,17 @@ namespace Assets.Scripts
         public int GetInitiative()
         {
             return _initiative;
+        }
+
+
+        public bool IsMyTurn()
+        {
+            return _myTurn;
+        }
+
+        public void IsMyTurn(bool isMyTurn)
+        {
+            _myTurn = isMyTurn;
         }
     }
 }

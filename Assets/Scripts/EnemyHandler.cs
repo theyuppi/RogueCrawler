@@ -50,34 +50,37 @@ namespace Assets.Scripts
 
         public GameObject SpawnEnemy(enemies enemyType, Vector2 position, int tileX, int tileY, int currentLvl, string currentRoom)
         {
+            GameObject enemy;
             switch (enemyType)
             {
                 case enemies.axeSkeleton:
-                    GameObject enemy = Instantiate(skeletonPrefab, position, transform.rotation) as GameObject;
-                    enemy.transform.parent = transform;
-                    enemy.GetComponent<EnemyScript>().tileX = tileX;
-                    enemy.GetComponent<EnemyScript>().tileY = tileY;
-                    enemy.GetComponent<EnemyScript>().eHandler = this;
-                    enemy.GetComponent<EnemyScript>().cScript = cScript.GetComponent<CameraScript>();
-                    enemy.GetComponent<EnemyScript>().map = cScript.GetComponent<ReadSpriteScript>();
-                    enemyList.Add(enemy);
-                    enemy.GetComponent<EnemyScript>().myIdString = currentLvl + currentRoom + tileX + tileY;
-                    enemy.GetComponent<EnemyScript>().LevelBoostEnemy(currentLvl);
-                    return enemy;
-
+                    enemy = Instantiate(skeletonPrefab, position, transform.rotation) as GameObject;
+                    break;
                 case enemies.fireSkeleton:
                     return null;
 
                 default:
                     return null;
-                
             }
+
+            EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
+            enemy.transform.parent = transform;
+            enemyScript.tileX = tileX;
+            enemyScript.tileY = tileY;
+            enemyScript.eHandler = this;
+            enemyScript.cScript = cScript.GetComponent<CameraScript>();
+            enemyScript.map = cScript.GetComponent<ReadSpriteScript>();
+            enemyList.Add(enemy);
+            enemyScript.myIdString = currentLvl + currentRoom + tileX + tileY;
+            enemyScript.LevelBoostEnemy(currentLvl);
+
+            return enemy;
         }
 
         public void RemoveFromList()
         {
-            enemyList.RemoveAll(gameObject => gameObject.GetComponent<EnemyScript>().isDead == true);
-            enemyList.RemoveAll(gameObject => gameObject == null);
+            enemyList.RemoveAll(go => go.GetComponent<EnemyScript>().isDead);
+            enemyList.RemoveAll(go => go == null);
             cScript.GetComponent<CameraScript>().MergeList();
         }
 
@@ -86,9 +89,9 @@ namespace Assets.Scripts
             cScript.GetComponent<CameraScript>().NextTurn(true);
         }
 
-        public void SendXPtoPlayer(int gainedXP)
+        public void SendXPtoPlayer(int gainedExp)
         {
-            cScript.GetComponent<CameraScript>().pHandler.GetComponent<PlayerHandler>().DistributeXP(gainedXP);
+            cScript.GetComponent<CameraScript>().pHandler.GetComponent<PlayerHandler>().DistributeXP(gainedExp);
         }
     }
 }

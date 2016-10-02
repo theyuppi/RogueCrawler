@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
 {
@@ -9,14 +10,14 @@ namespace Assets.Scripts
             if (PlayerPrefs.GetInt("PD") == 1)
             {
                 PlayerPrefs.SetInt("gameStarted", 1);
-                Application.LoadLevel("MainScene");
+                SceneManager.LoadScene("MainScene");
 
             }
             else
             {
                 PlayerPrefs.SetInt("gameStarted", 0);
                 PlayerPrefs.SetInt("PlayerShouldLoadItems", 1);
-                Application.LoadLevel("MainScene");
+                SceneManager.LoadScene("MainScene");
             }
         }
 

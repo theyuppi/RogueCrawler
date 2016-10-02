@@ -27,15 +27,22 @@ namespace Assets.Scripts
         public bool inChest = false;
         public RectTransform lootPanel;
 
+        public bool CombatMode { get; set; }
+        public bool PlayerTurn { get; set; }
+
+        private GameObject _currentUnit;
+
         void Start()
         {
             MergeList();
-            characterList[0].GetComponent<PlayerScript>().myTurn = true;
+            _currentUnit = characterList[0];
+            _currentUnit.GetComponent<PlayerScript>().IsMyTurn(true);
             UItext = GetComponentsInChildren<Text>();
             UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
             UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp;
             UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp;
             UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel;
+            PlayerTurn = true;
         }
 
         void Update()
@@ -44,11 +51,15 @@ namespace Assets.Scripts
             {
                 NextTurn(true);
             }
+
+            // if enemies live
+            CombatMode = characterList.Count > pHandler.playerList.Count;
+
             Vector3 goalPos = target.position;
             goalPos.z = transform.position.z;
             transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
-               
-            if (characterList[currentTarget].tag == "Player")
+
+            if (PlayerTurn)
             {
                 UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
                 UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp + "/" +
@@ -63,7 +74,7 @@ namespace Assets.Scripts
             }
 
 
-            if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0 && !characterList[0].GetComponent<PlayerScript>().isMoving)
+            if (Input.GetKeyUp(KeyCode.Space) && PlayerTurn && !characterList[currentTarget].GetComponent<PlayerScript>().isMoving)
             {
                 inInv = false;
                 invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
@@ -72,15 +83,15 @@ namespace Assets.Scripts
                 NextTurn(true);
             }
 
-            if (Input.GetKeyUp(KeyCode.Backspace) && currentTarget == 0)
+            if (Input.GetKeyUp(KeyCode.Backspace) && PlayerTurn)
             {
                 NextTurn(false);
             }
 
             //Toggle inventory
-            if (Input.GetKeyUp(KeyCode.I) && currentTarget == 0)
+            if (Input.GetKeyUp(KeyCode.I) && PlayerTurn)
             {
-                if (inInv == true)
+                if (inInv)
                 {
                     inInv = false;
                     invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
@@ -121,7 +132,7 @@ namespace Assets.Scripts
             }
 
             // sorts with every character's (enemy and player) initiative
-            // TODO: Fix so we dont just ++ an array to choose whose turn
+            // TODO: Fix so we dont just ++ an array to choose whose turn, or at least always start on 0 if combat mode
             var character = from entry in characterList
                 orderby entry.GetComponent<ICharacter>().GetInitiative() descending 
                 select entry;
@@ -131,7 +142,7 @@ namespace Assets.Scripts
 
         public void RemoveFromList()
         {
-            characterList.RemoveAll(gameObject => gameObject.GetComponent<EnemyScript>().isDead == true);
+            characterList.RemoveAll(gameObject => gameObject.GetComponent<EnemyScript>().isDead);
             characterList.RemoveAll(gameObject => gameObject == null);
         }
 
@@ -147,12 +158,12 @@ namespace Assets.Scripts
             StartCoroutine(ChangeCameraSmoothness());
             if (currentTarget > 0)  //It's an enemys turn
             {
-                characterList[currentTarget].GetComponent<EnemyScript>().myTurn = false;
+                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
                 characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
             }
             else  //It's players turn
             {
-                characterList[currentTarget].GetComponent<PlayerScript>().myTurn = false;
+                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
                 characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
             }
 
@@ -178,18 +189,24 @@ namespace Assets.Scripts
             if (currentTarget > 0) //Pass turn to an enemy
             {
                 characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
-                characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
-                characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
+                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
+                characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 3;
                 characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
                 UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts;
             }
             else  //Pass turn to a player
             {
-                characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
+                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
                 characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
                 characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
                 UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
             }
+            // TODO: Don't do this every frame. Check on NextTurn?
+            // TODO: Change all characterList[0] and [currentTarget] to a saved one...
+            // TODO: currentUnit = characterList[currentTarget] - do this at the same place as PlayerTurn check? on NextTurn?
+            PlayerTurn = (characterList[currentTarget].tag == "Player");
+
+
         }
 
         //public void OnPointerDown(PointerEventData eventData)

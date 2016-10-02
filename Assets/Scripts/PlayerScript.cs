@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -10,7 +11,7 @@ namespace Assets.Scripts
     [System.Serializable]
     public class PlayerScript : MonoBehaviour, ICharacter
     {
-        private Rigidbody2D rBody;
+        //private Rigidbody2D rBody;
         private Coroutine playerMovement;
         private SpriteRenderer sRender;
         private Animator animaThor;
@@ -31,7 +32,7 @@ namespace Assets.Scripts
         public bool isMoving = false;
         public bool isPerformingAttack = false;
         public bool lastNotWalkable = false;
-        public bool myTurn = false;
+        public bool _myTurn = false;
         public Text healthText;
 
         //Stats
@@ -63,8 +64,8 @@ namespace Assets.Scripts
         private int defence = 0;
         private int speed = 0;
         private int agility = 0;
-        private int recoveryRate = 0;
-        private int combatStartAP = 0; //Actionpoints at start of combat
+        //private int recoveryRate = 0;
+        //private int combatStartAP = 0; //Actionpoints at start of combat
 
 
         public InventoryScript inventory;
@@ -79,10 +80,9 @@ namespace Assets.Scripts
         int bonusStr = 0;
         int bonusDef = 0;
         int bonusVit = 0;
-
         //States
         public bool stunned = false;
-
+        private bool CombatMode { get; set; }
         public int charLVL = 1;
         public List<int> xpLevels = new List<int> { };
 
@@ -98,15 +98,18 @@ namespace Assets.Scripts
         }
 
         private direction myDirection = direction.Right;
+        private CameraScript _cameraScript;
+
 
         void Start()
         {
-            rBody = GetComponent<Rigidbody2D>();
+           // rBody = GetComponent<Rigidbody2D>();
             sRender = GetComponent<SpriteRenderer>();
             animaThor = GetComponent<Animator>();
             animaThor.SetInteger("State", 0);
             healthText = GetComponentInChildren<Text>();
             healthText.text = health.ToString();
+            _cameraScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
             StringBuilder str = new StringBuilder();
             str.Append(health.ToString());
@@ -169,6 +172,12 @@ namespace Assets.Scripts
                 map.PlayerDied();
             }
 
+            if (_cameraScript.CombatMode != CombatMode)
+            {
+                CombatMode = _cameraScript.CombatMode;
+                currActPts = maxActPts;
+            }
+
             UpdateStats();
         }
 
@@ -190,9 +199,24 @@ namespace Assets.Scripts
 
         private void CheckKeyDown()
         {
-            if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.U))
+            if (Debug.isDebugBuild)
             {
-                LevelUp();
+                if (Input.GetKeyDown(KeyCode.U))
+                    LevelUp();
+
+                if (Input.GetKeyDown(KeyCode.Y))
+                {
+                    foreach (var ent in _cameraScript.characterList)
+                    {
+                        Debug.Log(ent);
+                    }
+                }
+
+                if (Input.GetKeyDown(KeyCode.T))
+                {
+                    Debug.Log(_cameraScript);
+                }
+
             }
 
 
@@ -346,7 +370,7 @@ namespace Assets.Scripts
 
             int currNode = 0;
             isMoving = true;
-            while (isMoving == true && currentPath != null && currNode < currentPath.Count - 1)
+            while (isMoving && currentPath != null && currNode < currentPath.Count - 1)
             {
                 if (stunned)
                 {
@@ -355,12 +379,12 @@ namespace Assets.Scripts
                 }
                 if (currActPts > 0)
                 {
-                    Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
+                    /*Vector3 start = map.TileCoordToWorldCoord(currentPath[currNode].x, currentPath[currNode].y) +
                                     new Vector3(0, 0, -1f);
                     Vector3 end = map.TileCoordToWorldCoord(currentPath[currNode + 1].x, currentPath[currNode + 1].y) +
                                   new Vector3(0, 0, -1f);
 
-                    //Debug.DrawLine(start, end, Color.red);
+                    Debug.DrawLine(start, end, Color.red);*/
 
                     currNode++;
 
@@ -414,10 +438,11 @@ namespace Assets.Scripts
                     break;
             }
 
+            var tileScript = map.myTileArray[tileX, tileY].GetComponent<TileScript>();
             // Attacking enemy or walking in to wall
-            if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().walkable == false)
+            if (tileScript.walkable == false)
             {
-                if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().hasEnemy == true)
+                if (tileScript.hasEnemy)
                 {
                     Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
                     if (roundDir == Vector2.up)
@@ -446,59 +471,44 @@ namespace Assets.Scripts
                     }
                 }
                 // Walking in to door
-                if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isDoor == true)
+                if (tileScript.isDoor)
                 {
                     yield return new WaitForSeconds(0.05f);
 
+
+                    int a1 = 0;
+                    int direction = 0;
+
                     if (tileX < 2)
                     {
-                        for (int a = 0; a < map.roomNode.GetLength(0); a++)
-                        {
-                            if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
-                            {
-                                //Debug.Log("Creating room: " + map.roomNode[a, 3]);
-                                StartCoroutine(FadeInOutPortal(a, 3)); //West
-                            }
-                        }
+                        direction = 3; // west
                     }
                     else if (tileX > 36)
                     {
-                        for (int a = 0; a < map.roomNode.GetLength(0); a++)
-                        {
-                            if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
-                            {
-                                //Debug.Log("Creating room: " + map.roomNode[a, 4]);
-                                StartCoroutine(FadeInOutPortal(a, 4)); //East
-                            }
-                        }
+                        direction = 4; // east
                     }
                     else if (tileY < 2)
                     {
-                        for (int a = 0; a < map.roomNode.GetLength(0); a++)
-                        {
-                            if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
-                            {
-                                //Debug.Log("Creating room: " + map.roomNode[a, 2]);
-                                StartCoroutine(FadeInOutPortal(a, 2)); //South
-                            }
-                        }
+                        direction = 2; // south 
                     }
                     else if (tileY > 36)
                     {
-                        for (int a = 0; a < map.roomNode.GetLength(0); a++)
+                        direction = 1; // north 
+                    }
+
+                    for (int a = 0; a < map.roomNode.GetLength(0); a++)
+                    {
+                        if (map.roomNode[a, 0] == tileScript.owner)
                         {
-                            //Debug.Log(map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner);
-                            if (map.roomNode[a, 0] == map.myTileArray[tileX, tileY].GetComponent<TileScript>().owner)
-                            {
-                                //Debug.Log("Creating room: " + map.roomNode[a, 1]);
-                                StartCoroutine(FadeInOutPortal(a, 1)); //Pacifica North
-                            }
+                            a1 = a;
                         }
                     }
+
+                    StartCoroutine(FadeInOutPortal(a1, direction));
                 }
 
                 // Walking in to portal
-                if (map.myTileArray[tileX, tileY].GetComponent<TileScript>().isEndPortal == true)
+                if (tileScript.isEndPortal)
                 {
                     map.teleported = true;
                     Vector2 roundDir = new Vector2(Mathf.Round(dir.x), Mathf.Round(dir.y));
@@ -532,8 +542,13 @@ namespace Assets.Scripts
             }
             else
             {
+
+                if (_cameraScript.CombatMode)
+                {
+                    currActPts--;
+                }
+
                 // Lerp to new position
-                currActPts--;
                 float t = 0.0f;
                 while (t <= 1.1f)
                 {
@@ -550,7 +565,6 @@ namespace Assets.Scripts
                 try
                 {
                     map.myTileArray[tileXmoved, tileYmoved].GetComponent<TileScript>().ResetColor();  //Får fel ibland för att man går igenom en dörr och den försöker ta bort grön färg på rutor i gamla rummet
-
                 }
                 catch (Exception e)
                 {
@@ -756,6 +770,8 @@ namespace Assets.Scripts
                 t += Time.deltaTime / stepDoorDuration;
                 yield return new WaitForEndOfFrame();
             }
+
+            yield return new WaitForSeconds(3f);
         }
 
         private IEnumerator MoveToPortal(Vector2 dir)
@@ -802,7 +818,8 @@ namespace Assets.Scripts
             }
             else
             {
-                Application.LoadLevel("YouWin");
+                SceneManager.LoadScene("YouWin");
+                
                 //Debug.Log("GG, you win!");
             }
         }
@@ -880,6 +897,17 @@ namespace Assets.Scripts
         public int GetInitiative()
         {
             return _initiative;
+        }
+
+
+        public bool IsMyTurn()
+        {
+            return _myTurn;
+        }
+
+        public void IsMyTurn(bool isMyTurn)
+        {
+            _myTurn = isMyTurn;
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    GameObject go = GameObject.Find("Slot Panel Chest").transform.GetChild(slot - 100).gameObject;
+                    //GameObject go = GameObject.Find("Slot Panel Chest").transform.GetChild(slot - 100).gameObject;
                     item.belongsToChest.GetComponent<ChestScript>().ItemList.Remove(item);
                 }
             }

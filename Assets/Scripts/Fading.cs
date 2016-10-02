@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
 {
@@ -10,6 +11,11 @@ namespace Assets.Scripts
         private int drawDepth = -1000;
         private float alpha = 1.0f;
         private int fadeDir = -1;
+
+        void Start()
+        {
+            SceneManager.sceneLoaded += (arg0, mode) => OnLevelWasLoaded2();
+        }
 
         void OnGUI()
         {
@@ -27,7 +33,7 @@ namespace Assets.Scripts
             return (fadeSpeed);
         }
 
-        void OnLevelWasLoaded()
+        void OnLevelWasLoaded2()
         {
             BeginFade(-1);
         }

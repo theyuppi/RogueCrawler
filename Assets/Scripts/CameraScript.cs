@@ -114,9 +114,10 @@ namespace Assets.Scripts
             }
         }
 
-        public void SetTarget(int following)
+        public void SetTarget(int newTarget)
         {
-            target = characterList[following].gameObject.transform;
+            target = characterList[newTarget].gameObject.transform;
+            PlayerTurn = (characterList[currentTarget].tag == "Player");
         }
 
         public void MergeList()
@@ -156,16 +157,9 @@ namespace Assets.Scripts
         public void NextTurn(bool forwardTurnOrder)
         {
             StartCoroutine(ChangeCameraSmoothness());
-            if (currentTarget > 0)  //It's an enemys turn
-            {
-                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
-                characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
-            }
-            else  //It's players turn
-            {
-                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
-                characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
-            }
+
+            characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
+            characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 2;
 
             if (forwardTurnOrder)
             {
@@ -174,7 +168,6 @@ namespace Assets.Scripts
                 {
                     currentTarget = 0;
                 }
-                SetTarget(currentTarget);
             }
             else
             {
@@ -183,30 +176,18 @@ namespace Assets.Scripts
                 {
                     currentTarget = characterList.Count - 1;
                 }
-                SetTarget(currentTarget);
             }
+            SetTarget(currentTarget);
 
-            if (currentTarget > 0) //Pass turn to an enemy
-            {
+            characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
+            characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 3;
+            characterList[currentTarget].GetComponent<ICharacter>().ReceiveActPts();
+            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<ICharacter>().GetCurrentActionPoints();
+
+            /* Doesn't seem to be needed
+            if (!PlayerTurn)
                 characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
-                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
-                characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 3;
-                characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
-                UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts;
-            }
-            else  //Pass turn to a player
-            {
-                characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
-                characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
-                characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
-                UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts;
-            }
-            // TODO: Don't do this every frame. Check on NextTurn?
-            // TODO: Change all characterList[0] and [currentTarget] to a saved one...
-            // TODO: currentUnit = characterList[currentTarget] - do this at the same place as PlayerTurn check? on NextTurn?
-            PlayerTurn = (characterList[currentTarget].tag == "Player");
-
-
+             */
         }
 
         //public void OnPointerDown(PointerEventData eventData)

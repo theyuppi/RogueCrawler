@@ -613,9 +613,6 @@ namespace Assets.Scripts
                 case direction.Right:
                     StartCoroutine(PerformAttackMove(Vector2.right * 0.5f));
                     animaThor.SetInteger("State", 1);
-
-                    break;
-                default:
                     break;
             }
             map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
@@ -655,9 +652,10 @@ namespace Assets.Scripts
         {
             if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
             {
-                other.GetComponent<TileScript>().walkable = false;
-                other.GetComponent<TileScript>().occupant = this.gameObject;
-                other.GetComponent<TileScript>().hasPlayer = true;
+                TileScript ts = other.GetComponent<TileScript>();
+                ts.walkable = false;
+                ts.occupant = gameObject;
+                ts.hasPlayer = true;
                 tile = other.gameObject;
             }
         }
@@ -666,9 +664,10 @@ namespace Assets.Scripts
         {
             if (other.tag == "Floor" || other.tag == "Spike" || other.tag == "Hole")
             {
-                other.GetComponent<TileScript>().walkable = true;
-                other.GetComponent<TileScript>().occupant = null;
-                other.GetComponent<TileScript>().hasPlayer = false;
+                TileScript ts = other.GetComponent<TileScript>();
+                ts.walkable = true;
+                ts.occupant = null;
+                ts.hasPlayer = false;
             }
         }
 
@@ -684,6 +683,11 @@ namespace Assets.Scripts
         public void ReceiveActPts()
         {
             currActPts = maxActPts;
+        }
+
+        public int GetCurrentActionPoints()
+        {
+            return currActPts;
         }
 
         public void GainXP(int gainedXP)

@@ -3373,6 +3373,7 @@ MonoBehaviour:
   _textures:
   - {fileID: 2800000, guid: b08d5fd5f56c9fe40bfcb1a638e18b96, type: 3}
   - {fileID: 2800000, guid: 272f39271d93bae41838a9f304fbb0a7, type: 3}
+  targetSquare: {fileID: 21300000, guid: 821e0d3faa7e55842be56f821512b441, type: 3}
   _portraits: []
 --- !u!1001 &956910106
 Prefab:

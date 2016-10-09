@@ -9,7 +9,8 @@ namespace Assets.Scripts
         public GameObject skeletonPrefab;
 
         // TODO: Don't set these through unity. Just find them once. Makes code easier
-        public GameObject cScript;
+        private GameObject _mainCamera;
+        private CameraScript _cScript;
         public GameObject levelHandler; 
         public List<GameObject> enemyList = null;
         public int enemyID;
@@ -23,30 +24,32 @@ namespace Assets.Scripts
         public List<string> killedEnemies = new List<string>();
 
 
-        void Start () {
-	
+        void Start ()
+        {
+            _mainCamera = GameObject.FindWithTag("MainCamera");
+            _cScript = _mainCamera.GetComponent<CameraScript>();
         }
-	
-        // Update is called once per frame
+
+        /*Update is called once per frame
         void FixedUpdate () {
-            //if (Time.time % 2 == 0)
-            //{
+            if (Time.time % 2 == 0)
+            {
 
 
-            //    for (int i = 0; i < enemyList.Count - 1; i++)
-            //    {
-            //        if (enemyList[i].GetComponent<SpriteRenderer>().isVisible || enemyList[i].GetComponent<EnemyScript>().myTurn)
-            //        {
-            //            enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            //        }
-            //        else
-            //        {
-            //            enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
-            //        }
+                for (int i = 0; i < enemyList.Count - 1; i++)
+                {
+                    if (enemyList[i].GetComponent<SpriteRenderer>().isVisible || enemyList[i].GetComponent<EnemyScript>().myTurn)
+                    {
+                        enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        enemyList[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                    }
 
-            //    }
-            //}
-        }
+                }
+            }
+        }*/
 
         public GameObject SpawnEnemy(enemies enemyType, Vector2 position, int tileX, int tileY, int currentLvl, string currentRoom)
         {
@@ -68,8 +71,8 @@ namespace Assets.Scripts
             enemyScript.tileX = tileX;
             enemyScript.tileY = tileY;
             enemyScript.eHandler = this;
-            enemyScript.cScript = cScript.GetComponent<CameraScript>();
-            enemyScript.map = cScript.GetComponent<ReadSpriteScript>();
+            enemyScript.cScript = _cScript;
+            enemyScript.map = _mainCamera.GetComponent<ReadSpriteScript>();
             enemyList.Add(enemy);
             enemyScript.myIdString = currentLvl + currentRoom + tileX + tileY;
             enemyScript.LevelBoostEnemy(currentLvl);
@@ -81,17 +84,17 @@ namespace Assets.Scripts
         {
             enemyList.RemoveAll(go => go.GetComponent<EnemyScript>().isDead);
             enemyList.RemoveAll(go => go == null);
-            cScript.GetComponent<CameraScript>().MergeList();
+            _cScript.MergeList();
         }
 
         public void PassTurn()
         {
-            cScript.GetComponent<CameraScript>().NextTurn(true);
+            _cScript.NextTurn(true);
         }
 
         public void SendXPtoPlayer(int gainedExp)
         {
-            cScript.GetComponent<CameraScript>().pHandler.GetComponent<PlayerHandler>().DistributeXP(gainedExp);
+            _cScript.pHandler.GetComponent<PlayerHandler>().DistributeXP(gainedExp);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Assets.Scripts
         public Text healthText;
         public GameObject tile;
         public EnemyHandler eHandler;
-        public CameraScript cScript;
+        public CameraScript cScript; // Set and passed from EnemyHandler
         //public PlayerHandler pHandler;
         public bool isDead = false;
         public bool isMoving = false;
@@ -69,7 +69,6 @@ namespace Assets.Scripts
             animaThor = GetComponent<Animator>();
             //pHandler = GetComponent<PlayerHandler>();
             animaThor.SetInteger("State", 0);
-            //cScript = GetComponent<CameraScript>();
             transform.position = new Vector2(transform.position.x, transform.position.y + myOffsetY);
 
             ReceiveActPts();
@@ -98,7 +97,6 @@ namespace Assets.Scripts
                     var playerLengthValue = sc.tileX + sc.tileY;
                     var myLengthValue = tileX + tileY;
                     var lengthValue = Mathf.Abs(myLengthValue - playerLengthValue);
-                    Debug.Log(lengthValue);
                     if (lengthValue < closest)
                     {
                         playerFocus = player;
@@ -421,6 +419,11 @@ namespace Assets.Scripts
             currActPts = maxActPts;
         }
 
+        public int GetCurrentActionPoints()
+        {
+            return currActPts;
+        }
+
         public void LevelBoostEnemy(int level)
         {
             health += level * 20;
@@ -440,6 +443,7 @@ namespace Assets.Scripts
 
         public void IsMyTurn(bool isMyTurn)
         {
+            Debug.Log("My turn: " + isMyTurn + " @ " + Time.time);
             _myTurn = isMyTurn;
         }
     }

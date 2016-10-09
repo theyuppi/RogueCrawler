@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public Texture[] _textures;
         public Sprite targetSquare;
         public List<GameObject> _portraits;
-        private int _previousTarget;
+        private GameObject _previousTarget;
 
         void Start ()
         {
@@ -69,12 +69,13 @@ namespace Assets.Scripts
 
         void SetPortraitFocus(bool force = false)
         {
-            if (_cam.currentTarget != _previousTarget || force)
+            if (_cam.CurrentUnit != _previousTarget || force)
             {
-                if (_portraits[_previousTarget] != null)
-                    _portraits[_previousTarget].GetComponentInChildren<Image>().enabled = false;
+                if (_previousTarget != null)
+                    _portraits[_cam.characterList.IndexOf(_previousTarget)].GetComponentInChildren<Image>().enabled = false;
 
-                _portraits[_cam.currentTarget].GetComponentInChildren<Image>().enabled = true;
+                if (_portraits.Count-1 >= _cam.characterList.IndexOf(_cam.CurrentUnit))
+                    _portraits[_cam.characterList.IndexOf(_cam.CurrentUnit)].GetComponentInChildren<Image>().enabled = true;
 
                 /*foreach (var portrait in _portraits)
                 {
@@ -82,7 +83,7 @@ namespace Assets.Scripts
                     Debug.Log("Portrait:" + portrait.GetComponent<CharacterHolder>().Character.tag + " isturn: " + portrait.GetComponent<CharacterHolder>().Character.GetComponent<ICharacter>().IsMyTurn());
                 }*/
 
-                _previousTarget = _cam.currentTarget;
+                _previousTarget = _cam.CurrentUnit;
             }
         }
     }

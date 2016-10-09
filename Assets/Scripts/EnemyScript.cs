@@ -35,7 +35,7 @@ namespace Assets.Scripts
         private int attackPower = 5;
         public int currActPts = 0;
         public int maxActPts = 10;
-        private int _initiative = 2;
+        private int _initiative = 0;
         private EnemyHandler _enemyHandler;
 
         int xpReward = 5;
@@ -62,7 +62,8 @@ namespace Assets.Scripts
         private direction myDirection = direction.Right;
 
         // Use this for initialization
-        void Start () {
+        void Start ()
+        {
             healthText = GetComponentInChildren<Text>();
             healthText.text = health.ToString();
             sRender = GetComponent<SpriteRenderer>();
@@ -442,7 +443,6 @@ namespace Assets.Scripts
 
         public void IsMyTurn(bool isMyTurn)
         {
-            Debug.Log("My turn: " + isMyTurn + " @ " + Time.time);
             _myTurn = isMyTurn;
         }
     }

@@ -30,13 +30,13 @@ namespace Assets.Scripts
         public bool CombatMode { get; set; }
         public bool PlayerTurn { get; set; }
 
-        private GameObject _currentUnit;
+        public GameObject CurrentUnit { get; set; }
 
         void Start()
         {
+            CurrentUnit = GameObject.FindWithTag("Player");
             MergeList();
-            _currentUnit = characterList[0];
-            _currentUnit.GetComponent<PlayerScript>().IsMyTurn(true);
+            CurrentUnit.GetComponent<PlayerScript>().IsMyTurn(true);
             UItext = GetComponentsInChildren<Text>();
             UpdateGuiText();
             PlayerTurn = true;
@@ -59,7 +59,7 @@ namespace Assets.Scripts
             UpdateGuiText();
 
 
-            if (Input.GetKeyUp(KeyCode.Space) && PlayerTurn && !characterList[currentTarget].GetComponent<PlayerScript>().isMoving)
+            if (Input.GetKeyUp(KeyCode.Space) && PlayerTurn && !CurrentUnit.GetComponent<PlayerScript>().isMoving)
             {
                 inInv = false;
                 invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
@@ -101,13 +101,13 @@ namespace Assets.Scripts
 
         private void UpdateGuiText()
         {
-            UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<ICharacter>().GetCurrentActionPoints();
+            UItext[0].text = "AP: " + CurrentUnit.GetComponent<ICharacter>().GetCurrentActionPoints();
             if (PlayerTurn)
             {
-                UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp + "/" +
-                                 characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[
-                                     characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1];
-                UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL;
+                UItext[1].text = "XP: " + CurrentUnit.GetComponent<PlayerScript>().xp + "/" +
+                                 CurrentUnit.GetComponent<PlayerScript>().xpLevels[
+                                     CurrentUnit.GetComponent<PlayerScript>().charLVL - 1];
+                UItext[2].text = "LEVEL: " + CurrentUnit.GetComponent<PlayerScript>().charLVL;
                 UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel;
             }
         }
@@ -115,7 +115,7 @@ namespace Assets.Scripts
         public void SetTarget(int newTarget)
         {
             target = characterList[newTarget].gameObject.transform;
-            PlayerTurn = (characterList[currentTarget].tag == "Player");
+            PlayerTurn = (CurrentUnit.tag == "Player");
         }
 
         public void MergeList(bool nextTurn = true)
@@ -159,8 +159,8 @@ namespace Assets.Scripts
         {
             StartCoroutine(ChangeCameraSmoothness());
 
-            characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(false);
-            characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 2;
+            CurrentUnit.GetComponent<ICharacter>().IsMyTurn(false);
+            CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 2;
 
             if (forwardTurnOrder)
             {
@@ -182,11 +182,12 @@ namespace Assets.Scripts
                     currentTarget = characterList.Count - 1;
                 }
             }
+            CurrentUnit = characterList[currentTarget];
             SetTarget(currentTarget);
 
-            characterList[currentTarget].GetComponent<ICharacter>().IsMyTurn(true);
-            characterList[currentTarget].GetComponent<SpriteRenderer>().sortingOrder = 3;
-            characterList[currentTarget].GetComponent<ICharacter>().ReceiveActPts();
+            CurrentUnit.GetComponent<ICharacter>().IsMyTurn(true);
+            CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 3;
+            CurrentUnit.GetComponent<ICharacter>().ReceiveActPts();
 
             /* Doesn't seem to be needed
             if (!PlayerTurn)

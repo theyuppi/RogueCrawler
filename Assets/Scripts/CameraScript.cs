@@ -187,7 +187,8 @@ namespace Assets.Scripts
 
             CurrentUnit.GetComponent<ICharacter>().IsMyTurn(true);
             CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 3;
-            CurrentUnit.GetComponent<ICharacter>().ReceiveActPts();
+            if (force && !CombatMode || !force && CombatMode)
+                CurrentUnit.GetComponent<ICharacter>().ReceiveActPts();
 
             /* Doesn't seem to be needed
             if (!PlayerTurn)

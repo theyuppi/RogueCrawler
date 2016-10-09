@@ -71,8 +71,11 @@ namespace Assets.Scripts
         {
             if (_cam.currentTarget != _previousTarget || force)
             {
-                _portraits[_previousTarget].GetComponentInChildren<Image>().enabled = false;
+                if (_portraits[_previousTarget] != null)
+                    _portraits[_previousTarget].GetComponentInChildren<Image>().enabled = false;
+
                 _portraits[_cam.currentTarget].GetComponentInChildren<Image>().enabled = true;
+
                 /*foreach (var portrait in _portraits)
                 {
                     portrait.GetComponentInChildren<Image>().enabled = portrait.GetComponent<CharacterHolder>().Character.GetComponent<ICharacter>().IsMyTurn();

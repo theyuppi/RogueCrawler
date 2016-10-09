@@ -84,7 +84,7 @@ namespace Assets.Scripts
         {
             enemyList.RemoveAll(go => go.GetComponent<EnemyScript>().isDead);
             enemyList.RemoveAll(go => go == null);
-            _cScript.MergeList();
+            _cScript.MergeList(false);
         }
 
         public void PassTurn()

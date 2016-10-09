@@ -35,7 +35,7 @@ namespace Assets.Scripts
         private int attackPower = 5;
         public int currActPts = 0;
         public int maxActPts = 10;
-        private int _initiative = 0;
+        private int _initiative = 2;
         private EnemyHandler _enemyHandler;
 
         int xpReward = 5;
@@ -331,8 +331,7 @@ namespace Assets.Scripts
             isDead = true;
             eHandler.RemoveFromList();
             eHandler.SendXPtoPlayer(xpReward);
-            Destroy(this.gameObject);
-        
+            Destroy(gameObject);
         }
 
         private void PerformAttack(direction dir)

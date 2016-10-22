@@ -1,24 +1,26 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class HoleScript : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class HoleScript : MonoBehaviour {
 
-    private int myDmg = 999;
-    // Use this for initialization
-    void Start () {
+        private int myDmg = 999;
+        // Use this for initialization
+        void Start () {
 	
-	}
+        }
 	
-	// Update is called once per frame
-	void Update () {
+        // Update is called once per frame
+        void Update () {
 	
-	}
+        }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Player")
+        void OnTriggerEnter2D(Collider2D other)
         {
-            StartCoroutine(other.GetComponent<PlayerScript>().GetHit(myDmg));
+            if (other.tag == "Player")
+            {
+                StartCoroutine(other.GetComponent<PlayerScript>().GetHit(myDmg));
+            }
         }
     }
 }

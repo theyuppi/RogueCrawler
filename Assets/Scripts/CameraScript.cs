@@ -1,230 +1,256 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
+
 //using UnityEngine.EventSystems;
 
-[System.Serializable]
-public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
+namespace Assets.Scripts
 {
-	public Transform target;
-	public static float smoothTime = 0.0f;
-	public int currentTarget = 0;
-	private Vector3 velocity = Vector3.zero;
-	public EnemyHandler eHandler;
-	public PlayerHandler pHandler;
-	public List<GameObject> characterList = null;
-	public Text[] UItext;
-	int xp;
+    [System.Serializable]
+    public class CameraScript : MonoBehaviour//, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
+    {
+        public Transform target;
+        public static float smoothTime = 0.0f;
+        public int currentTarget = 0;
+        private Vector3 velocity = Vector3.zero;
+        public EnemyHandler eHandler;
+        public PlayerHandler pHandler;
+        public List<GameObject> characterList = null;
+        public Text[] UItext;
+        int xp;
 
-	public Canvas invCanvas;
-	public bool inInv = false;
-	public bool inChest = false;
-	public RectTransform lootPanel;
+        public Canvas invCanvas;
+        public bool inInv = false;
+        public bool inChest = false;
+        public RectTransform lootPanel;
 
-	void Start()
-	{
-		MergeList();
-		characterList[0].GetComponent<PlayerScript>().myTurn = true;
-		UItext = GetComponentsInChildren<Text>();
-		UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
-		UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString();
-		UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
-	}
+        public bool CombatMode { get; set; }
+        public bool PlayerTurn { get; set; }
 
-	void Update()
-	{
-		Vector3 goalPos = target.position;
-		goalPos.z = transform.position.z;
-		transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
-		if (currentTarget > 0)
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
-		else
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
+        public GameObject CurrentUnit { get; set; }
 
-		if (currentTarget == 0)
-		{
-			UItext[1].text = "XP: " + characterList[currentTarget].GetComponent<PlayerScript>().xp.ToString() + "/" + characterList[currentTarget].GetComponent<PlayerScript>().xpLevels[characterList[currentTarget].GetComponent<PlayerScript>().charLVL - 1].ToString();
-			UItext[2].text = "LEVEL: " + characterList[currentTarget].GetComponent<PlayerScript>().charLVL.ToString();
-			UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel.ToString();
-		}
+        void Start()
+        {
+            CurrentUnit = GameObject.FindWithTag("Player");
+            MergeList();
+            CurrentUnit.GetComponent<PlayerScript>().IsMyTurn(true);
+            UItext = GetComponentsInChildren<Text>();
+            UpdateGuiText();
+            PlayerTurn = true;
+        }
+
+        void Update()
+        {
+            if (!target)
+            {
+                NextTurn(true);
+            }
+
+            // if enemies live
+            CombatMode = characterList.Count > pHandler.playerList.Count;
+
+            Vector3 goalPos = target.position;
+            goalPos.z = transform.position.z;
+            transform.position = Vector3.SmoothDamp(transform.position, goalPos, ref velocity, smoothTime);
+
+            UpdateGuiText();
 
 
-		if (Input.GetKeyUp(KeyCode.Space) && currentTarget == 0 && !characterList[0].GetComponent<PlayerScript>().isMoving)
-		{
+            if (Input.GetKeyUp(KeyCode.Space) && PlayerTurn && !CurrentUnit.GetComponent<PlayerScript>().isMoving)
+            {
+                inInv = false;
+                invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+                invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+                lootPanel.localScale = new Vector3(0, 0, 0);
+                NextTurn(true);
+            }
+
+            if (Input.GetKeyUp(KeyCode.Backspace) && PlayerTurn)
+            {
+                NextTurn(false);
+            }
+
+            //Toggle inventory
+            if (Input.GetKeyUp(KeyCode.I) && PlayerTurn)
+            {
+                if (inInv)
+                {
+                    inInv = false;
+                    invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+                    invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+                    lootPanel.localScale = new Vector3(0, 0, 0);
+                }
+                else
+                {
+                    inInv = true;
+                    invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
+                    invCanvas.GetComponent<Canvas>().targetDisplay = 0;
+                    lootPanel.localScale = new Vector3(0, 0, 0);
+                }
+            }
+
+            //Escape to exit
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
+
+        private void UpdateGuiText()
+        {
+            UItext[0].text = "AP: " + CurrentUnit.GetComponent<ICharacter>().GetCurrentActionPoints();
+            if (PlayerTurn)
+            {
+                UItext[1].text = "XP: " + CurrentUnit.GetComponent<PlayerScript>().xp + "/" +
+                                 CurrentUnit.GetComponent<PlayerScript>().xpLevels[
+                                     CurrentUnit.GetComponent<PlayerScript>().charLVL - 1];
+                UItext[2].text = "LEVEL: " + CurrentUnit.GetComponent<PlayerScript>().charLVL;
+                UItext[3].text = "FLOOR: " + GetComponent<ReadSpriteScript>().currentLevel;
+            }
+        }
+
+        public void SetTarget(int newTarget)
+        {
+            target = characterList[newTarget].gameObject.transform;
+            PlayerTurn = (CurrentUnit.tag == "Player");
+        }
+
+        public void MergeList(bool nextTurn = true)
+        {
+            characterList.Clear();
+            for (int i = 0; i < pHandler.playerList.Count; i++)
+            {
+                characterList.Add(pHandler.playerList[i]);
+            }
+            for (int i = 0; i < eHandler.enemyList.Count; i++)
+            {
+                characterList.Add(eHandler.enemyList[i]);
+            }
+
+            // sorts with every character's (enemy and player) initiative
+            // TODO: Fix so we dont just ++ an array to choose whose turn, or at least always start on 0 if combat mode
+            var character = from entry in characterList
+                orderby entry.GetComponent<ICharacter>().GetInitiative() descending 
+                select entry;
+
+            characterList = character.ToList();
+
+            if(nextTurn)
+                NextTurn(false, true, 0);
+        }
+
+        public void RemoveFromList()
+        {
+            characterList.RemoveAll(gameObject => gameObject.GetComponent<EnemyScript>().isDead);
+            characterList.RemoveAll(gameObject => gameObject == null);
+        }
+
+        public IEnumerator ChangeCameraSmoothness()
+        {
+            smoothTime = 0.2f;
+            yield return new WaitForSeconds(0.8f);
+            smoothTime = 0;
+        }
+
+        public void NextTurn(bool forwardTurnOrder, bool force = false, int newTarget = 0)
+        {
+            StartCoroutine(ChangeCameraSmoothness());
+
+            CurrentUnit.GetComponent<ICharacter>().IsMyTurn(false);
+            CurrentUnit.GetComponent<ICharacter>().GetMap().ClearOldPath();
+            CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 2;
+
+            if (forwardTurnOrder)
+            {
+                currentTarget++;
+                if (currentTarget >= characterList.Count)
+                {
+                    currentTarget = 0;
+                }
+            }
+            else if (force)
+            {
+                currentTarget = newTarget;
+            }
+            else 
+            {
+                currentTarget--;
+                if (currentTarget < 0)
+                {
+                    currentTarget = characterList.Count - 1;
+                }
+            }
+            CurrentUnit = characterList[currentTarget];
+            SetTarget(currentTarget);
+
+            CurrentUnit.GetComponent<ICharacter>().IsMyTurn(true);
+            CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 3;
+            if (force && !CombatMode || !force && CombatMode)
+                CurrentUnit.GetComponent<ICharacter>().ReceiveActPts();
+
+            /* Doesn't seem to be needed
+            if (!PlayerTurn)
+                characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
+             */
+        }
+
+        //public void OnPointerDown(PointerEventData eventData)
+        //{
+        //	Debug.Log(eventData.pointerEnter.name);
+        //	//Debug.Log("Now over tile: " + eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().myID);
+        //	Debug.Log("OnPointerDown");
+        //}
+
+        //public void OnPointerClick(PointerEventData eventData)
+        //{
+        //	Debug.Log(eventData.pointerPressRaycast);
+
+        //	Debug.Log("OnPointerClick");
+        //	//eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().GotClicked();
+        //	if (eventData.pointerCurrentRaycast.gameObject.tag == "Floor")
+        //	{
+        //		Debug.Log("OnPointerClick");
+        //	}
+        //}
+
+        //public void OnPointerUp(PointerEventData eventData)
+        //{
+        //	Debug.Log("OnPointerUp");
+        //}
+
+        //public void OnPointerEnter(PointerEventData eventData)
+        //{
+        //	Debug.Log(eventData.pointerEnter.name);
+        //}
+
+        public void ChestClicked()
+        {
+            inInv = true;
+            inChest = true;
+            invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
+            invCanvas.GetComponent<Canvas>().targetDisplay = 0;
+            lootPanel.localScale = new Vector3(1, 1, 1);
+        }
+
+        public void ChestClosed()
+        {
             inInv = false;
+            inChest = false;
             invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
             invCanvas.GetComponent<Canvas>().targetDisplay = 7;
             lootPanel.localScale = new Vector3(0, 0, 0);
-            NextTurn(true);
-		}
+        }
 
-		if (Input.GetKeyUp(KeyCode.Backspace) && currentTarget == 0)
-		{
-			NextTurn(false);
-		}
-
-		//Toggle inventory
-		if (Input.GetKeyUp(KeyCode.I) && currentTarget == 0)
-		{
-			if (inInv == true)
-			{
-				inInv = false;
-				invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
-				invCanvas.GetComponent<Canvas>().targetDisplay = 7;
-				lootPanel.localScale = new Vector3(0, 0, 0);
-			}
-			else
-			{
-				inInv = true;
-				invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
-				invCanvas.GetComponent<Canvas>().targetDisplay = 0;
-				lootPanel.localScale = new Vector3(0, 0, 0);
-			}
-		}
-
-		//Escape to exit
-		if (Input.GetKeyUp(KeyCode.Escape))
-		{
-			Application.Quit();
-		}
-	}
-
-	public void SetTarget(int following)
-	{
-		target = characterList[following].gameObject.transform;
-	}
-
-	public void MergeList()
-	{
-		characterList.Clear();
-		for (int i = 0; i < pHandler.playerList.Count; i++)
-		{
-			characterList.Add(pHandler.playerList[i]);
-		}
-		for (int i = 0; i < eHandler.enemyList.Count; i++)
-		{
-			characterList.Add(eHandler.enemyList[i]);
-		}
-	}
-
-	public void RemoveFromList()
-	{
-		characterList.RemoveAll(gameObject => gameObject.GetComponent<EnemyScript>().isDead == true);
-		characterList.RemoveAll(gameObject => gameObject == null);
-	}
-
-	public IEnumerator ChangeCameraSmoothness()
-	{
-		smoothTime = 0.2f;
-		yield return new WaitForSeconds(0.8f);
-		smoothTime = 0;
-	}
-
-	public void NextTurn(bool forwardTurnOrder)
-	{
-		StartCoroutine(ChangeCameraSmoothness());
-		if (currentTarget > 0)  //It's an enemys turn
-		{
-			characterList[currentTarget].GetComponent<EnemyScript>().myTurn = false;
-			characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
-		}
-		else  //It's players turn
-		{
-			characterList[currentTarget].GetComponent<PlayerScript>().myTurn = false;
-			characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 2;
-		}
-
-		if (forwardTurnOrder)
-		{
-			currentTarget++;
-			if (currentTarget >= characterList.Count)
-			{
-				currentTarget = 0;
-			}
-			SetTarget(currentTarget);
-		}
-		else
-		{
-			currentTarget--;
-			if (currentTarget < 0)
-			{
-				currentTarget = characterList.Count - 1;
-			}
-			SetTarget(currentTarget);
-		}
-
-		if (currentTarget > 0) //Pass turn to an enemy
-		{
-			characterList[currentTarget].GetComponent<EnemyScript>().gameObject.SetActive(true);
-			characterList[currentTarget].GetComponent<EnemyScript>().myTurn = true;
-			characterList[currentTarget].GetComponent<EnemyScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
-			characterList[currentTarget].GetComponent<EnemyScript>().ReceiveActPts();
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<EnemyScript>().currActPts.ToString();
-		}
-		else  //Pass turn to a player
-		{
-			characterList[currentTarget].GetComponent<PlayerScript>().myTurn = true;
-			characterList[currentTarget].GetComponent<PlayerScript>().GetComponent<SpriteRenderer>().sortingOrder = 3;
-			characterList[currentTarget].GetComponent<PlayerScript>().ReceiveActPts();
-			UItext[0].text = "AP: " + characterList[currentTarget].GetComponent<PlayerScript>().currActPts.ToString();
-		}
-	}
-
-	//public void OnPointerDown(PointerEventData eventData)
-	//{
-	//	Debug.Log(eventData.pointerEnter.name);
-	//	//Debug.Log("Now over tile: " + eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().myID);
-	//	Debug.Log("OnPointerDown");
-	//}
-
-	//public void OnPointerClick(PointerEventData eventData)
-	//{
-	//	Debug.Log(eventData.pointerPressRaycast);
-
-	//	Debug.Log("OnPointerClick");
-	//	//eventData.pointerCurrentRaycast.gameObject.GetComponent<TileScript>().GotClicked();
-	//	if (eventData.pointerCurrentRaycast.gameObject.tag == "Floor")
-	//	{
-	//		Debug.Log("OnPointerClick");
-	//	}
-	//}
-
-	//public void OnPointerUp(PointerEventData eventData)
-	//{
-	//	Debug.Log("OnPointerUp");
-	//}
-
-	//public void OnPointerEnter(PointerEventData eventData)
-	//{
-	//	Debug.Log(eventData.pointerEnter.name);
-	//}
-
-	public void ChestClicked()
-	{
-		inInv = true;
-		inChest = true;
-		invCanvas.GetComponent<GraphicRaycaster>().enabled = true;
-		invCanvas.GetComponent<Canvas>().targetDisplay = 0;
-		lootPanel.localScale = new Vector3(1, 1, 1);
-	}
-
-	public void ChestClosed()
-	{
-		inInv = false;
-		inChest = false;
-		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
-		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
-		lootPanel.localScale = new Vector3(0, 0, 0);
-	}
-
-	public void InvClosed()
-	{
-		inInv = false;
-		inChest = false;
-		invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
-		invCanvas.GetComponent<Canvas>().targetDisplay = 7;
-		lootPanel.localScale = new Vector3(0, 0, 0);
-	}
+        public void InvClosed()
+        {
+            inInv = false;
+            inChest = false;
+            invCanvas.GetComponent<GraphicRaycaster>().enabled = false;
+            invCanvas.GetComponent<Canvas>().targetDisplay = 7;
+            lootPanel.localScale = new Vector3(0, 0, 0);
+        }
+    }
 }

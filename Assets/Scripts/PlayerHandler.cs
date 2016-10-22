@@ -1,54 +1,55 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class PlayerHandler : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class PlayerHandler : MonoBehaviour {
 
-    // Use this for initialization
-    public GameObject player;
-    public List<GameObject> playerList = null;
+        public GameObject player;
+        public List<GameObject> playerList = null;
 
-    void Start () {
-        playerList.Add(player);
-    }
+        void Start () {
+            // TODO: Get players from code.
+            playerList.Add(player);
+        }
 	
-	// Update is called once per frame
-	void FixedUpdate () {
+        //public GameObject SpawnPlayer(Vector2 position)
+        //{
+        //    GameObject player = Instantiate(Player, position, transform.rotation) as GameObject;
+        //    enemy.transform.parent = transform;
+        //    enemyList.Add(enemy);
+        //    enemy.GetComponent<EnemyScript>().eHandler = this;
+        //    return enemy;
+        //}
 
-	    
-	}
-
-    //public GameObject SpawnPlayer(Vector2 position)
-    //{
-    //    GameObject player = Instantiate(Player, position, transform.rotation) as GameObject;
-    //    enemy.transform.parent = transform;
-    //    enemyList.Add(enemy);
-    //    enemy.GetComponent<EnemyScript>().eHandler = this;
-    //    return enemy;
-    //}
-
-    public void DistributeXP(int gainedXP)
-    {
-        player.GetComponent<PlayerScript>().GainXP(gainedXP);
-    }
-
-    public void ResetPlayer(bool PD)
-    {
-        if (PD)
+        public void DistributeXP(int gainedXP)
         {
-            player.GetComponent<PlayerScript>().PermaDeathSpawn();
-        }
-        else
-        {
-            player.GetComponent<PlayerScript>().SavePlayer();
-        }
+            gainedXP = gainedXP/playerList.Count;
+            foreach (var player in playerList)
+            {
+                player.GetComponent<PlayerScript>().GainXP(gainedXP);
+            }
         
+        }
+
+        public void ResetPlayer(bool PD)
+        {
+            if (PD)
+            {
+                player.GetComponent<PlayerScript>().PermaDeathSpawn();
+            }
+            else
+            {
+                player.GetComponent<PlayerScript>().SavePlayer();
+            }
+        
+        }
+
+        // Också dumt (ta bort sen)
+        //public void BumpPlayer(int x, int y)
+        //{
+        //    player.GetComponent<PlayerScript>().BumpMe(x, y);
+        //}
+
     }
-
-    // Också dumt (ta bort sen)
-    //public void BumpPlayer(int x, int y)
-    //{
-    //    player.GetComponent<PlayerScript>().BumpMe(x, y);
-    //}
-
 }

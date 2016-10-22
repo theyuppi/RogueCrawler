@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
-public class ButtonScript : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class ButtonScript : MonoBehaviour {
 
-	public void PlayBtn()
-    {
-        if (PlayerPrefs.GetInt("PD") == 1)
+        public void PlayBtn()
         {
-            PlayerPrefs.SetInt("gameStarted", 1);
-            Application.LoadLevel("MainScene");
+            if (PlayerPrefs.GetInt("PD") == 1)
+            {
+                PlayerPrefs.SetInt("gameStarted", 1);
+                SceneManager.LoadScene("MainScene");
 
+            }
+            else
+            {
+                PlayerPrefs.SetInt("gameStarted", 0);
+                PlayerPrefs.SetInt("PlayerShouldLoadItems", 1);
+                SceneManager.LoadScene("MainScene");
+            }
         }
-        else
+
+        public void ExitBtn()
         {
-            PlayerPrefs.SetInt("gameStarted", 0);
-			PlayerPrefs.SetInt("PlayerShouldLoadItems", 1);
-            Application.LoadLevel("MainScene");
+            Application.Quit();
         }
-    }
-
-    public void ExitBtn()
-    {
-        Application.Quit();
     }
 }

@@ -695,6 +695,11 @@ namespace Assets.Scripts
             xp += gainedXP;
         }
 
+        public ReadSpriteScript GetMap()
+        {
+            return map;
+        }
+
 
         public void BumpMe(int dir)
         {

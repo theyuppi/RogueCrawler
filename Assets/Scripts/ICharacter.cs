@@ -10,5 +10,6 @@ namespace Assets.Scripts
         void ReceiveActPts();
         int GetCurrentActionPoints();
         IEnumerator GetHit(int damageAmount);
+        ReadSpriteScript GetMap();
     }
 }

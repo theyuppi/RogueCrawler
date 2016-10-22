@@ -160,6 +160,7 @@ namespace Assets.Scripts
             StartCoroutine(ChangeCameraSmoothness());
 
             CurrentUnit.GetComponent<ICharacter>().IsMyTurn(false);
+            CurrentUnit.GetComponent<ICharacter>().GetMap().ClearOldPath();
             CurrentUnit.GetComponent<SpriteRenderer>().sortingOrder = 2;
 
             if (forwardTurnOrder)

@@ -364,9 +364,10 @@ namespace Assets.Scripts
                 default:
                     break;
             }
+
             currActPts -= 3;
             map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower);
-            map.ClearOldPath();
+            //map.ClearOldPath(); Why do we need to clear path when attacking? I will put this when user clicks space
             StartCoroutine(SetAttackFalse());
 
             //if (currActPts >= 2)
@@ -426,6 +427,11 @@ namespace Assets.Scripts
         public int GetCurrentActionPoints()
         {
             return currActPts;
+        }
+
+        public ReadSpriteScript GetMap()
+        {
+            return map;
         }
 
         public void LevelBoostEnemy(int level)

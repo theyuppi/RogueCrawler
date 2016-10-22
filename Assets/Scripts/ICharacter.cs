@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts
+﻿using System.Collections;
+
+namespace Assets.Scripts
 {
     interface ICharacter
     {
@@ -7,5 +9,6 @@
         void IsMyTurn(bool set);
         void ReceiveActPts();
         int GetCurrentActionPoints();
+        IEnumerator GetHit(int damageAmount);
     }
 }

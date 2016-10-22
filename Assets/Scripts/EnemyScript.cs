@@ -118,7 +118,7 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    turnIsOver = true;
+                    StartCoroutine(DoNothing());
                 }
                 IsMyTurn(false);
             }
@@ -203,9 +203,6 @@ namespace Assets.Scripts
                 case -1:
                     sRender.flipX = false;
                     break;
-
-                default:
-                    break;
             }
 
             // Check if tile in path is walkable
@@ -277,6 +274,13 @@ namespace Assets.Scripts
             {
                 currentPath = null;
             }
+        }
+
+
+        IEnumerator DoNothing()
+        {
+            yield return new WaitForSeconds(1f);
+            turnIsOver = true;
         }
 
         void OnTriggerEnter2D(Collider2D other)
@@ -361,7 +365,7 @@ namespace Assets.Scripts
                     break;
             }
             currActPts -= 3;
-            map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower, true);
+            map.myTileArray[tileX + (int)roundDir.x, tileY + (int)roundDir.y].GetComponent<TileScript>().CharOnTileGetHit(attackPower);
             map.ClearOldPath();
             StartCoroutine(SetAttackFalse());
 

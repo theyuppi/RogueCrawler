@@ -209,20 +209,11 @@ namespace Assets.Scripts
             return transform.position;
         }
 
-        public void CharOnTileGetHit(int damageAmount, bool isPlayer)
+        public void CharOnTileGetHit(int damageAmount)
         {
             if (occupant != null)
-            {
-                if (isPlayer)
-                {
-                    //Debug.Log("myID: " + myID);
-                    //Debug.Log("occupant: " + occupant.ToString());
-                    StartCoroutine(occupant.GetComponent<PlayerScript>().GetHit(damageAmount));
-                }
-                else
-                {
-                    StartCoroutine(occupant.GetComponent<EnemyScript>().GetHit(damageAmount));
-                }
+            {                
+                StartCoroutine(occupant.GetComponent<ICharacter>().GetHit(damageAmount));
             }
         }
 

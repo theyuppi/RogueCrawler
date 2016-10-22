@@ -615,7 +615,7 @@ namespace Assets.Scripts
                     animaThor.SetInteger("State", 1);
                     break;
             }
-            map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower, false);
+            map.myTileArray[tileX, tileY].GetComponent<TileScript>().CharOnTileGetHit(attackPower);
             map.ClearOldPath();
             StartCoroutine(SetAttackFalse());
         }
